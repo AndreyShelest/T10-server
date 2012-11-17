@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/qss/green.qss</file>
+        <file>resources/icons/gears.svg</file>
+        <file>resources/icons/computer.svg</file>
+        <file>resources/icons/at.svg</file>
+        <file>resources/icons/gun.svg</file>
+        <file>resources/icons/plug_in.svg</file>
+        <file>resources/icons/share.svg</file>
+        <file>resources/html/for_net_server/style.css</file>
+        <file>resources/html/for_net_server/page.html</file>
+        <file>resources/html/for_net_server/images/09.jpg</file>
+        <file>resources/icons/airplane.svg</file>
+        <file>resources/icons/airplane2.svg</file>
+        <file>resources/icons/Monkey.svg</file>
+        <file>resources/icons/Watch.svg</file>
+        <file>resources/icons/Wrench.svg</file>
+        <file>resources/icons/com.png</file>
+        <file>resources/icons/Qt-logo.svg</file>
+        <file>resources/icons/refresh.svg</file>
+        <file>resources/icons/disapprove.svg</file>
+        <file>resources/icons/community.svg</file>
+        <file>resources/icons/joystick.svg</file>
+        <file>resources/icons/joystick2.svg</file>
+    </qresource>
+</RCC>
