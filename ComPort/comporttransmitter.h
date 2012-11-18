@@ -49,7 +49,7 @@ public slots:
     void slot_Recieved();
     void slot_Write(QByteArray data);
     void COM_disconnect();
-    void setControlByte();
+    void setControlByte(char cbyte);
     //void setDataToMC(QByteArray data);
 
     void slotJoyXChanged(int value);

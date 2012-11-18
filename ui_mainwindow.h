@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sun Nov 18 16:08:48 2012
+** Created: Sun Nov 18 22:42:19 2012
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -80,13 +80,6 @@ public:
     QLabel *labelClientsConnected;
     QWidget *tab_com;
     QGridLayout *gridLayout_2;
-    QGroupBox *groupBox_comPort;
-    QGridLayout *gridLayout;
-    QLabel *label_comPortName;
-    QLineEdit *lineEditPort;
-    QPushButton *pushButton_comPortReconnect;
-    QPushButton *pushButton;
-    QGroupBox *groupBox;
     QWidget *widget_3;
     QGridLayout *gridLayout_3;
     QLabel *label_14;
@@ -94,6 +87,22 @@ public:
     QVBoxLayout *verticalLayout_3;
     QSpacerItem *verticalSpacer_2;
     QPushButton *pushButton_2;
+    QGroupBox *groupBox;
+    QGridLayout *gridLayout_6;
+    QToolButton *tb_custom_pp;
+    QToolButton *tb_custom_on;
+    QSpacerItem *verticalSpacer;
+    QToolButton *tb_data_on;
+    QToolButton *tb_custom_rau;
+    QToolButton *tb_data_rau_joy;
+    QToolButton *tb_data_on_Joy;
+    QWidget *widget_5;
+    QGroupBox *groupBox_comPort;
+    QGridLayout *gridLayout;
+    QSpacerItem *verticalSpacer_3;
+    QLineEdit *lineEditPort;
+    QLabel *label_comPortName;
+    QPushButton *pushButton_comPortReconnect;
     QWidget *tab_joy;
     QWidget *widget;
     QGroupBox *groupBox_netServer;
@@ -105,10 +114,10 @@ public:
     QPushButton *pushButton_6;
     QWidget *widget_4;
     QGroupBox *groupBox_joystick;
-    QComboBox *cb_joycticks;
     QToolButton *pb_joy_refresh;
     QPushButton *pushButton_3;
     QPushButton *pushButton_4;
+    QComboBox *cb_joycticks;
     QWidget *tab_settings;
     QPushButton *pBsimulate;
     QMenuBar *menuBar;
@@ -387,62 +396,6 @@ public:
         gridLayout_2->setSpacing(6);
         gridLayout_2->setContentsMargins(11, 11, 11, 11);
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
-        groupBox_comPort = new QGroupBox(tab_com);
-        groupBox_comPort->setObjectName(QString::fromUtf8("groupBox_comPort"));
-        sizePolicy.setHeightForWidth(groupBox_comPort->sizePolicy().hasHeightForWidth());
-        groupBox_comPort->setSizePolicy(sizePolicy);
-        groupBox_comPort->setMaximumSize(QSize(190, 110));
-        groupBox_comPort->setFlat(false);
-        groupBox_comPort->setCheckable(false);
-        gridLayout = new QGridLayout(groupBox_comPort);
-        gridLayout->setSpacing(6);
-        gridLayout->setContentsMargins(11, 11, 11, 11);
-        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        label_comPortName = new QLabel(groupBox_comPort);
-        label_comPortName->setObjectName(QString::fromUtf8("label_comPortName"));
-
-        gridLayout->addWidget(label_comPortName, 0, 0, 1, 1);
-
-        lineEditPort = new QLineEdit(groupBox_comPort);
-        lineEditPort->setObjectName(QString::fromUtf8("lineEditPort"));
-
-        gridLayout->addWidget(lineEditPort, 0, 1, 1, 1);
-
-        pushButton_comPortReconnect = new QPushButton(groupBox_comPort);
-        pushButton_comPortReconnect->setObjectName(QString::fromUtf8("pushButton_comPortReconnect"));
-        pushButton_comPortReconnect->setMinimumSize(QSize(180, 26));
-        pushButton_comPortReconnect->setMaximumSize(QSize(180, 26));
-        pushButton_comPortReconnect->setIcon(icon2);
-        pushButton_comPortReconnect->setIconSize(QSize(20, 20));
-        pushButton_comPortReconnect->setCheckable(false);
-        pushButton_comPortReconnect->setChecked(false);
-        pushButton_comPortReconnect->setAutoRepeat(false);
-        pushButton_comPortReconnect->setFlat(false);
-
-        gridLayout->addWidget(pushButton_comPortReconnect, 1, 0, 1, 2);
-
-        pushButton = new QPushButton(groupBox_comPort);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
-        pushButton->setMinimumSize(QSize(180, 26));
-        pushButton->setMaximumSize(QSize(180, 26));
-        pushButton->setIcon(icon);
-        pushButton->setIconSize(QSize(20, 20));
-
-        gridLayout->addWidget(pushButton, 2, 0, 1, 2);
-
-
-        gridLayout_2->addWidget(groupBox_comPort, 0, 0, 1, 1);
-
-        groupBox = new QGroupBox(tab_com);
-        groupBox->setObjectName(QString::fromUtf8("groupBox"));
-        QSizePolicy sizePolicy5(QSizePolicy::Expanding, QSizePolicy::Preferred);
-        sizePolicy5.setHorizontalStretch(0);
-        sizePolicy5.setVerticalStretch(0);
-        sizePolicy5.setHeightForWidth(groupBox->sizePolicy().hasHeightForWidth());
-        groupBox->setSizePolicy(sizePolicy5);
-
-        gridLayout_2->addWidget(groupBox, 0, 1, 1, 1);
-
         widget_3 = new QWidget(tab_com);
         widget_3->setObjectName(QString::fromUtf8("widget_3"));
         sizePolicy.setHeightForWidth(widget_3->sizePolicy().hasHeightForWidth());
@@ -453,6 +406,9 @@ public:
         gridLayout_3->setObjectName(QString::fromUtf8("gridLayout_3"));
         label_14 = new QLabel(widget_3);
         label_14->setObjectName(QString::fromUtf8("label_14"));
+        QSizePolicy sizePolicy5(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        sizePolicy5.setHorizontalStretch(0);
+        sizePolicy5.setVerticalStretch(0);
         sizePolicy5.setHeightForWidth(label_14->sizePolicy().hasHeightForWidth());
         label_14->setSizePolicy(sizePolicy5);
 
@@ -480,6 +436,132 @@ public:
 
 
         gridLayout_2->addWidget(widget_3, 1, 0, 1, 2);
+
+        groupBox = new QGroupBox(tab_com);
+        groupBox->setObjectName(QString::fromUtf8("groupBox"));
+        QSizePolicy sizePolicy6(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        sizePolicy6.setHorizontalStretch(0);
+        sizePolicy6.setVerticalStretch(0);
+        sizePolicy6.setHeightForWidth(groupBox->sizePolicy().hasHeightForWidth());
+        groupBox->setSizePolicy(sizePolicy6);
+        gridLayout_6 = new QGridLayout(groupBox);
+        gridLayout_6->setSpacing(6);
+        gridLayout_6->setContentsMargins(11, 11, 11, 11);
+        gridLayout_6->setObjectName(QString::fromUtf8("gridLayout_6"));
+        tb_custom_pp = new QToolButton(groupBox);
+        tb_custom_pp->setObjectName(QString::fromUtf8("tb_custom_pp"));
+        tb_custom_pp->setEnabled(false);
+        QIcon icon10;
+        icon10.addFile(QString::fromUtf8(":/resources/icons/airplane2.svg"), QSize(), QIcon::Normal, QIcon::On);
+        tb_custom_pp->setIcon(icon10);
+        tb_custom_pp->setIconSize(QSize(24, 24));
+        tb_custom_pp->setCheckable(true);
+
+        gridLayout_6->addWidget(tb_custom_pp, 2, 3, 1, 1);
+
+        tb_custom_on = new QToolButton(groupBox);
+        tb_custom_on->setObjectName(QString::fromUtf8("tb_custom_on"));
+        tb_custom_on->setEnabled(true);
+        tb_custom_on->setIcon(icon);
+        tb_custom_on->setIconSize(QSize(24, 24));
+        tb_custom_on->setCheckable(true);
+
+        gridLayout_6->addWidget(tb_custom_on, 2, 2, 1, 1);
+
+        verticalSpacer = new QSpacerItem(20, 15, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout_6->addItem(verticalSpacer, 0, 0, 1, 1);
+
+        tb_data_on = new QToolButton(groupBox);
+        tb_data_on->setObjectName(QString::fromUtf8("tb_data_on"));
+        tb_data_on->setEnabled(true);
+        tb_data_on->setIcon(icon10);
+        tb_data_on->setIconSize(QSize(24, 24));
+        tb_data_on->setCheckable(true);
+
+        gridLayout_6->addWidget(tb_data_on, 1, 0, 1, 1);
+
+        tb_custom_rau = new QToolButton(groupBox);
+        tb_custom_rau->setObjectName(QString::fromUtf8("tb_custom_rau"));
+        tb_custom_rau->setEnabled(false);
+        tb_custom_rau->setIcon(icon10);
+        tb_custom_rau->setIconSize(QSize(24, 24));
+        tb_custom_rau->setCheckable(true);
+
+        gridLayout_6->addWidget(tb_custom_rau, 1, 3, 1, 1);
+
+        tb_data_rau_joy = new QToolButton(groupBox);
+        tb_data_rau_joy->setObjectName(QString::fromUtf8("tb_data_rau_joy"));
+        tb_data_rau_joy->setEnabled(true);
+        QIcon icon11;
+        icon11.addFile(QString::fromUtf8(":/resources/icons/Wrench.svg"), QSize(), QIcon::Normal, QIcon::On);
+        tb_data_rau_joy->setIcon(icon11);
+        tb_data_rau_joy->setIconSize(QSize(24, 24));
+        tb_data_rau_joy->setCheckable(true);
+
+        gridLayout_6->addWidget(tb_data_rau_joy, 1, 2, 1, 1);
+
+        tb_data_on_Joy = new QToolButton(groupBox);
+        tb_data_on_Joy->setObjectName(QString::fromUtf8("tb_data_on_Joy"));
+        tb_data_on_Joy->setEnabled(true);
+        QIcon icon12;
+        icon12.addFile(QString::fromUtf8(":/resources/icons/joystick2.svg"), QSize(), QIcon::Normal, QIcon::On);
+        tb_data_on_Joy->setIcon(icon12);
+        tb_data_on_Joy->setIconSize(QSize(24, 24));
+        tb_data_on_Joy->setCheckable(true);
+
+        gridLayout_6->addWidget(tb_data_on_Joy, 2, 0, 1, 1);
+
+        widget_5 = new QWidget(groupBox);
+        widget_5->setObjectName(QString::fromUtf8("widget_5"));
+        sizePolicy.setHeightForWidth(widget_5->sizePolicy().hasHeightForWidth());
+        widget_5->setSizePolicy(sizePolicy);
+
+        gridLayout_6->addWidget(widget_5, 2, 4, 1, 1);
+
+
+        gridLayout_2->addWidget(groupBox, 0, 1, 1, 1);
+
+        groupBox_comPort = new QGroupBox(tab_com);
+        groupBox_comPort->setObjectName(QString::fromUtf8("groupBox_comPort"));
+        sizePolicy.setHeightForWidth(groupBox_comPort->sizePolicy().hasHeightForWidth());
+        groupBox_comPort->setSizePolicy(sizePolicy);
+        groupBox_comPort->setMaximumSize(QSize(190, 110));
+        groupBox_comPort->setFlat(false);
+        groupBox_comPort->setCheckable(false);
+        gridLayout = new QGridLayout(groupBox_comPort);
+        gridLayout->setSpacing(6);
+        gridLayout->setContentsMargins(11, 11, 11, 11);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        verticalSpacer_3 = new QSpacerItem(20, 2, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout->addItem(verticalSpacer_3, 0, 1, 1, 1);
+
+        lineEditPort = new QLineEdit(groupBox_comPort);
+        lineEditPort->setObjectName(QString::fromUtf8("lineEditPort"));
+
+        gridLayout->addWidget(lineEditPort, 1, 1, 1, 1);
+
+        label_comPortName = new QLabel(groupBox_comPort);
+        label_comPortName->setObjectName(QString::fromUtf8("label_comPortName"));
+
+        gridLayout->addWidget(label_comPortName, 1, 0, 1, 1);
+
+        pushButton_comPortReconnect = new QPushButton(groupBox_comPort);
+        pushButton_comPortReconnect->setObjectName(QString::fromUtf8("pushButton_comPortReconnect"));
+        sizePolicy.setHeightForWidth(pushButton_comPortReconnect->sizePolicy().hasHeightForWidth());
+        pushButton_comPortReconnect->setSizePolicy(sizePolicy);
+        pushButton_comPortReconnect->setIcon(icon2);
+        pushButton_comPortReconnect->setIconSize(QSize(20, 20));
+        pushButton_comPortReconnect->setCheckable(false);
+        pushButton_comPortReconnect->setChecked(false);
+        pushButton_comPortReconnect->setAutoRepeat(false);
+        pushButton_comPortReconnect->setFlat(false);
+
+        gridLayout->addWidget(pushButton_comPortReconnect, 2, 0, 1, 2);
+
+
+        gridLayout_2->addWidget(groupBox_comPort, 0, 0, 1, 1);
 
         tabWidget->addTab(tab_com, icon2, QString());
         tab_joy = new QWidget();
@@ -520,18 +602,14 @@ public:
         groupBox_joystick = new QGroupBox(widget_4);
         groupBox_joystick->setObjectName(QString::fromUtf8("groupBox_joystick"));
         groupBox_joystick->setGeometry(QRect(20, 10, 191, 121));
-        cb_joycticks = new QComboBox(groupBox_joystick);
-        cb_joycticks->setObjectName(QString::fromUtf8("cb_joycticks"));
-        cb_joycticks->setGeometry(QRect(8, 20, 141, 22));
-        cb_joycticks->setEditable(false);
         pb_joy_refresh = new QToolButton(groupBox_joystick);
         pb_joy_refresh->setObjectName(QString::fromUtf8("pb_joy_refresh"));
         pb_joy_refresh->setGeometry(QRect(161, 17, 26, 26));
         pb_joy_refresh->setMinimumSize(QSize(26, 26));
         pb_joy_refresh->setMaximumSize(QSize(26, 26));
-        QIcon icon10;
-        icon10.addFile(QString::fromUtf8(":/resources/icons/refresh.svg"), QSize(), QIcon::Normal, QIcon::Off);
-        pb_joy_refresh->setIcon(icon10);
+        QIcon icon13;
+        icon13.addFile(QString::fromUtf8(":/resources/icons/refresh.svg"), QSize(), QIcon::Normal, QIcon::Off);
+        pb_joy_refresh->setIcon(icon13);
         pb_joy_refresh->setIconSize(QSize(20, 20));
         pushButton_3 = new QPushButton(groupBox_joystick);
         pushButton_3->setObjectName(QString::fromUtf8("pushButton_3"));
@@ -546,6 +624,9 @@ public:
         pushButton_4->setCursor(QCursor(Qt::PointingHandCursor));
         pushButton_4->setIcon(icon);
         pushButton_4->setIconSize(QSize(20, 20));
+        cb_joycticks = new QComboBox(groupBox_joystick);
+        cb_joycticks->setObjectName(QString::fromUtf8("cb_joycticks"));
+        cb_joycticks->setGeometry(QRect(30, 20, 101, 27));
         tabWidget->addTab(tab_joy, icon8, QString());
         tab_settings = new QWidget();
         tab_settings->setObjectName(QString::fromUtf8("tab_settings"));
@@ -583,7 +664,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(2);
+        tabWidget->setCurrentIndex(1);
         stackedWidget->setCurrentIndex(0);
 
 
@@ -668,17 +749,37 @@ public:
 #endif // QT_NO_STATUSTIP
         labelClientsConnected->setText(QApplication::translate("MainWindow", "0", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_server), QApplication::translate("MainWindow", "Server", 0, QApplication::UnicodeUTF8));
+        label_14->setText(QApplication::translate("MainWindow", "Data transmited to Com Port", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        list_toCom->setToolTip(QApplication::translate("MainWindow", "<html><head/><body><p><br/></p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        pushButton_2->setText(QApplication::translate("MainWindow", "Clear Data", 0, QApplication::UnicodeUTF8));
+        groupBox->setTitle(QApplication::translate("MainWindow", "Control Parameters", 0, QApplication::UnicodeUTF8));
+        tb_custom_pp->setText(QApplication::translate("MainWindow", "PushButton", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        tb_custom_on->setToolTip(QApplication::translate("MainWindow", "<html><head/><body><p>custom mode</p><p><br/></p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        tb_custom_on->setText(QApplication::translate("MainWindow", "PushButton", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        tb_data_on->setToolTip(QApplication::translate("MainWindow", "<html><head/><body><p>Turn ON aircraft data</p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        tb_data_on->setText(QApplication::translate("MainWindow", "PushButton", 0, QApplication::UnicodeUTF8));
+        tb_custom_rau->setText(QApplication::translate("MainWindow", "PushButton", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        tb_data_rau_joy->setToolTip(QApplication::translate("MainWindow", "<html><head/><body><p>rau by joy</p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        tb_data_rau_joy->setText(QApplication::translate("MainWindow", "PushButton", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        tb_data_on_Joy->setToolTip(QApplication::translate("MainWindow", "<html><head/><body><p>joy data</p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        tb_data_on_Joy->setText(QApplication::translate("MainWindow", "PushButton", 0, QApplication::UnicodeUTF8));
         groupBox_comPort->setTitle(QApplication::translate("MainWindow", "COM port", 0, QApplication::UnicodeUTF8));
-        label_comPortName->setText(QApplication::translate("MainWindow", "name:", 0, QApplication::UnicodeUTF8));
         lineEditPort->setText(QApplication::translate("MainWindow", "/dev/ttyUSB0", 0, QApplication::UnicodeUTF8));
+        label_comPortName->setText(QApplication::translate("MainWindow", "name:", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
         pushButton_comPortReconnect->setToolTip(QApplication::translate("MainWindow", "Com Port reconnect", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         pushButton_comPortReconnect->setText(QApplication::translate("MainWindow", "Reconnect", 0, QApplication::UnicodeUTF8));
-        pushButton->setText(QApplication::translate("MainWindow", "COM port settings", 0, QApplication::UnicodeUTF8));
-        groupBox->setTitle(QApplication::translate("MainWindow", "GroupBox", 0, QApplication::UnicodeUTF8));
-        label_14->setText(QApplication::translate("MainWindow", "Data transmited to Com Port", 0, QApplication::UnicodeUTF8));
-        pushButton_2->setText(QApplication::translate("MainWindow", "Clear Data", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_com), QApplication::translate("MainWindow", "Com Port", 0, QApplication::UnicodeUTF8));
         groupBox_netServer->setTitle(QApplication::translate("MainWindow", "Net server", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "Listen IP:", 0, QApplication::UnicodeUTF8));
@@ -691,6 +792,10 @@ public:
         pb_joy_refresh->setText(QString());
         pushButton_3->setText(QApplication::translate("MainWindow", "Connect", 0, QApplication::UnicodeUTF8));
         pushButton_4->setText(QApplication::translate("MainWindow", "Joystick settings", 0, QApplication::UnicodeUTF8));
+        cb_joycticks->clear();
+        cb_joycticks->insertItems(0, QStringList()
+         << QApplication::translate("MainWindow", "no joysticks", 0, QApplication::UnicodeUTF8)
+        );
         tabWidget->setTabText(tabWidget->indexOf(tab_joy), QApplication::translate("MainWindow", "Joystick", 0, QApplication::UnicodeUTF8));
         pBsimulate->setText(QApplication::translate("MainWindow", "Simulate", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_settings), QApplication::translate("MainWindow", "Settings", 0, QApplication::UnicodeUTF8));

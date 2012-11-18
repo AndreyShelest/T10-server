@@ -10,6 +10,7 @@
 #include "ComPort/comporttransmitter.h"
 #include "Aircraft/aircraft.h"
 #include "Joystick/v_joystick_adapter.h"
+#include "QListWidget"
 
 namespace Ui {
 class MainWindow;
@@ -59,6 +60,22 @@ private slots:
 
     void on_pb_joy_refresh_clicked();
 
+    void on_list_toCom_clicked(const QModelIndex &index);
+
+    void on_list_toCom_itemClicked(QListWidgetItem *item);
+    void set_transmit_mode(char com);
+    void on_tb_data_on_clicked(bool checked);
+
+    void on_tb_data_on_toggled(bool checked);
+
+    void on_tb_data_rau_joy_toggled(bool checked);
+
+    void on_tb_data_on_Joy_toggled(bool checked);
+
+    void on_tb_custom_on_toggled(bool checked);
+
+    void on_pushButton_2_clicked();
+
 public slots:
     void log(QString data);
 
@@ -68,6 +85,7 @@ private:
     QLabel* labelComPortStatus;
     QLabel* labelJoystickStatus;
             NetServer* server;
+
     ComPortTransmitter* comPort;
     Aircraft* aircraft;
     VJoystickAdapter* joystick;

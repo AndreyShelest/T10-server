@@ -7,16 +7,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-       // ui->groupBox_comPort->hide();
-        //ui->groupBox_joystick->hide();
-       //ui->groupBox_netServer->hide();
-
 
     QFile file(":/resources/qss/green.qss");
     file.open(QFile::ReadOnly);
     QString styleSheet = QLatin1String(file.readAll());
     qApp->setStyleSheet(styleSheet);
-//    settings=new QSettings(QSettings::IniFormat, QSettings::UserScope,QCoreApplication::organizationName(), QCoreApplication::applicationName());
     this->setWindowTitle(QCoreApplication::applicationName());
     comPort = 0;
 
@@ -40,28 +35,30 @@ MainWindow::MainWindow(QWidget *parent) :
     server = new NetServer();
     if (settings.value("NetServer/autostart", true).toBool())
         ui->actionServer->setChecked(true);
-   // dataContainer = new DataContainer();
-    //connect(dataContainer, SIGNAL(DataReady(QList<float>)), server, SLOT(DataReady(QList<float>)));
+
     comPort = new ComPortTransmitter(this);
     connect(comPort, SIGNAL(Zavislo()), this, SLOT(comPortNotResponding()));
     connect(comPort, SIGNAL(Otvislo()), this, SLOT(comPortRepaired()));
     if (settings.value("ComPort/autoConnect", "").toBool())
-       { ui->actionCom_port->setChecked(true);
-ui->pushButton_comPortReconnect->setEnabled(true);
+    { ui->actionCom_port->setChecked(true);
+        ui->pushButton_comPortReconnect->setEnabled(true);
     }
     else ui->pushButton_comPortReconnect->setEnabled(true);
 
     joystick = new VJoystickAdapter();
     if (settings.value("Joystick/autoConnect", true).toBool()){
         ui->actionJoystick->setChecked(true);
-   }
+    }
     connect(comPort,SIGNAL(dataTransmitedToCom(QByteArray)),this,SLOT(showDataToCom(QByteArray)));
     if (joystick->isConnected()) ui->pb_joy_refresh->click();
-//    ui->listWidget_Log->clear();
-//    this->log(tr("Server started") + " [0.0.0.0:1989]");
 
-//    this->log(tr("COM port: connected to COM8"));
-//    labelComPortStatus->setText(tr("COM port: ") + "<span style=\"color:#008800;font-weight:bold;\">" + tr("transferring") + "</span>");
+    this->set_transmit_mode('q');
+
+    //    ui->listWidget_Log->clear();
+    //    this->log(tr("Server started") + " [0.0.0.0:1989]");
+
+    //    this->log(tr("COM port: connected to COM8"));
+    //    labelComPortStatus->setText(tr("COM port: ") + "<span style=\"color:#008800;font-weight:bold;\">" + tr("transferring") + "</span>");
     //    QListWidgetItem* lwi;
     //    lwi = new QListWidgetItem("Approximator [192.168.0.56]");
     //    ui->listWidget_peerList->addItem(lwi);
@@ -114,7 +111,7 @@ void MainWindow::on_actionServer_toggled(bool arg1)
     if (arg1)
     {
         QSettings settings(QSettings::IniFormat, QSettings::UserScope,
-                         QCoreApplication::organizationName(), QCoreApplication::applicationName());
+                           QCoreApplication::organizationName(), QCoreApplication::applicationName());
 
         QHostAddress addr(settings.value("NetServer/address", "0.0.0.0").toString());
         quint16 port = settings.value("NetServer/port", 1988).toInt();
@@ -154,7 +151,7 @@ void MainWindow::on_actionJoystick_toggled(bool arg1)
     if (arg1)
     {
         QSettings settings(QSettings::IniFormat, QSettings::UserScope,
-                         QCoreApplication::organizationName(), QCoreApplication::applicationName());
+                           QCoreApplication::organizationName(), QCoreApplication::applicationName());
         QStringList sl = VJoystickAdapter::getAvaliableJoystickName();
 
         qDebug() << "Available joysticks: ";
@@ -252,8 +249,8 @@ void MainWindow::on_actionCom_port_toggled(bool arg1)
             this->repositionOnSidebar();
         }
 
-////        connect(trans, SIGNAL(DataReady(QByteArray)), dataContainer, SLOT(comPortDataReady(QByteArray)));
-////        connect(dataContainer, SIGNAL(ready2com(QByteArray)), trans, SLOT(slot_Write(QByteArray)));
+        ////        connect(trans, SIGNAL(DataReady(QByteArray)), dataContainer, SLOT(comPortDataReady(QByteArray)));
+        ////        connect(dataContainer, SIGNAL(ready2com(QByteArray)), trans, SLOT(slot_Write(QByteArray)));
 
     }
     else
@@ -323,7 +320,7 @@ void MainWindow::on_stackedWidget_currentChanged(int arg1)
 void MainWindow::on_actionAbout_triggered()
 {
     QMessageBox::about(this, tr("T-10 Server"),
-             tr("aboutme"));
+                       tr("aboutme"));
 }
 
 void MainWindow::on_actionAbout_Qt_triggered()
@@ -333,11 +330,11 @@ void MainWindow::on_actionAbout_Qt_triggered()
 
 void MainWindow::on_horizontalSlider_sliderMoved(int position)
 {
-//    QByteArray ba;
-//    ba.clear();
-//    ba.append((unsigned char)position);
-//    ui->label_14->setText(QString::number(position));
-//    comPort->setDataToMC(ba);
+    //    QByteArray ba;
+    //    ba.clear();
+    //    ba.append((unsigned char)position);
+    //    ui->label_14->setText(QString::number(position));
+    //    comPort->setDataToMC(ba);
 }
 
 
@@ -352,8 +349,8 @@ void MainWindow::on_actionSettings_triggered(bool checked)
 void MainWindow::on_pushButton_comPortReconnect_clicked()
 {
     ui->actionCom_port->setChecked(false);
-QSettings settings(QSettings::IniFormat, QSettings::UserScope,
-                     QCoreApplication::organizationName(), QCoreApplication::applicationName());
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope,
+                       QCoreApplication::organizationName(), QCoreApplication::applicationName());
     settings.setValue("ComPort/name", ui->lineEditPort->text());
     ui->actionCom_port->setChecked(true);
 
@@ -362,18 +359,21 @@ QSettings settings(QSettings::IniFormat, QSettings::UserScope,
 
 void MainWindow::showDataToCom(QByteArray dataToMc)
 {
-   QString buf;
-   if (comPort->COM_isConnected())
-   {
+    QString buf;
 
-    for(int i=0; i<dataToMc.size();i++)
+    if (comPort->COM_isConnected())
     {
-            buf+=QString::number((unsigned char)dataToMc[i])+", ";
-    }
-    ui->list_toCom->addItem(buf);
 
-    ui->list_toCom->scrollToBottom();
-   }
+        for(int i=0; i<dataToMc.size();i++)
+        {
+          buf.append(QString::number((unsigned char)dataToMc[i])+", ");
+
+        }
+
+        ui->list_toCom->addItem(buf);
+
+        ui->list_toCom->scrollToBottom();
+    }
 
 }
 
@@ -386,15 +386,186 @@ void MainWindow::on_pBsimulate_clicked()
 void MainWindow::on_pb_joy_refresh_clicked()
 {
     QStringList joyList=joystick->getAvaliableJoystickName();
-        if (joyList.count()>0){
+    if (joyList.count()>0){
         for (int i=0;i<joyList.count();i++)
         {
             ui->cb_joycticks->setItemText(i,joyList[i]);
         }
-        }
-        else ui->cb_joycticks->setItemText(0,"no joysticks");
+    }
+    else ui->cb_joycticks->setItemText(0,"no joysticks");
 
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope,
+                       QCoreApplication::organizationName(), QCoreApplication::applicationName());
+    settings.setValue("Joystick/name", ui->cb_joycticks->itemText(ui->cb_joycticks->currentIndex()));
+}
+
+
+
+void MainWindow::on_list_toCom_itemClicked(QListWidgetItem *item)
+{
+    QStringList ListToCom=item->text().split(", ");
+}
+
+void MainWindow::set_transmit_mode(char com)
+{
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope,
+                       QCoreApplication::organizationName(), QCoreApplication::applicationName());
+    if (ui->tb_data_on->isChecked())
+    {ui->tb_data_on_Joy->setChecked(false);}
+    switch (com)
+    {
+    case 'd':// only data
+    {
+        ui->tb_data_on->setEnabled(true);
+        ui->tb_data_on->setChecked(true);
+         ui->tb_data_on_Joy->setEnabled(false);
+         ui->tb_data_on_Joy->setChecked(false);
+        ui->tb_data_rau_joy->setEnabled(false);
+        ui->tb_data_rau_joy->setChecked(false);
+             ui->tb_custom_on->setEnabled(false);
+              ui->tb_custom_on->setChecked(false);
+              settings.setValue("ComPort/Mode", com);
+                   comPort->setControlByte(com);
+         break;
+    }
+    case 'j': // data and joy
+    {
+        ui->tb_data_on_Joy->setEnabled(true);
+        ui->tb_data_on_Joy->setChecked(true);
+         ui->tb_data_on->setEnabled(false);
+          ui->tb_data_on->setChecked(false);
+          ui->tb_data_rau_joy->setEnabled(false);
+          ui->tb_data_rau_joy->setChecked(false);
+               ui->tb_custom_on->setEnabled(false);
+                ui->tb_custom_on->setChecked(false);
+                settings.setValue("ComPort/Mode",com);
+                 comPort->setControlByte(com);
+        break;
+    }
+    case 'c':// control rau by joy
+    {
+        ui->tb_data_rau_joy->setEnabled(true);
+        ui->tb_data_rau_joy->setChecked(true);
+         ui->tb_data_on_Joy->setEnabled(false);
+         ui->tb_data_on_Joy->setChecked(false);
+        ui->tb_data_on->setEnabled(false);
+        ui->tb_data_on->setChecked(false);
+             ui->tb_custom_on->setEnabled(false);
+              ui->tb_custom_on->setChecked(false);
+              settings.setValue("ComPort/Mode", com);
+              comPort->setControlByte(com);
+        break;
+    }
+    case 'r':// custom rau and ppn control
+    {
+        ui->tb_custom_on->setEnabled(true);
+        ui->tb_custom_on->setChecked(true);
+         ui->tb_data_on_Joy->setEnabled(false);
+         ui->tb_data_on_Joy->setChecked(false);
+        ui->tb_data_rau_joy->setEnabled(false);
+        ui->tb_data_rau_joy->setChecked(false);
+             ui->tb_data_on->setEnabled(false);
+              ui->tb_data_on->setChecked(false);
+                   comPort->setControlByte(com);
+                   ui->tb_custom_pp->setEnabled(true);
+                   ui->tb_custom_rau->setEnabled(true);
+                    settings.setValue("ComPort/Mode", com);
+        break;
+    }
+
+    default:
+    {
+        ui->tb_data_on->setEnabled(true);
+        ui->tb_data_on->setChecked(false);
+         ui->tb_data_on_Joy->setEnabled(true);
+         ui->tb_data_on_Joy->setChecked(false);
+        ui->tb_data_rau_joy->setEnabled(true);
+        ui->tb_data_rau_joy->setChecked(false);
+             ui->tb_custom_on->setEnabled(true);
+              ui->tb_custom_on->setChecked(false);
+                                           ui->tb_custom_pp->setEnabled(false);
+                                           ui->tb_custom_rau->setEnabled(false);
+                                           ui->tb_custom_pp->setChecked(false);
+                                           ui->tb_custom_rau->setChecked(false);
+                   comPort->setControlByte(com);
+        break;
+    }
+    }
+
+    //    dataToMc[0]=(unsigned char)'d'; // only data
+    //    dataToMc[0]=(unsigned char)'j'; // data and joy
+    //    dataToMc[0]=(unsigned char)'c'; // data and joy RauControl
+    //    dataToMc[0]=(unsigned char)'r'; // data and rauContol
+
+}
+
+void MainWindow::on_list_toCom_clicked(const QModelIndex &index)
+{
+
+}
+
+void MainWindow::on_tb_data_on_clicked(bool checked)
+{
+
+}
+
+void MainWindow::on_tb_data_on_toggled(bool checked)
+{
+    if (checked)
+    {
         QSettings settings(QSettings::IniFormat, QSettings::UserScope,
-                            QCoreApplication::organizationName(), QCoreApplication::applicationName());
-            settings.setValue("Joystick/name", ui->cb_joycticks->itemText(ui->cb_joycticks->currentIndex()));
+                           QCoreApplication::organizationName(), QCoreApplication::applicationName());
+this->set_transmit_mode('d');
+        settings.setValue("ComPort/Mode", 'd');
+
+    }
+    else {
+        this->set_transmit_mode('q');}
+}
+
+void MainWindow::on_tb_data_rau_joy_toggled(bool checked)
+{
+    if (checked)
+    {
+        QSettings settings(QSettings::IniFormat, QSettings::UserScope,
+                           QCoreApplication::organizationName(), QCoreApplication::applicationName());
+this->set_transmit_mode('c');
+        settings.setValue("ComPort/Mode", 'c');
+
+    }
+    else {
+        this->set_transmit_mode('q');}
+}
+
+void MainWindow::on_tb_data_on_Joy_toggled(bool checked)
+{
+    if (checked)
+    {
+        QSettings settings(QSettings::IniFormat, QSettings::UserScope,
+                           QCoreApplication::organizationName(), QCoreApplication::applicationName());
+this->set_transmit_mode('j');
+        settings.setValue("ComPort/Mode", 'j');
+
+    }
+    else {
+        this->set_transmit_mode('q');}
+}
+
+void MainWindow::on_tb_custom_on_toggled(bool checked)
+{
+    if (checked)
+    {
+        QSettings settings(QSettings::IniFormat, QSettings::UserScope,
+                           QCoreApplication::organizationName(), QCoreApplication::applicationName());
+this->set_transmit_mode('r');
+        settings.setValue("ComPort/Mode", 'r');
+
+    }
+    else {
+        this->set_transmit_mode('q');}
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    ui->list_toCom->clear();
 }

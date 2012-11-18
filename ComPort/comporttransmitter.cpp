@@ -236,8 +236,7 @@ void ComPortTransmitter::slot_watchDog()
 
 void ComPortTransmitter::slot_DataToMcTimeout()
 {
-    this->setControlByte();
-   this->slot_Write(dataToMc);
+       this->slot_Write(dataToMc);
     this->dataTransmitedToCom(dataToMc);
 }
 
@@ -275,12 +274,10 @@ void ComPortTransmitter::getPacket(QByteArray &apacket)
 }
 
 
-void ComPortTransmitter::setControlByte()
+void ComPortTransmitter::setControlByte(char cbyte)
 {
-    //unsigned char con='d';
-    //dataToMc[0]=(unsigned char)'d'; // only data
-   // dataToMc[0]=(unsigned char)'j'; // data and joy
-    dataToMc[0]=(unsigned char)'c'; // data and joy RauControl
-//    dataToMc[0]=(unsigned char)'r'; // data and rauContol
-    //this->slot_Write(dataToMc);
+
+    dataToMc[0]=(unsigned char)cbyte;
+
+
 }

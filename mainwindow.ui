@@ -42,7 +42,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <property name="documentMode">
        <bool>false</bool>
@@ -381,6 +381,255 @@
         <string>Com Port</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_2">
+        <item row="1" column="0" colspan="2">
+         <widget class="QWidget" name="widget_3" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_3">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_14">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Data transmited to Com Port</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QListWidget" name="list_toCom">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <layout class="QVBoxLayout" name="verticalLayout_3">
+             <item>
+              <spacer name="verticalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_2">
+               <property name="text">
+                <string>Clear Data</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QGroupBox" name="groupBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="title">
+           <string>Control Parameters</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_6">
+           <item row="2" column="3">
+            <widget class="QToolButton" name="tb_custom_pp">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normalon>:/resources/icons/airplane2.svg</normalon>
+              </iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>24</width>
+               <height>24</height>
+              </size>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QToolButton" name="tb_custom_on">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;custom mode&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+             <property name="icon">
+              <iconset resource="T10_Server3.qrc">
+               <normaloff>:/resources/icons/gears.svg</normaloff>:/resources/icons/gears.svg</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>24</width>
+               <height>24</height>
+              </size>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>15</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="1" column="0">
+            <widget class="QToolButton" name="tb_data_on">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Turn ON aircraft data&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normalon>:/resources/icons/airplane2.svg</normalon>
+              </iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>24</width>
+               <height>24</height>
+              </size>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3">
+            <widget class="QToolButton" name="tb_custom_rau">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normalon>:/resources/icons/airplane2.svg</normalon>
+              </iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>24</width>
+               <height>24</height>
+              </size>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QToolButton" name="tb_data_rau_joy">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;rau by joy&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normalon>:/resources/icons/Wrench.svg</normalon>
+              </iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>24</width>
+               <height>24</height>
+              </size>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QToolButton" name="tb_data_on_Joy">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;joy data&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normalon>:/resources/icons/joystick2.svg</normalon>
+              </iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>24</width>
+               <height>24</height>
+              </size>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="4">
+            <widget class="QWidget" name="widget_5" native="true">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
         <item row="0" column="0">
          <widget class="QGroupBox" name="groupBox_comPort">
           <property name="sizePolicy">
@@ -405,33 +654,40 @@
            <bool>false</bool>
           </property>
           <layout class="QGridLayout" name="gridLayout">
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_comPortName">
-             <property name="text">
-              <string>name:</string>
-             </property>
-            </widget>
-           </item>
            <item row="0" column="1">
+            <spacer name="verticalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>2</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="1" column="1">
             <widget class="QLineEdit" name="lineEditPort">
              <property name="text">
               <string>/dev/ttyUSB0</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="0" colspan="2">
-            <widget class="QPushButton" name="pushButton_comPortReconnect">
-             <property name="minimumSize">
-              <size>
-               <width>180</width>
-               <height>26</height>
-              </size>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_comPortName">
+             <property name="text">
+              <string>name:</string>
              </property>
-             <property name="maximumSize">
-              <size>
-               <width>180</width>
-               <height>26</height>
-              </size>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="2">
+            <widget class="QPushButton" name="pushButton_comPortReconnect">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
              <property name="toolTip">
               <string>Com Port reconnect</string>
@@ -462,100 +718,6 @@
               <bool>false</bool>
              </property>
             </widget>
-           </item>
-           <item row="2" column="0" colspan="2">
-            <widget class="QPushButton" name="pushButton">
-             <property name="minimumSize">
-              <size>
-               <width>180</width>
-               <height>26</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>180</width>
-               <height>26</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>COM port settings</string>
-             </property>
-             <property name="icon">
-              <iconset resource="T10_Server3.qrc">
-               <normaloff>:/resources/icons/gears.svg</normaloff>:/resources/icons/gears.svg</iconset>
-             </property>
-             <property name="iconSize">
-              <size>
-               <width>20</width>
-               <height>20</height>
-              </size>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QGroupBox" name="groupBox">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="title">
-           <string>GroupBox</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0" colspan="2">
-         <widget class="QWidget" name="widget_3" native="true">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_3">
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_14">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Data transmited to Com Port</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QListWidget" name="list_toCom"/>
-           </item>
-           <item row="1" column="1">
-            <layout class="QVBoxLayout" name="verticalLayout_3">
-             <item>
-              <spacer name="verticalSpacer_2">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>40</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButton_2">
-               <property name="text">
-                <string>Clear Data</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
            </item>
           </layout>
          </widget>
