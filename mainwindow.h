@@ -10,7 +10,6 @@
 #include "ComPort/comporttransmitter.h"
 #include "Aircraft/aircraft.h"
 #include "Joystick/v_joystick_adapter.h"
-#include "datacontainer.h"
 
 namespace Ui {
 class MainWindow;
@@ -58,6 +57,8 @@ private slots:
 
     void on_pBsimulate_clicked();
 
+    void on_pb_joy_refresh_clicked();
+
 public slots:
     void log(QString data);
 
@@ -68,7 +69,6 @@ private:
     QLabel* labelJoystickStatus;
             NetServer* server;
     ComPortTransmitter* comPort;
-    DataContainer* dataContainer;
     Aircraft* aircraft;
     VJoystickAdapter* joystick;
 

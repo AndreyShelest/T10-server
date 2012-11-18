@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sun Nov 18 14:38:47 2012
+** Created: Sun Nov 18 16:08:48 2012
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -26,6 +26,7 @@
 #include <QtGui/QMenuBar>
 #include <QtGui/QPushButton>
 #include <QtGui/QSpacerItem>
+#include <QtGui/QSplitter>
 #include <QtGui/QStackedWidget>
 #include <QtGui/QStatusBar>
 #include <QtGui/QTabWidget>
@@ -52,35 +53,31 @@ public:
     QHBoxLayout *horizontalLayout;
     QTabWidget *tabWidget;
     QWidget *tab_server;
-    QWidget *widget;
-    QVBoxLayout *verticalLayout;
+    QGridLayout *gridLayout_5;
+    QLabel *label_13;
+    QListWidget *listWidget;
+    QListWidget *listWidget_Log;
+    QPushButton *pushButton_7;
     QStackedWidget *stackedWidget;
     QWidget *page;
-    QPushButton *pushButton_7;
-    QWidget *layoutWidget;
     QGridLayout *gridLayout_4;
-    QLabel *label_13;
     QLabel *label_7;
-    QLabel *label_8;
+    QLabel *lbl_Peer_name;
     QLabel *label_9;
-    QLabel *label_11;
+    QLabel *lbl_peer_IP;
     QLabel *label_10;
-    QLabel *label_12;
-    QLabel *label_4;
+    QLabel *lbl_Bytes_received;
+    QLabel *lbl_Peer_port;
     QLabel *label_3;
+    QLabel *lbl_Bytes_send;
     QLabel *label_5;
-    QLabel *label_6;
     QWidget *page_2;
     QHBoxLayout *horizontalLayout_3;
     QWidget *widget_2;
-    QLabel *labelClientsConnected;
-    QWidget *layoutWidget1;
-    QGridLayout *gridLayout_5;
-    QLabel *labelClients;
-    QPushButton *pBsimulate;
-    QListWidget *listWidget_Log;
     QListWidget *listWidget_peerList;
-    QListWidget *listWidget;
+    QSplitter *splitter;
+    QLabel *labelClients;
+    QLabel *labelClientsConnected;
     QWidget *tab_com;
     QGridLayout *gridLayout_2;
     QGroupBox *groupBox_comPort;
@@ -98,7 +95,7 @@ public:
     QSpacerItem *verticalSpacer_2;
     QPushButton *pushButton_2;
     QWidget *tab_joy;
-    QWidget *widget1;
+    QWidget *widget;
     QGroupBox *groupBox_netServer;
     QLabel *label;
     QLineEdit *lineEdit_2;
@@ -108,11 +105,12 @@ public:
     QPushButton *pushButton_6;
     QWidget *widget_4;
     QGroupBox *groupBox_joystick;
-    QComboBox *comboBox;
-    QToolButton *toolButton_2;
+    QComboBox *cb_joycticks;
+    QToolButton *pb_joy_refresh;
     QPushButton *pushButton_3;
     QPushButton *pushButton_4;
     QWidget *tab_settings;
+    QPushButton *pBsimulate;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -198,99 +196,118 @@ public:
         tabWidget->setMovable(false);
         tab_server = new QWidget();
         tab_server->setObjectName(QString::fromUtf8("tab_server"));
-        widget = new QWidget(tab_server);
-        widget->setObjectName(QString::fromUtf8("widget"));
-        widget->setGeometry(QRect(170, 0, 302, 151));
-        verticalLayout = new QVBoxLayout(widget);
-        verticalLayout->setSpacing(6);
-        verticalLayout->setContentsMargins(11, 11, 11, 11);
-        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        verticalLayout->setSizeConstraint(QLayout::SetNoConstraint);
-        verticalLayout->setContentsMargins(1, -1, -1, -1);
-        stackedWidget = new QStackedWidget(widget);
+        gridLayout_5 = new QGridLayout(tab_server);
+        gridLayout_5->setSpacing(6);
+        gridLayout_5->setContentsMargins(11, 11, 11, 11);
+        gridLayout_5->setObjectName(QString::fromUtf8("gridLayout_5"));
+        label_13 = new QLabel(tab_server);
+        label_13->setObjectName(QString::fromUtf8("label_13"));
+
+        gridLayout_5->addWidget(label_13, 0, 2, 2, 1);
+
+        listWidget = new QListWidget(tab_server);
+        new QListWidgetItem(listWidget);
+        new QListWidgetItem(listWidget);
+        new QListWidgetItem(listWidget);
+        new QListWidgetItem(listWidget);
+        new QListWidgetItem(listWidget);
+        new QListWidgetItem(listWidget);
+        new QListWidgetItem(listWidget);
+        listWidget->setObjectName(QString::fromUtf8("listWidget"));
+        QSizePolicy sizePolicy2(QSizePolicy::MinimumExpanding, QSizePolicy::Expanding);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(listWidget->sizePolicy().hasHeightForWidth());
+        listWidget->setSizePolicy(sizePolicy2);
+        listWidget->setMinimumSize(QSize(150, 0));
+        listWidget->setMaximumSize(QSize(150, 16777215));
+
+        gridLayout_5->addWidget(listWidget, 2, 2, 2, 1);
+
+        listWidget_Log = new QListWidget(tab_server);
+        listWidget_Log->setObjectName(QString::fromUtf8("listWidget_Log"));
+        sizePolicy2.setHeightForWidth(listWidget_Log->sizePolicy().hasHeightForWidth());
+        listWidget_Log->setSizePolicy(sizePolicy2);
+        listWidget_Log->setMinimumSize(QSize(150, 0));
+        listWidget_Log->setFrameShape(QFrame::NoFrame);
+
+        gridLayout_5->addWidget(listWidget_Log, 4, 1, 1, 2);
+
+        pushButton_7 = new QPushButton(tab_server);
+        pushButton_7->setObjectName(QString::fromUtf8("pushButton_7"));
+        QIcon icon9;
+        icon9.addFile(QString::fromUtf8(":/resources/icons/disapprove.svg"), QSize(), QIcon::Normal, QIcon::Off);
+        pushButton_7->setIcon(icon9);
+        pushButton_7->setIconSize(QSize(20, 20));
+
+        gridLayout_5->addWidget(pushButton_7, 3, 1, 1, 1);
+
+        stackedWidget = new QStackedWidget(tab_server);
         stackedWidget->setObjectName(QString::fromUtf8("stackedWidget"));
         sizePolicy.setHeightForWidth(stackedWidget->sizePolicy().hasHeightForWidth());
         stackedWidget->setSizePolicy(sizePolicy);
         page = new QWidget();
         page->setObjectName(QString::fromUtf8("page"));
-        pushButton_7 = new QPushButton(page);
-        pushButton_7->setObjectName(QString::fromUtf8("pushButton_7"));
-        pushButton_7->setGeometry(QRect(50, 230, 131, 23));
-        QIcon icon9;
-        icon9.addFile(QString::fromUtf8(":/resources/icons/disapprove.svg"), QSize(), QIcon::Normal, QIcon::Off);
-        pushButton_7->setIcon(icon9);
-        pushButton_7->setIconSize(QSize(20, 20));
-        layoutWidget = new QWidget(page);
-        layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
-        layoutWidget->setGeometry(QRect(10, -10, 291, 151));
-        gridLayout_4 = new QGridLayout(layoutWidget);
+        gridLayout_4 = new QGridLayout(page);
         gridLayout_4->setSpacing(6);
         gridLayout_4->setContentsMargins(11, 11, 11, 11);
         gridLayout_4->setObjectName(QString::fromUtf8("gridLayout_4"));
-        gridLayout_4->setContentsMargins(0, 0, 0, 0);
-        label_13 = new QLabel(layoutWidget);
-        label_13->setObjectName(QString::fromUtf8("label_13"));
-
-        gridLayout_4->addWidget(label_13, 0, 0, 2, 2);
-
-        label_7 = new QLabel(layoutWidget);
+        label_7 = new QLabel(page);
         label_7->setObjectName(QString::fromUtf8("label_7"));
-        label_7->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_7->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
 
-        gridLayout_4->addWidget(label_7, 1, 1, 1, 1);
+        gridLayout_4->addWidget(label_7, 0, 0, 1, 2);
 
-        label_8 = new QLabel(layoutWidget);
-        label_8->setObjectName(QString::fromUtf8("label_8"));
+        lbl_Peer_name = new QLabel(page);
+        lbl_Peer_name->setObjectName(QString::fromUtf8("lbl_Peer_name"));
 
-        gridLayout_4->addWidget(label_8, 1, 2, 1, 1);
+        gridLayout_4->addWidget(lbl_Peer_name, 0, 2, 1, 1);
 
-        label_9 = new QLabel(layoutWidget);
+        label_9 = new QLabel(page);
         label_9->setObjectName(QString::fromUtf8("label_9"));
-        label_9->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_9->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
 
-        gridLayout_4->addWidget(label_9, 2, 1, 1, 1);
+        gridLayout_4->addWidget(label_9, 1, 0, 1, 2);
 
-        label_11 = new QLabel(layoutWidget);
-        label_11->setObjectName(QString::fromUtf8("label_11"));
+        lbl_peer_IP = new QLabel(page);
+        lbl_peer_IP->setObjectName(QString::fromUtf8("lbl_peer_IP"));
 
-        gridLayout_4->addWidget(label_11, 2, 2, 1, 1);
+        gridLayout_4->addWidget(lbl_peer_IP, 1, 2, 1, 1);
 
-        label_10 = new QLabel(layoutWidget);
+        label_10 = new QLabel(page);
         label_10->setObjectName(QString::fromUtf8("label_10"));
-        label_10->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_10->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
 
-        gridLayout_4->addWidget(label_10, 3, 1, 1, 1);
+        gridLayout_4->addWidget(label_10, 2, 0, 1, 1);
 
-        label_12 = new QLabel(layoutWidget);
-        label_12->setObjectName(QString::fromUtf8("label_12"));
+        lbl_Bytes_received = new QLabel(page);
+        lbl_Bytes_received->setObjectName(QString::fromUtf8("lbl_Bytes_received"));
 
-        gridLayout_4->addWidget(label_12, 3, 2, 1, 1);
+        gridLayout_4->addWidget(lbl_Bytes_received, 4, 2, 1, 1);
 
-        label_4 = new QLabel(layoutWidget);
-        label_4->setObjectName(QString::fromUtf8("label_4"));
+        lbl_Peer_port = new QLabel(page);
+        lbl_Peer_port->setObjectName(QString::fromUtf8("lbl_Peer_port"));
 
-        gridLayout_4->addWidget(label_4, 4, 1, 1, 2);
+        gridLayout_4->addWidget(lbl_Peer_port, 2, 2, 1, 1);
 
-        label_3 = new QLabel(layoutWidget);
+        label_3 = new QLabel(page);
         label_3->setObjectName(QString::fromUtf8("label_3"));
-        label_3->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_3->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
 
-        gridLayout_4->addWidget(label_3, 5, 0, 1, 2);
+        gridLayout_4->addWidget(label_3, 3, 0, 1, 2);
 
-        label_5 = new QLabel(layoutWidget);
+        lbl_Bytes_send = new QLabel(page);
+        lbl_Bytes_send->setObjectName(QString::fromUtf8("lbl_Bytes_send"));
+
+        gridLayout_4->addWidget(lbl_Bytes_send, 3, 2, 1, 1);
+
+        label_5 = new QLabel(page);
         label_5->setObjectName(QString::fromUtf8("label_5"));
-        label_5->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label_5->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
 
-        gridLayout_4->addWidget(label_5, 6, 0, 1, 2);
-
-        label_6 = new QLabel(layoutWidget);
-        label_6->setObjectName(QString::fromUtf8("label_6"));
-
-        gridLayout_4->addWidget(label_6, 6, 2, 1, 1);
+        gridLayout_4->addWidget(label_5, 4, 0, 1, 2);
 
         stackedWidget->addWidget(page);
-        layoutWidget->raise();
-        pushButton_7->raise();
         page_2 = new QWidget();
         page_2->setObjectName(QString::fromUtf8("page_2"));
         horizontalLayout_3 = new QHBoxLayout(page_2);
@@ -304,81 +321,66 @@ public:
 
         stackedWidget->addWidget(page_2);
 
-        verticalLayout->addWidget(stackedWidget);
+        gridLayout_5->addWidget(stackedWidget, 2, 1, 1, 1);
 
-        labelClientsConnected = new QLabel(tab_server);
-        labelClientsConnected->setObjectName(QString::fromUtf8("labelClientsConnected"));
-        labelClientsConnected->setGeometry(QRect(83, 2, 16, 16));
-        QFont font;
-        font.setFamily(QString::fromUtf8("Verdana"));
-        font.setPointSize(9);
-        font.setBold(true);
-        font.setWeight(75);
-        labelClientsConnected->setFont(font);
-        layoutWidget1 = new QWidget(tab_server);
-        layoutWidget1->setObjectName(QString::fromUtf8("layoutWidget1"));
-        layoutWidget1->setGeometry(QRect(0, 0, 681, 361));
-        gridLayout_5 = new QGridLayout(layoutWidget1);
-        gridLayout_5->setSpacing(6);
-        gridLayout_5->setContentsMargins(11, 11, 11, 11);
-        gridLayout_5->setObjectName(QString::fromUtf8("gridLayout_5"));
-        gridLayout_5->setContentsMargins(0, 0, 0, 0);
-        labelClients = new QLabel(layoutWidget1);
-        labelClients->setObjectName(QString::fromUtf8("labelClients"));
-        labelClients->setMinimumSize(QSize(65, 0));
-        labelClients->setMaximumSize(QSize(65, 16777215));
-        QFont font1;
-        font1.setFamily(QString::fromUtf8("Verdana"));
-        font1.setPointSize(10);
-        font1.setBold(true);
-        font1.setItalic(false);
-        font1.setWeight(75);
-        labelClients->setFont(font1);
-
-        gridLayout_5->addWidget(labelClients, 0, 0, 1, 1);
-
-        pBsimulate = new QPushButton(layoutWidget1);
-        pBsimulate->setObjectName(QString::fromUtf8("pBsimulate"));
-
-        gridLayout_5->addWidget(pBsimulate, 2, 1, 1, 1);
-
-        listWidget_Log = new QListWidget(layoutWidget1);
-        listWidget_Log->setObjectName(QString::fromUtf8("listWidget_Log"));
-        QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(listWidget_Log->sizePolicy().hasHeightForWidth());
-        listWidget_Log->setSizePolicy(sizePolicy2);
-        listWidget_Log->setMinimumSize(QSize(300, 100));
-        listWidget_Log->setMaximumSize(QSize(16777215, 100));
-        listWidget_Log->setFrameShape(QFrame::NoFrame);
-
-        gridLayout_5->addWidget(listWidget_Log, 2, 2, 1, 1);
-
-        listWidget_peerList = new QListWidget(layoutWidget1);
+        listWidget_peerList = new QListWidget(tab_server);
         listWidget_peerList->setObjectName(QString::fromUtf8("listWidget_peerList"));
+        QSizePolicy sizePolicy3(QSizePolicy::Fixed, QSizePolicy::Expanding);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(listWidget_peerList->sizePolicy().hasHeightForWidth());
+        listWidget_peerList->setSizePolicy(sizePolicy3);
         listWidget_peerList->setMaximumSize(QSize(150, 16777215));
         listWidget_peerList->setFrameShape(QFrame::NoFrame);
         listWidget_peerList->setAutoScroll(true);
 
-        gridLayout_5->addWidget(listWidget_peerList, 1, 0, 2, 1);
+        gridLayout_5->addWidget(listWidget_peerList, 1, 0, 4, 1);
 
-        listWidget = new QListWidget(layoutWidget1);
-        new QListWidgetItem(listWidget);
-        new QListWidgetItem(listWidget);
-        new QListWidgetItem(listWidget);
-        new QListWidgetItem(listWidget);
-        new QListWidgetItem(listWidget);
-        new QListWidgetItem(listWidget);
-        new QListWidgetItem(listWidget);
-        listWidget->setObjectName(QString::fromUtf8("listWidget"));
+        splitter = new QSplitter(tab_server);
+        splitter->setObjectName(QString::fromUtf8("splitter"));
+        QSizePolicy sizePolicy4(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        sizePolicy4.setHorizontalStretch(0);
+        sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(splitter->sizePolicy().hasHeightForWidth());
+        splitter->setSizePolicy(sizePolicy4);
+        splitter->setMaximumSize(QSize(16777215, 16777215));
+        splitter->setOrientation(Qt::Horizontal);
+        labelClients = new QLabel(splitter);
+        labelClients->setObjectName(QString::fromUtf8("labelClients"));
+        sizePolicy.setHeightForWidth(labelClients->sizePolicy().hasHeightForWidth());
+        labelClients->setSizePolicy(sizePolicy);
+        QFont font;
+        font.setFamily(QString::fromUtf8("Verdana"));
+        font.setPointSize(10);
+        font.setBold(true);
+        font.setItalic(false);
+        font.setWeight(75);
+        labelClients->setFont(font);
+        splitter->addWidget(labelClients);
+        labelClientsConnected = new QLabel(splitter);
+        labelClientsConnected->setObjectName(QString::fromUtf8("labelClientsConnected"));
+        sizePolicy.setHeightForWidth(labelClientsConnected->sizePolicy().hasHeightForWidth());
+        labelClientsConnected->setSizePolicy(sizePolicy);
+        QFont font1;
+        font1.setFamily(QString::fromUtf8("Verdana"));
+        font1.setPointSize(9);
+        font1.setBold(true);
+        font1.setWeight(75);
+        labelClientsConnected->setFont(font1);
+        labelClientsConnected->setLayoutDirection(Qt::LeftToRight);
+        labelClientsConnected->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        splitter->addWidget(labelClientsConnected);
 
-        gridLayout_5->addWidget(listWidget, 1, 1, 1, 1);
+        gridLayout_5->addWidget(splitter, 0, 0, 1, 1);
 
         tabWidget->addTab(tab_server, icon1, QString());
-        layoutWidget->raise();
-        widget->raise();
-        labelClientsConnected->raise();
+        listWidget->raise();
+        listWidget_Log->raise();
+        listWidget_peerList->raise();
+        label_13->raise();
+        stackedWidget->raise();
+        pushButton_7->raise();
+        splitter->raise();
         tab_com = new QWidget();
         tab_com->setObjectName(QString::fromUtf8("tab_com"));
         gridLayout_2 = new QGridLayout(tab_com);
@@ -433,11 +435,11 @@ public:
 
         groupBox = new QGroupBox(tab_com);
         groupBox->setObjectName(QString::fromUtf8("groupBox"));
-        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Preferred);
-        sizePolicy3.setHorizontalStretch(0);
-        sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(groupBox->sizePolicy().hasHeightForWidth());
-        groupBox->setSizePolicy(sizePolicy3);
+        QSizePolicy sizePolicy5(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        sizePolicy5.setHorizontalStretch(0);
+        sizePolicy5.setVerticalStretch(0);
+        sizePolicy5.setHeightForWidth(groupBox->sizePolicy().hasHeightForWidth());
+        groupBox->setSizePolicy(sizePolicy5);
 
         gridLayout_2->addWidget(groupBox, 0, 1, 1, 1);
 
@@ -451,8 +453,8 @@ public:
         gridLayout_3->setObjectName(QString::fromUtf8("gridLayout_3"));
         label_14 = new QLabel(widget_3);
         label_14->setObjectName(QString::fromUtf8("label_14"));
-        sizePolicy3.setHeightForWidth(label_14->sizePolicy().hasHeightForWidth());
-        label_14->setSizePolicy(sizePolicy3);
+        sizePolicy5.setHeightForWidth(label_14->sizePolicy().hasHeightForWidth());
+        label_14->setSizePolicy(sizePolicy5);
 
         gridLayout_3->addWidget(label_14, 0, 0, 1, 1);
 
@@ -482,12 +484,12 @@ public:
         tabWidget->addTab(tab_com, icon2, QString());
         tab_joy = new QWidget();
         tab_joy->setObjectName(QString::fromUtf8("tab_joy"));
-        widget1 = new QWidget(tab_joy);
-        widget1->setObjectName(QString::fromUtf8("widget1"));
-        widget1->setGeometry(QRect(270, 19, 200, 131));
-        widget1->setMinimumSize(QSize(200, 0));
-        widget1->setMaximumSize(QSize(200, 16777215));
-        groupBox_netServer = new QGroupBox(widget1);
+        widget = new QWidget(tab_joy);
+        widget->setObjectName(QString::fromUtf8("widget"));
+        widget->setGeometry(QRect(270, 19, 200, 131));
+        widget->setMinimumSize(QSize(200, 0));
+        widget->setMaximumSize(QSize(200, 16777215));
+        groupBox_netServer = new QGroupBox(widget);
         groupBox_netServer->setObjectName(QString::fromUtf8("groupBox_netServer"));
         groupBox_netServer->setGeometry(QRect(10, 0, 151, 141));
         label = new QLabel(groupBox_netServer);
@@ -518,19 +520,19 @@ public:
         groupBox_joystick = new QGroupBox(widget_4);
         groupBox_joystick->setObjectName(QString::fromUtf8("groupBox_joystick"));
         groupBox_joystick->setGeometry(QRect(20, 10, 191, 121));
-        comboBox = new QComboBox(groupBox_joystick);
-        comboBox->setObjectName(QString::fromUtf8("comboBox"));
-        comboBox->setGeometry(QRect(8, 20, 141, 22));
-        comboBox->setEditable(true);
-        toolButton_2 = new QToolButton(groupBox_joystick);
-        toolButton_2->setObjectName(QString::fromUtf8("toolButton_2"));
-        toolButton_2->setGeometry(QRect(161, 17, 26, 26));
-        toolButton_2->setMinimumSize(QSize(26, 26));
-        toolButton_2->setMaximumSize(QSize(26, 26));
+        cb_joycticks = new QComboBox(groupBox_joystick);
+        cb_joycticks->setObjectName(QString::fromUtf8("cb_joycticks"));
+        cb_joycticks->setGeometry(QRect(8, 20, 141, 22));
+        cb_joycticks->setEditable(false);
+        pb_joy_refresh = new QToolButton(groupBox_joystick);
+        pb_joy_refresh->setObjectName(QString::fromUtf8("pb_joy_refresh"));
+        pb_joy_refresh->setGeometry(QRect(161, 17, 26, 26));
+        pb_joy_refresh->setMinimumSize(QSize(26, 26));
+        pb_joy_refresh->setMaximumSize(QSize(26, 26));
         QIcon icon10;
         icon10.addFile(QString::fromUtf8(":/resources/icons/refresh.svg"), QSize(), QIcon::Normal, QIcon::Off);
-        toolButton_2->setIcon(icon10);
-        toolButton_2->setIconSize(QSize(20, 20));
+        pb_joy_refresh->setIcon(icon10);
+        pb_joy_refresh->setIconSize(QSize(20, 20));
         pushButton_3 = new QPushButton(groupBox_joystick);
         pushButton_3->setObjectName(QString::fromUtf8("pushButton_3"));
         pushButton_3->setGeometry(QRect(10, 60, 180, 26));
@@ -547,6 +549,9 @@ public:
         tabWidget->addTab(tab_joy, icon8, QString());
         tab_settings = new QWidget();
         tab_settings->setObjectName(QString::fromUtf8("tab_settings"));
+        pBsimulate = new QPushButton(tab_settings);
+        pBsimulate->setObjectName(QString::fromUtf8("pBsimulate"));
+        pBsimulate->setGeometry(QRect(400, 170, 85, 27));
         tabWidget->addTab(tab_settings, icon, QString());
 
         horizontalLayout->addWidget(tabWidget);
@@ -623,27 +628,7 @@ public:
 #ifndef QT_NO_TOOLTIP
         actionJoystick->setToolTip(QApplication::translate("MainWindow", "Connect to joystick", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
-        pushButton_7->setText(QApplication::translate("MainWindow", "Disconnect", 0, QApplication::UnicodeUTF8));
         label_13->setText(QApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Requested data:</span></p></body></html>", 0, QApplication::UnicodeUTF8));
-        label_7->setText(QApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Name:</span></p></body></html>", 0, QApplication::UnicodeUTF8));
-        label_8->setText(QApplication::translate("MainWindow", "Bocman", 0, QApplication::UnicodeUTF8));
-        label_9->setText(QApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Ip address:</span></p></body></html>", 0, QApplication::UnicodeUTF8));
-        label_11->setText(QApplication::translate("MainWindow", "192.168.0.100", 0, QApplication::UnicodeUTF8));
-        label_10->setText(QApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Port:</span></p></body></html>", 0, QApplication::UnicodeUTF8));
-        label_12->setText(QApplication::translate("MainWindow", "8054", 0, QApplication::UnicodeUTF8));
-        label_4->setText(QApplication::translate("MainWindow", "83751", 0, QApplication::UnicodeUTF8));
-        label_3->setText(QApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Bytes send:</span></p></body></html>", 0, QApplication::UnicodeUTF8));
-        label_5->setText(QApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Bytes recieved:</span></p></body></html>", 0, QApplication::UnicodeUTF8));
-        label_6->setText(QApplication::translate("MainWindow", "4578", 0, QApplication::UnicodeUTF8));
-#ifndef QT_NO_STATUSTIP
-        labelClientsConnected->setStatusTip(QApplication::translate("MainWindow", "Number of connected clients", 0, QApplication::UnicodeUTF8));
-#endif // QT_NO_STATUSTIP
-        labelClientsConnected->setText(QApplication::translate("MainWindow", "0", 0, QApplication::UnicodeUTF8));
-#ifndef QT_NO_STATUSTIP
-        labelClients->setStatusTip(QApplication::translate("MainWindow", "Number of connected clients", 0, QApplication::UnicodeUTF8));
-#endif // QT_NO_STATUSTIP
-        labelClients->setText(QApplication::translate("MainWindow", "Clients:", 0, QApplication::UnicodeUTF8));
-        pBsimulate->setText(QApplication::translate("MainWindow", "Simulate", 0, QApplication::UnicodeUTF8));
 
         const bool __sortingEnabled = listWidget->isSortingEnabled();
         listWidget->setSortingEnabled(false);
@@ -663,6 +648,25 @@ public:
         ___qlistwidgetitem6->setText(QApplication::translate("MainWindow", "Joystick Z", 0, QApplication::UnicodeUTF8));
         listWidget->setSortingEnabled(__sortingEnabled);
 
+        pushButton_7->setText(QApplication::translate("MainWindow", "Disconnect", 0, QApplication::UnicodeUTF8));
+        label_7->setText(QApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Name:</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+        lbl_Peer_name->setText(QApplication::translate("MainWindow", "Bocman", 0, QApplication::UnicodeUTF8));
+        label_9->setText(QApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Ip address:</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+        lbl_peer_IP->setText(QApplication::translate("MainWindow", "192.168.0.100", 0, QApplication::UnicodeUTF8));
+        label_10->setText(QApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Port:</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+        lbl_Bytes_received->setText(QApplication::translate("MainWindow", "4578", 0, QApplication::UnicodeUTF8));
+        lbl_Peer_port->setText(QApplication::translate("MainWindow", "8054", 0, QApplication::UnicodeUTF8));
+        label_3->setText(QApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Bytes send:</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+        lbl_Bytes_send->setText(QApplication::translate("MainWindow", "83751", 0, QApplication::UnicodeUTF8));
+        label_5->setText(QApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Bytes recieved:</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_STATUSTIP
+        labelClients->setStatusTip(QApplication::translate("MainWindow", "Number of connected clients", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_STATUSTIP
+        labelClients->setText(QApplication::translate("MainWindow", "Clients:", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_STATUSTIP
+        labelClientsConnected->setStatusTip(QApplication::translate("MainWindow", "Number of connected clients", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_STATUSTIP
+        labelClientsConnected->setText(QApplication::translate("MainWindow", "0", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_server), QApplication::translate("MainWindow", "Server", 0, QApplication::UnicodeUTF8));
         groupBox_comPort->setTitle(QApplication::translate("MainWindow", "COM port", 0, QApplication::UnicodeUTF8));
         label_comPortName->setText(QApplication::translate("MainWindow", "name:", 0, QApplication::UnicodeUTF8));
@@ -684,10 +688,11 @@ public:
         pushButton_5->setText(QApplication::translate("MainWindow", "Start server", 0, QApplication::UnicodeUTF8));
         pushButton_6->setText(QApplication::translate("MainWindow", "Server settings", 0, QApplication::UnicodeUTF8));
         groupBox_joystick->setTitle(QApplication::translate("MainWindow", "Joystick", 0, QApplication::UnicodeUTF8));
-        toolButton_2->setText(QString());
+        pb_joy_refresh->setText(QString());
         pushButton_3->setText(QApplication::translate("MainWindow", "Connect", 0, QApplication::UnicodeUTF8));
         pushButton_4->setText(QApplication::translate("MainWindow", "Joystick settings", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_joy), QApplication::translate("MainWindow", "Joystick", 0, QApplication::UnicodeUTF8));
+        pBsimulate->setText(QApplication::translate("MainWindow", "Simulate", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_settings), QApplication::translate("MainWindow", "Settings", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 

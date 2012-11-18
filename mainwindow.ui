@@ -61,222 +61,261 @@
        <attribute name="title">
         <string>Server</string>
        </attribute>
-       <widget class="QWidget" name="widget" native="true">
-        <property name="geometry">
-         <rect>
-          <x>170</x>
-          <y>0</y>
-          <width>302</width>
-          <height>151</height>
-         </rect>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <property name="sizeConstraint">
-          <enum>QLayout::SetNoConstraint</enum>
-         </property>
-         <property name="leftMargin">
-          <number>1</number>
-         </property>
-         <item>
-          <widget class="QStackedWidget" name="stackedWidget">
+       <layout class="QGridLayout" name="gridLayout_5">
+        <item row="0" column="2" rowspan="2">
+         <widget class="QLabel" name="label_13">
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Requested data:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2" rowspan="2">
+         <widget class="QListWidget" name="listWidget">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>150</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>150</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <item>
+           <property name="text">
+            <string>Ailerons</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Rudder</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Velocity</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Vertical speed</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Joystick X</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Joystick Y</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Joystick Z</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="4" column="1" colspan="2">
+         <widget class="QListWidget" name="listWidget_Log">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>150</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QPushButton" name="pushButton_7">
+          <property name="text">
+           <string>Disconnect</string>
+          </property>
+          <property name="icon">
+           <iconset resource="T10_Server3.qrc">
+            <normaloff>:/resources/icons/disapprove.svg</normaloff>:/resources/icons/disapprove.svg</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QStackedWidget" name="stackedWidget">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="page">
+           <layout class="QGridLayout" name="gridLayout_4">
+            <item row="0" column="0" colspan="2">
+             <widget class="QLabel" name="label_7">
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Name:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QLabel" name="lbl_Peer_name">
+              <property name="text">
+               <string>Bocman</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0" colspan="2">
+             <widget class="QLabel" name="label_9">
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Ip address:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QLabel" name="lbl_peer_IP">
+              <property name="text">
+               <string>192.168.0.100</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_10">
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Port:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="2">
+             <widget class="QLabel" name="lbl_Bytes_received">
+              <property name="text">
+               <string>4578</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QLabel" name="lbl_Peer_port">
+              <property name="text">
+               <string>8054</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0" colspan="2">
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bytes send:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="2">
+             <widget class="QLabel" name="lbl_Bytes_send">
+              <property name="text">
+               <string>83751</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0" colspan="2">
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bytes recieved:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="page_2">
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QWidget" name="widget_2" native="true"/>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+        <item row="1" column="0" rowspan="4">
+         <widget class="QListWidget" name="listWidget_peerList">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>150</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="autoScroll">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QSplitter" name="splitter">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <widget class="QLabel" name="labelClients">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
-           </property>
-           <property name="currentIndex">
-            <number>0</number>
-           </property>
-           <widget class="QWidget" name="page">
-            <widget class="QPushButton" name="pushButton_7">
-             <property name="geometry">
-              <rect>
-               <x>50</x>
-               <y>230</y>
-               <width>131</width>
-               <height>23</height>
-              </rect>
-             </property>
-             <property name="text">
-              <string>Disconnect</string>
-             </property>
-             <property name="icon">
-              <iconset resource="T10_Server3.qrc">
-               <normaloff>:/resources/icons/disapprove.svg</normaloff>:/resources/icons/disapprove.svg</iconset>
-             </property>
-             <property name="iconSize">
-              <size>
-               <width>20</width>
-               <height>20</height>
-              </size>
-             </property>
-            </widget>
-            <widget class="QWidget" name="layoutWidget">
-             <property name="geometry">
-              <rect>
-               <x>10</x>
-               <y>-10</y>
-               <width>291</width>
-               <height>151</height>
-              </rect>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_4">
-              <item row="0" column="0" rowspan="2" colspan="2">
-               <widget class="QLabel" name="label_13">
-                <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Requested data:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QLabel" name="label_7">
-                <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Name:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="2">
-               <widget class="QLabel" name="label_8">
-                <property name="text">
-                 <string>Bocman</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QLabel" name="label_9">
-                <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Ip address:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="2">
-               <widget class="QLabel" name="label_11">
-                <property name="text">
-                 <string>192.168.0.100</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="1">
-               <widget class="QLabel" name="label_10">
-                <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Port:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="2">
-               <widget class="QLabel" name="label_12">
-                <property name="text">
-                 <string>8054</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="1" colspan="2">
-               <widget class="QLabel" name="label_4">
-                <property name="text">
-                 <string>83751</string>
-                </property>
-               </widget>
-              </item>
-              <item row="5" column="0" colspan="2">
-               <widget class="QLabel" name="label_3">
-                <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bytes send:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="6" column="0" colspan="2">
-               <widget class="QLabel" name="label_5">
-                <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bytes recieved:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="6" column="2">
-               <widget class="QLabel" name="label_6">
-                <property name="text">
-                 <string>4578</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-            <zorder>layoutWidget</zorder>
-            <zorder>pushButton_7</zorder>
-           </widget>
-           <widget class="QWidget" name="page_2">
-            <layout class="QHBoxLayout" name="horizontalLayout_3">
-             <item>
-              <widget class="QWidget" name="widget_2" native="true"/>
-             </item>
-            </layout>
-           </widget>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QLabel" name="labelClientsConnected">
-        <property name="geometry">
-         <rect>
-          <x>83</x>
-          <y>2</y>
-          <width>16</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>Verdana</family>
-          <pointsize>9</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="statusTip">
-         <string>Number of connected clients</string>
-        </property>
-        <property name="text">
-         <string>0</string>
-        </property>
-       </widget>
-       <widget class="QWidget" name="layoutWidget">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>681</width>
-          <height>361</height>
-         </rect>
-        </property>
-        <layout class="QGridLayout" name="gridLayout_5">
-         <item row="0" column="0">
-          <widget class="QLabel" name="labelClients">
-           <property name="minimumSize">
-            <size>
-             <width>65</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>65</width>
-             <height>16777215</height>
-            </size>
            </property>
            <property name="font">
             <font>
@@ -294,99 +333,44 @@
             <string>Clients:</string>
            </property>
           </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QPushButton" name="pBsimulate">
-           <property name="text">
-            <string>Simulate</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
-          <widget class="QListWidget" name="listWidget_Log">
+          <widget class="QLabel" name="labelClientsConnected">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
-           <property name="minimumSize">
-            <size>
-             <width>300</width>
-             <height>100</height>
-            </size>
+           <property name="font">
+            <font>
+             <family>Verdana</family>
+             <pointsize>9</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
            </property>
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>100</height>
-            </size>
+           <property name="statusTip">
+            <string>Number of connected clients</string>
            </property>
-           <property name="frameShape">
-            <enum>QFrame::NoFrame</enum>
+           <property name="layoutDirection">
+            <enum>Qt::LeftToRight</enum>
            </property>
-          </widget>
-         </item>
-         <item row="1" column="0" rowspan="2">
-          <widget class="QListWidget" name="listWidget_peerList">
-           <property name="maximumSize">
-            <size>
-             <width>150</width>
-             <height>16777215</height>
-            </size>
+           <property name="text">
+            <string>0</string>
            </property>
-           <property name="frameShape">
-            <enum>QFrame::NoFrame</enum>
-           </property>
-           <property name="autoScroll">
-            <bool>true</bool>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
           </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QListWidget" name="listWidget">
-           <item>
-            <property name="text">
-             <string>Ailerons</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Rudder</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Velocity</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Vertical speed</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Joystick X</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Joystick Y</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Joystick Z</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <zorder>layoutWidget</zorder>
-       <zorder>widget</zorder>
-       <zorder>labelClientsConnected</zorder>
+         </widget>
+        </item>
+       </layout>
+       <zorder>listWidget</zorder>
+       <zorder>listWidget_Log</zorder>
+       <zorder>listWidget_peerList</zorder>
+       <zorder>label_13</zorder>
+       <zorder>stackedWidget</zorder>
+       <zorder>pushButton_7</zorder>
+       <zorder>splitter</zorder>
       </widget>
       <widget class="QWidget" name="tab_com">
        <attribute name="icon">
@@ -740,7 +724,7 @@
          <property name="title">
           <string>Joystick</string>
          </property>
-         <widget class="QComboBox" name="comboBox">
+         <widget class="QComboBox" name="cb_joycticks">
           <property name="geometry">
            <rect>
             <x>8</x>
@@ -750,10 +734,10 @@
            </rect>
           </property>
           <property name="editable">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
-         <widget class="QToolButton" name="toolButton_2">
+         <widget class="QToolButton" name="pb_joy_refresh">
           <property name="geometry">
            <rect>
             <x>161</x>
@@ -862,6 +846,19 @@
        <attribute name="title">
         <string>Settings</string>
        </attribute>
+       <widget class="QPushButton" name="pBsimulate">
+        <property name="geometry">
+         <rect>
+          <x>400</x>
+          <y>170</y>
+          <width>85</width>
+          <height>27</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Simulate</string>
+        </property>
+       </widget>
       </widget>
      </widget>
     </item>

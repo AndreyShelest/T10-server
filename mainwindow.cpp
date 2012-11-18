@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     file.open(QFile::ReadOnly);
     QString styleSheet = QLatin1String(file.readAll());
     qApp->setStyleSheet(styleSheet);
-    //settings=new QSettings(QSettings::IniFormat, QSettings::UserScope,QCoreApplication::organizationName(), QCoreApplication::applicationName());
+//    settings=new QSettings(QSettings::IniFormat, QSettings::UserScope,QCoreApplication::organizationName(), QCoreApplication::applicationName());
     this->setWindowTitle(QCoreApplication::applicationName());
     comPort = 0;
 
@@ -37,9 +37,6 @@ MainWindow::MainWindow(QWidget *parent) :
                        QCoreApplication::organizationName(), QCoreApplication::applicationName());
     qDebug() << "Settings file name: " << settings.fileName();
 
-    aircraft = new Aircraft();
-    //aircraft->startSimulation();
-
     server = new NetServer();
     if (settings.value("NetServer/autostart", true).toBool())
         ui->actionServer->setChecked(true);
@@ -55,10 +52,11 @@ ui->pushButton_comPortReconnect->setEnabled(true);
     else ui->pushButton_comPortReconnect->setEnabled(true);
 
     joystick = new VJoystickAdapter();
-    if (settings.value("Joystick/autoConnect", true).toBool())
+    if (settings.value("Joystick/autoConnect", true).toBool()){
         ui->actionJoystick->setChecked(true);
+   }
     connect(comPort,SIGNAL(dataTransmitedToCom(QByteArray)),this,SLOT(showDataToCom(QByteArray)));
-
+    if (joystick->isConnected()) ui->pb_joy_refresh->click();
 //    ui->listWidget_Log->clear();
 //    this->log(tr("Server started") + " [0.0.0.0:1989]");
 
@@ -165,7 +163,7 @@ void MainWindow::on_actionJoystick_toggled(bool arg1)
         int m_joyId = -1;
         for (int i = 0; i < sl.count(); i++)
         {
-            if (sl[i] == settings.value("Joystick/name", "").toString())
+            if (sl[i] == settings.value("Joystick/name", "A4TECH USB Device").toString())
             {
                 m_joyId = i;
                 break;
@@ -384,3 +382,19 @@ void MainWindow::on_pBsimulate_clicked()
     connect(comPort,SIGNAL(dataTransmitedToCom(QByteArray)),server,SLOT(dataFromJoystic(QByteArray)));
 }
 
+
+void MainWindow::on_pb_joy_refresh_clicked()
+{
+    QStringList joyList=VJoystickAdapter::getAvaliableJoystickName();
+        if (joyList.count()>0){
+        for (int i=0;i<joyList.count();i++)
+        {
+            ui->cb_joycticks->setItemText(i,joyList[i]);
+        }
+        }
+        else ui->cb_joycticks->setItemText(0,"no joysticks");
+
+//        QSettings settings(QSettings::IniFormat, QSettings::UserScope,
+//                             QCoreApplication::organizationName(), QCoreApplication::applicationName());
+//            settings.setValue("Joystick/name", ui->cb_joycticks->currentText());
+}
