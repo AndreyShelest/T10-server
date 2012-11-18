@@ -10,7 +10,6 @@
 #include "ComPort/comporttransmitter.h"
 #include "Aircraft/aircraft.h"
 #include "Joystick/v_joystick_adapter.h"
-#include "Settings/settingsdialog.h"
 #include "datacontainer.h"
 
 namespace Ui {

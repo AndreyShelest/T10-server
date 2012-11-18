@@ -42,7 +42,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <property name="documentMode">
        <bool>false</bool>
@@ -112,7 +112,7 @@
               </size>
              </property>
             </widget>
-            <widget class="QWidget" name="">
+            <widget class="QWidget" name="layoutWidget">
              <property name="geometry">
               <rect>
                <x>10</x>
@@ -216,20 +216,8 @@
               </item>
              </layout>
             </widget>
-            <zorder>label_3</zorder>
-            <zorder>label_4</zorder>
-            <zorder>label_5</zorder>
-            <zorder>label_6</zorder>
-            <zorder>label_7</zorder>
-            <zorder>label_8</zorder>
-            <zorder>label_10</zorder>
-            <zorder>label_11</zorder>
-            <zorder>label_12</zorder>
+            <zorder>layoutWidget</zorder>
             <zorder>pushButton_7</zorder>
-            <zorder>label_13</zorder>
-            <zorder></zorder>
-            <zorder>label_13</zorder>
-            <zorder></zorder>
            </widget>
            <widget class="QWidget" name="page_2">
             <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -266,7 +254,7 @@
          <string>0</string>
         </property>
        </widget>
-       <widget class="QWidget" name="">
+       <widget class="QWidget" name="layoutWidget">
         <property name="geometry">
          <rect>
           <x>0</x>
@@ -398,12 +386,7 @@
        </widget>
        <zorder>layoutWidget</zorder>
        <zorder>widget</zorder>
-       <zorder>listWidget_peerList</zorder>
-       <zorder>labelClients</zorder>
-       <zorder></zorder>
-       <zorder>stackedWidget</zorder>
-       <zorder>listWidget_Log</zorder>
-       <zorder>listWidget</zorder>
+       <zorder>labelClientsConnected</zorder>
       </widget>
       <widget class="QWidget" name="tab_com">
        <attribute name="icon">

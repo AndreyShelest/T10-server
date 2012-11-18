@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Fri Nov 16 14:38:02 2012
+** Created: Sun Nov 18 14:13:54 2012
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -57,7 +57,7 @@ public:
     QStackedWidget *stackedWidget;
     QWidget *page;
     QPushButton *pushButton_7;
-    QWidget *widget1;
+    QWidget *layoutWidget;
     QGridLayout *gridLayout_4;
     QLabel *label_13;
     QLabel *label_7;
@@ -74,7 +74,7 @@ public:
     QHBoxLayout *horizontalLayout_3;
     QWidget *widget_2;
     QLabel *labelClientsConnected;
-    QWidget *widget2;
+    QWidget *layoutWidget1;
     QGridLayout *gridLayout_5;
     QLabel *labelClients;
     QPushButton *pBsimulate;
@@ -98,7 +98,7 @@ public:
     QSpacerItem *verticalSpacer_2;
     QPushButton *pushButton_2;
     QWidget *tab_joy;
-    QWidget *widget3;
+    QWidget *widget1;
     QGroupBox *groupBox_netServer;
     QLabel *label;
     QLineEdit *lineEdit_2;
@@ -220,87 +220,77 @@ public:
         icon9.addFile(QString::fromUtf8(":/resources/icons/disapprove.svg"), QSize(), QIcon::Normal, QIcon::Off);
         pushButton_7->setIcon(icon9);
         pushButton_7->setIconSize(QSize(20, 20));
-        widget1 = new QWidget(page);
-        widget1->setObjectName(QString::fromUtf8("widget1"));
-        widget1->setGeometry(QRect(10, -10, 291, 151));
-        gridLayout_4 = new QGridLayout(widget1);
+        layoutWidget = new QWidget(page);
+        layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
+        layoutWidget->setGeometry(QRect(10, -10, 291, 151));
+        gridLayout_4 = new QGridLayout(layoutWidget);
         gridLayout_4->setSpacing(6);
         gridLayout_4->setContentsMargins(11, 11, 11, 11);
         gridLayout_4->setObjectName(QString::fromUtf8("gridLayout_4"));
         gridLayout_4->setContentsMargins(0, 0, 0, 0);
-        label_13 = new QLabel(widget1);
+        label_13 = new QLabel(layoutWidget);
         label_13->setObjectName(QString::fromUtf8("label_13"));
 
         gridLayout_4->addWidget(label_13, 0, 0, 2, 2);
 
-        label_7 = new QLabel(widget1);
+        label_7 = new QLabel(layoutWidget);
         label_7->setObjectName(QString::fromUtf8("label_7"));
         label_7->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
         gridLayout_4->addWidget(label_7, 1, 1, 1, 1);
 
-        label_8 = new QLabel(widget1);
+        label_8 = new QLabel(layoutWidget);
         label_8->setObjectName(QString::fromUtf8("label_8"));
 
         gridLayout_4->addWidget(label_8, 1, 2, 1, 1);
 
-        label_9 = new QLabel(widget1);
+        label_9 = new QLabel(layoutWidget);
         label_9->setObjectName(QString::fromUtf8("label_9"));
         label_9->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
         gridLayout_4->addWidget(label_9, 2, 1, 1, 1);
 
-        label_11 = new QLabel(widget1);
+        label_11 = new QLabel(layoutWidget);
         label_11->setObjectName(QString::fromUtf8("label_11"));
 
         gridLayout_4->addWidget(label_11, 2, 2, 1, 1);
 
-        label_10 = new QLabel(widget1);
+        label_10 = new QLabel(layoutWidget);
         label_10->setObjectName(QString::fromUtf8("label_10"));
         label_10->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
         gridLayout_4->addWidget(label_10, 3, 1, 1, 1);
 
-        label_12 = new QLabel(widget1);
+        label_12 = new QLabel(layoutWidget);
         label_12->setObjectName(QString::fromUtf8("label_12"));
 
         gridLayout_4->addWidget(label_12, 3, 2, 1, 1);
 
-        label_4 = new QLabel(widget1);
+        label_4 = new QLabel(layoutWidget);
         label_4->setObjectName(QString::fromUtf8("label_4"));
 
         gridLayout_4->addWidget(label_4, 4, 1, 1, 2);
 
-        label_3 = new QLabel(widget1);
+        label_3 = new QLabel(layoutWidget);
         label_3->setObjectName(QString::fromUtf8("label_3"));
         label_3->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
         gridLayout_4->addWidget(label_3, 5, 0, 1, 2);
 
-        label_5 = new QLabel(widget1);
+        label_5 = new QLabel(layoutWidget);
         label_5->setObjectName(QString::fromUtf8("label_5"));
         label_5->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
         gridLayout_4->addWidget(label_5, 6, 0, 1, 2);
 
-        label_6 = new QLabel(widget1);
+        label_6 = new QLabel(layoutWidget);
         label_6->setObjectName(QString::fromUtf8("label_6"));
 
         gridLayout_4->addWidget(label_6, 6, 2, 1, 1);
 
         stackedWidget->addWidget(page);
-        label_3->raise();
-        label_4->raise();
-        label_5->raise();
-        label_6->raise();
-        label_7->raise();
-        label_8->raise();
-        label_10->raise();
-        label_11->raise();
-        label_12->raise();
+        layoutWidget->raise();
         pushButton_7->raise();
-        label_13->raise();
-        label_13->raise();
         page_2 = new QWidget();
         page_2->setObjectName(QString::fromUtf8("page_2"));
         horizontalLayout_3 = new QHBoxLayout(page_2);
@@ -325,15 +315,15 @@ public:
         font.setBold(true);
         font.setWeight(75);
         labelClientsConnected->setFont(font);
-        widget2 = new QWidget(tab_server);
-        widget2->setObjectName(QString::fromUtf8("widget2"));
-        widget2->setGeometry(QRect(0, 0, 681, 361));
-        gridLayout_5 = new QGridLayout(widget2);
+        layoutWidget1 = new QWidget(tab_server);
+        layoutWidget1->setObjectName(QString::fromUtf8("layoutWidget1"));
+        layoutWidget1->setGeometry(QRect(0, 0, 681, 361));
+        gridLayout_5 = new QGridLayout(layoutWidget1);
         gridLayout_5->setSpacing(6);
         gridLayout_5->setContentsMargins(11, 11, 11, 11);
         gridLayout_5->setObjectName(QString::fromUtf8("gridLayout_5"));
         gridLayout_5->setContentsMargins(0, 0, 0, 0);
-        labelClients = new QLabel(widget2);
+        labelClients = new QLabel(layoutWidget1);
         labelClients->setObjectName(QString::fromUtf8("labelClients"));
         labelClients->setMinimumSize(QSize(65, 0));
         labelClients->setMaximumSize(QSize(65, 16777215));
@@ -347,12 +337,12 @@ public:
 
         gridLayout_5->addWidget(labelClients, 0, 0, 1, 1);
 
-        pBsimulate = new QPushButton(widget2);
+        pBsimulate = new QPushButton(layoutWidget1);
         pBsimulate->setObjectName(QString::fromUtf8("pBsimulate"));
 
         gridLayout_5->addWidget(pBsimulate, 2, 1, 1, 1);
 
-        listWidget_Log = new QListWidget(widget2);
+        listWidget_Log = new QListWidget(layoutWidget1);
         listWidget_Log->setObjectName(QString::fromUtf8("listWidget_Log"));
         QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
         sizePolicy2.setHorizontalStretch(0);
@@ -365,7 +355,7 @@ public:
 
         gridLayout_5->addWidget(listWidget_Log, 2, 2, 1, 1);
 
-        listWidget_peerList = new QListWidget(widget2);
+        listWidget_peerList = new QListWidget(layoutWidget1);
         listWidget_peerList->setObjectName(QString::fromUtf8("listWidget_peerList"));
         listWidget_peerList->setMaximumSize(QSize(150, 16777215));
         listWidget_peerList->setFrameShape(QFrame::NoFrame);
@@ -373,7 +363,7 @@ public:
 
         gridLayout_5->addWidget(listWidget_peerList, 1, 0, 2, 1);
 
-        listWidget = new QListWidget(widget2);
+        listWidget = new QListWidget(layoutWidget1);
         new QListWidgetItem(listWidget);
         new QListWidgetItem(listWidget);
         new QListWidgetItem(listWidget);
@@ -386,12 +376,9 @@ public:
         gridLayout_5->addWidget(listWidget, 1, 1, 1, 1);
 
         tabWidget->addTab(tab_server, icon1, QString());
+        layoutWidget->raise();
         widget->raise();
-        listWidget_peerList->raise();
-        labelClients->raise();
-        stackedWidget->raise();
-        listWidget_Log->raise();
-        listWidget->raise();
+        labelClientsConnected->raise();
         tab_com = new QWidget();
         tab_com->setObjectName(QString::fromUtf8("tab_com"));
         gridLayout_2 = new QGridLayout(tab_com);
@@ -495,12 +482,12 @@ public:
         tabWidget->addTab(tab_com, icon2, QString());
         tab_joy = new QWidget();
         tab_joy->setObjectName(QString::fromUtf8("tab_joy"));
-        widget3 = new QWidget(tab_joy);
-        widget3->setObjectName(QString::fromUtf8("widget3"));
-        widget3->setGeometry(QRect(270, 19, 200, 131));
-        widget3->setMinimumSize(QSize(200, 0));
-        widget3->setMaximumSize(QSize(200, 16777215));
-        groupBox_netServer = new QGroupBox(widget3);
+        widget1 = new QWidget(tab_joy);
+        widget1->setObjectName(QString::fromUtf8("widget1"));
+        widget1->setGeometry(QRect(270, 19, 200, 131));
+        widget1->setMinimumSize(QSize(200, 0));
+        widget1->setMaximumSize(QSize(200, 16777215));
+        groupBox_netServer = new QGroupBox(widget1);
         groupBox_netServer->setObjectName(QString::fromUtf8("groupBox_netServer"));
         groupBox_netServer->setGeometry(QRect(10, 0, 151, 141));
         label = new QLabel(groupBox_netServer);
@@ -591,7 +578,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(2);
         stackedWidget->setCurrentIndex(0);
 
 
