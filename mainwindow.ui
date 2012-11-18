@@ -724,19 +724,6 @@
          <property name="title">
           <string>Joystick</string>
          </property>
-         <widget class="QComboBox" name="cb_joycticks">
-          <property name="geometry">
-           <rect>
-            <x>8</x>
-            <y>20</y>
-            <width>141</width>
-            <height>22</height>
-           </rect>
-          </property>
-          <property name="editable">
-           <bool>false</bool>
-          </property>
-         </widget>
          <widget class="QToolButton" name="pb_joy_refresh">
           <property name="geometry">
            <rect>
@@ -834,6 +821,21 @@
             <height>20</height>
            </size>
           </property>
+         </widget>
+         <widget class="QComboBox" name="cb_joycticks">
+          <property name="geometry">
+           <rect>
+            <x>30</x>
+            <y>20</y>
+            <width>101</width>
+            <height>27</height>
+           </rect>
+          </property>
+          <item>
+           <property name="text">
+            <string>no joysticks</string>
+           </property>
+          </item>
          </widget>
         </widget>
        </widget>

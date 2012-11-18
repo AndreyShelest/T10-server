@@ -163,7 +163,7 @@ void MainWindow::on_actionJoystick_toggled(bool arg1)
         int m_joyId = -1;
         for (int i = 0; i < sl.count(); i++)
         {
-            if (sl[i] == settings.value("Joystick/name", "A4TECH USB Device").toString())
+            if (sl[i] == settings.value("Joystick/name", "").toString())
             {
                 m_joyId = i;
                 break;
@@ -385,7 +385,7 @@ void MainWindow::on_pBsimulate_clicked()
 
 void MainWindow::on_pb_joy_refresh_clicked()
 {
-    QStringList joyList=VJoystickAdapter::getAvaliableJoystickName();
+    QStringList joyList=joystick->getAvaliableJoystickName();
         if (joyList.count()>0){
         for (int i=0;i<joyList.count();i++)
         {
@@ -394,7 +394,7 @@ void MainWindow::on_pb_joy_refresh_clicked()
         }
         else ui->cb_joycticks->setItemText(0,"no joysticks");
 
-//        QSettings settings(QSettings::IniFormat, QSettings::UserScope,
-//                             QCoreApplication::organizationName(), QCoreApplication::applicationName());
-//            settings.setValue("Joystick/name", ui->cb_joycticks->currentText());
+        QSettings settings(QSettings::IniFormat, QSettings::UserScope,
+                            QCoreApplication::organizationName(), QCoreApplication::applicationName());
+            settings.setValue("Joystick/name", ui->cb_joycticks->itemText(ui->cb_joycticks->currentIndex()));
 }
