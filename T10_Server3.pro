@@ -28,8 +28,7 @@ SOURCES += main.cpp\
     ComPort/comporttransmitter.cpp \
     Aircraft/aircraft.cpp \
     Joystick/v_joystick_adapter.cpp \
-    Settings/settingsdialog.cpp \
-    datacontainer.cpp
+     datacontainer.cpp
 
 HEADERS  += mainwindow.h \
     NetServer/netserver.h \
@@ -39,11 +38,9 @@ HEADERS  += mainwindow.h \
     ComPort/comporttransmitter.h \
     Aircraft/aircraft.h \
     Joystick/v_joystick_adapter.h \
-    Settings/settingsdialog.h \
-    datacontainer.h
+      datacontainer.h
 
 FORMS    += mainwindow.ui \
-    Settings/settingsdialog.ui
 
 RESOURCES += \
     T10_Server3.qrc

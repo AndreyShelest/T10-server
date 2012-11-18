@@ -347,13 +347,7 @@ void MainWindow::on_horizontalSlider_sliderMoved(int position)
 
 void MainWindow::on_actionSettings_triggered(bool checked)
 {
-SettingsDialog* ProgSettings;
-    if (checked=true)
-       {
-        ProgSettings=new SettingsDialog();
-                ProgSettings->show();
-    }
-    else ProgSettings->close();
+
 
 }
 
