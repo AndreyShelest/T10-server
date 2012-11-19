@@ -404,7 +404,18 @@ void MainWindow::on_pb_joy_refresh_clicked()
 void MainWindow::on_list_toCom_itemClicked(QListWidgetItem *item)
 {
     QStringList ListToCom=item->text().split(", ");
-}
+    ui->lbl_con_byte->setText(ListToCom[0]);
+    QStandardItemModel model(ui->table_toCom->rowCount(),ui->table_toCom->columnCount());
+int n=0;
+            for (int i=0;i<3;i++)
+    {
+        for (int j=0;j<3;j++)
+        {
+            ui->table_toCom->model()->setData(model.index(j,i),ListToCom[n+1]);
+            n++;
+                }
+    }
+   }
 
 void MainWindow::set_transmit_mode(char com)
 {

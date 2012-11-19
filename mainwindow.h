@@ -11,6 +11,7 @@
 #include "Aircraft/aircraft.h"
 #include "Joystick/v_joystick_adapter.h"
 #include "QListWidget"
+#include "QStandardItemModel"
 
 namespace Ui {
 class MainWindow;
