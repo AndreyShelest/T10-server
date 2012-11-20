@@ -249,8 +249,7 @@ void MainWindow::on_actionCom_port_toggled(bool arg1)
             //delete comPort;
             //comPort = 0;
             ui->actionCom_port->setChecked(false);
-            //ui->groupBox_comPort->show();
-            this->repositionOnSidebar();
+                this->repositionOnSidebar();
         }
 
         ////        connect(trans, SIGNAL(DataReady(QByteArray)), dataContainer, SLOT(comPortDataReady(QByteArray)));
