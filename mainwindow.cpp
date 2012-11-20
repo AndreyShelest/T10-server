@@ -39,11 +39,15 @@ MainWindow::MainWindow(QWidget *parent) :
     comPort = new ComPortTransmitter(this);
     connect(comPort, SIGNAL(Zavislo()), this, SLOT(comPortNotResponding()));
     connect(comPort, SIGNAL(Otvislo()), this, SLOT(comPortRepaired()));
+    comPort->setDeviceName(settings.value("ComPort/name","").toString());
     if (settings.value("ComPort/autoConnect", "").toBool())
     { ui->actionCom_port->setChecked(true);
         ui->pushButton_comPortReconnect->setEnabled(true);
+        this->set_transmit_mode('d');
     }
-    else ui->pushButton_comPortReconnect->setEnabled(true);
+    else {ui->pushButton_comPortReconnect->setEnabled(true);
+    ui->actionCom_port->setChecked(false);
+    this->set_transmit_mode('q');}
 
     joystick = new VJoystickAdapter();
     if (settings.value("Joystick/autoConnect", true).toBool()){
@@ -52,7 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(comPort,SIGNAL(dataTransmitedToCom(QByteArray)),this,SLOT(showDataToCom(QByteArray)));
     if (joystick->isConnected()) ui->pb_joy_refresh->click();
 
-    this->set_transmit_mode('q');
+
 
     //    ui->listWidget_Log->clear();
     //    this->log(tr("Server started") + " [0.0.0.0:1989]");
@@ -363,13 +367,14 @@ void MainWindow::showDataToCom(QByteArray dataToMc)
 
     if (comPort->COM_isConnected())
     {
-
+buf.clear();
         for(int i=0; i<dataToMc.size();i++)
         {
-          buf.append(QString::number((unsigned char)dataToMc[i])+", ");
+           // buf.append(QString::number((unsigned char)dataToMc[i])+", ");
+           buf.append(QString("%1,%2").arg(QString::number((unsigned char)dataToMc[i]),3).arg(" ",1));
 
         }
-
+buf.remove(buf.length()-2,2);
         ui->list_toCom->addItem(buf);
 
         ui->list_toCom->scrollToBottom();
@@ -379,7 +384,7 @@ void MainWindow::showDataToCom(QByteArray dataToMc)
 
 void MainWindow::on_pBsimulate_clicked()
 {
-    connect(comPort,SIGNAL(dataTransmitedToCom(QByteArray)),server,SLOT(dataFromJoystic(QByteArray)));
+//    connect(comPort,SIGNAL(dataTransmitedToCom(QByteArray)),server,SLOT(dataFromJoystic(QByteArray)));
 }
 
 
@@ -406,16 +411,16 @@ void MainWindow::on_list_toCom_itemClicked(QListWidgetItem *item)
     QStringList ListToCom=item->text().split(", ");
     ui->lbl_con_byte->setText(ListToCom[0]);
     QStandardItemModel model(ui->table_toCom->rowCount(),ui->table_toCom->columnCount());
-int n=0;
-            for (int i=0;i<3;i++)
+    int n=0;
+    for (int i=0;i<3;i++)
     {
         for (int j=0;j<3;j++)
         {
             ui->table_toCom->model()->setData(model.index(j,i),ListToCom[n+1]);
             n++;
-                }
+        }
     }
-   }
+}
 
 void MainWindow::set_transmit_mode(char com)
 {
@@ -429,58 +434,58 @@ void MainWindow::set_transmit_mode(char com)
     {
         ui->tb_data_on->setEnabled(true);
         ui->tb_data_on->setChecked(true);
-         ui->tb_data_on_Joy->setEnabled(false);
-         ui->tb_data_on_Joy->setChecked(false);
+        ui->tb_data_on_Joy->setEnabled(false);
+        ui->tb_data_on_Joy->setChecked(false);
         ui->tb_data_rau_joy->setEnabled(false);
         ui->tb_data_rau_joy->setChecked(false);
-             ui->tb_custom_on->setEnabled(false);
-              ui->tb_custom_on->setChecked(false);
-              settings.setValue("ComPort/Mode", com);
-                   comPort->setControlByte(com);
-         break;
+        ui->tb_custom_on->setEnabled(false);
+        ui->tb_custom_on->setChecked(false);
+        settings.setValue("ComPort/Mode", com);
+        comPort->setControlByte(com);
+        break;
     }
     case 'j': // data and joy
     {
         ui->tb_data_on_Joy->setEnabled(true);
         ui->tb_data_on_Joy->setChecked(true);
-         ui->tb_data_on->setEnabled(false);
-          ui->tb_data_on->setChecked(false);
-          ui->tb_data_rau_joy->setEnabled(false);
-          ui->tb_data_rau_joy->setChecked(false);
-               ui->tb_custom_on->setEnabled(false);
-                ui->tb_custom_on->setChecked(false);
-                settings.setValue("ComPort/Mode",com);
-                 comPort->setControlByte(com);
+        ui->tb_data_on->setEnabled(false);
+        ui->tb_data_on->setChecked(false);
+        ui->tb_data_rau_joy->setEnabled(false);
+        ui->tb_data_rau_joy->setChecked(false);
+        ui->tb_custom_on->setEnabled(false);
+        ui->tb_custom_on->setChecked(false);
+        settings.setValue("ComPort/Mode",com);
+        comPort->setControlByte(com);
         break;
     }
     case 'c':// control rau by joy
     {
         ui->tb_data_rau_joy->setEnabled(true);
         ui->tb_data_rau_joy->setChecked(true);
-         ui->tb_data_on_Joy->setEnabled(false);
-         ui->tb_data_on_Joy->setChecked(false);
+        ui->tb_data_on_Joy->setEnabled(false);
+        ui->tb_data_on_Joy->setChecked(false);
         ui->tb_data_on->setEnabled(false);
         ui->tb_data_on->setChecked(false);
-             ui->tb_custom_on->setEnabled(false);
-              ui->tb_custom_on->setChecked(false);
-              settings.setValue("ComPort/Mode", com);
-              comPort->setControlByte(com);
+        ui->tb_custom_on->setEnabled(false);
+        ui->tb_custom_on->setChecked(false);
+        settings.setValue("ComPort/Mode", com);
+        comPort->setControlByte(com);
         break;
     }
     case 'r':// custom rau and ppn control
     {
         ui->tb_custom_on->setEnabled(true);
         ui->tb_custom_on->setChecked(true);
-         ui->tb_data_on_Joy->setEnabled(false);
-         ui->tb_data_on_Joy->setChecked(false);
+        ui->tb_data_on_Joy->setEnabled(false);
+        ui->tb_data_on_Joy->setChecked(false);
         ui->tb_data_rau_joy->setEnabled(false);
         ui->tb_data_rau_joy->setChecked(false);
-             ui->tb_data_on->setEnabled(false);
-              ui->tb_data_on->setChecked(false);
-                   comPort->setControlByte(com);
-                   ui->tb_custom_pp->setEnabled(true);
-                   ui->tb_custom_rau->setEnabled(true);
-                    settings.setValue("ComPort/Mode", com);
+        ui->tb_data_on->setEnabled(false);
+        ui->tb_data_on->setChecked(false);
+        comPort->setControlByte(com);
+        ui->tb_custom_pp->setEnabled(true);
+        ui->tb_custom_rau->setEnabled(true);
+        settings.setValue("ComPort/Mode", com);
         break;
     }
 
@@ -488,17 +493,17 @@ void MainWindow::set_transmit_mode(char com)
     {
         ui->tb_data_on->setEnabled(true);
         ui->tb_data_on->setChecked(false);
-         ui->tb_data_on_Joy->setEnabled(true);
-         ui->tb_data_on_Joy->setChecked(false);
+        ui->tb_data_on_Joy->setEnabled(true);
+        ui->tb_data_on_Joy->setChecked(false);
         ui->tb_data_rau_joy->setEnabled(true);
         ui->tb_data_rau_joy->setChecked(false);
-             ui->tb_custom_on->setEnabled(true);
-              ui->tb_custom_on->setChecked(false);
-                                           ui->tb_custom_pp->setEnabled(false);
-                                           ui->tb_custom_rau->setEnabled(false);
-                                           ui->tb_custom_pp->setChecked(false);
-                                           ui->tb_custom_rau->setChecked(false);
-                   comPort->setControlByte(com);
+        ui->tb_custom_on->setEnabled(true);
+        ui->tb_custom_on->setChecked(false);
+        ui->tb_custom_pp->setEnabled(false);
+        ui->tb_custom_rau->setEnabled(false);
+        ui->tb_custom_pp->setChecked(false);
+        ui->tb_custom_rau->setChecked(false);
+        comPort->setControlByte(com);
         break;
     }
     }
@@ -526,7 +531,7 @@ void MainWindow::on_tb_data_on_toggled(bool checked)
     {
         QSettings settings(QSettings::IniFormat, QSettings::UserScope,
                            QCoreApplication::organizationName(), QCoreApplication::applicationName());
-this->set_transmit_mode('d');
+        this->set_transmit_mode('d');
         settings.setValue("ComPort/Mode", 'd');
 
     }
@@ -540,7 +545,7 @@ void MainWindow::on_tb_data_rau_joy_toggled(bool checked)
     {
         QSettings settings(QSettings::IniFormat, QSettings::UserScope,
                            QCoreApplication::organizationName(), QCoreApplication::applicationName());
-this->set_transmit_mode('c');
+        this->set_transmit_mode('c');
         settings.setValue("ComPort/Mode", 'c');
 
     }
@@ -554,7 +559,7 @@ void MainWindow::on_tb_data_on_Joy_toggled(bool checked)
     {
         QSettings settings(QSettings::IniFormat, QSettings::UserScope,
                            QCoreApplication::organizationName(), QCoreApplication::applicationName());
-this->set_transmit_mode('j');
+        this->set_transmit_mode('j');
         settings.setValue("ComPort/Mode", 'j');
 
     }
@@ -568,7 +573,7 @@ void MainWindow::on_tb_custom_on_toggled(bool checked)
     {
         QSettings settings(QSettings::IniFormat, QSettings::UserScope,
                            QCoreApplication::organizationName(), QCoreApplication::applicationName());
-this->set_transmit_mode('r');
+        this->set_transmit_mode('r');
         settings.setValue("ComPort/Mode", 'r');
 
     }

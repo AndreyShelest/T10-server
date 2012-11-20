@@ -37,6 +37,7 @@ public:
     bool COM_isConnected();
     QString getDeviceName();
     void getPacket(QByteArray &apacket);
+    void setDeviceName(QString name);
 signals:
     void DataReady(QByteArray data);
     void Zavislo();

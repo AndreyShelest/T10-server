@@ -405,6 +405,12 @@
            </item>
            <item row="1" column="0" rowspan="2">
             <widget class="QListWidget" name="list_toCom">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="acceptDrops">
               <bool>true</bool>
              </property>
