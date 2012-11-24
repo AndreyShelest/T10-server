@@ -11,7 +11,6 @@
 #include "Aircraft/aircraft.h"
 #include "Joystick/v_joystick_adapter.h"
 #include "QListWidget"
-#include "QStandardItemModel"
 
 namespace Ui {
 class MainWindow;
@@ -76,6 +75,9 @@ private slots:
     void on_tb_custom_on_toggled(bool checked);
 
     void on_pushButton_2_clicked();
+
+
+    void on_listWidgetSettings_clicked(const QModelIndex &index);
 
 public slots:
     void log(QString data);

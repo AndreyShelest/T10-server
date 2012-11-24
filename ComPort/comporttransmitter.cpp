@@ -273,11 +273,6 @@ void ComPortTransmitter::getPacket(QByteArray &apacket)
     }
 }
 
-void ComPortTransmitter::setDeviceName(QString name)
-{
-    this->deviceName=name;
-}
-
 
 void ComPortTransmitter::setControlByte(char cbyte)
 {
