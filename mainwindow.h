@@ -11,6 +11,7 @@
 #include "Aircraft/aircraft.h"
 #include "Joystick/v_joystick_adapter.h"
 #include "QListWidget"
+#include "QStandardItemModel"
 
 namespace Ui {
 class MainWindow;
@@ -60,7 +61,6 @@ private slots:
 
     void on_pb_joy_refresh_clicked();
 
-    void on_list_toCom_clicked(const QModelIndex &index);
 
     void on_list_toCom_itemClicked(QListWidgetItem *item);
     void set_transmit_mode(char com);
