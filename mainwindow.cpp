@@ -52,6 +52,7 @@ MainWindow::MainWindow(QWidget *parent) :
     if (joystick->isConnected()) ui->pb_joy_refresh->click();
 
     this->set_transmit_mode('d');
+    ui->PPN_wgt->setHidden(!ui->tb_custom_pp->isChecked());
 
     //    ui->listWidget_Log->clear();
     //    this->log(tr("Server started") + " [0.0.0.0:1989]");
@@ -408,6 +409,8 @@ void MainWindow::set_transmit_mode(char com)
         ui->tb_data_rau_joy->setChecked(false);
              ui->tb_custom_on->setEnabled(false);
               ui->tb_custom_on->setChecked(false);
+              ui->tb_custom_pp->setChecked(false);
+              ui->tb_custom_rau->setChecked(false);
               settings.setValue("ComPort/Mode", com);
                    comPort->setControlByte(com);
          break;
@@ -422,6 +425,8 @@ void MainWindow::set_transmit_mode(char com)
           ui->tb_data_rau_joy->setChecked(false);
                ui->tb_custom_on->setEnabled(false);
                 ui->tb_custom_on->setChecked(false);
+                ui->tb_custom_pp->setChecked(false);
+                ui->tb_custom_rau->setChecked(false);
                 settings.setValue("ComPort/Mode",com);
                  comPort->setControlByte(com);
         break;
@@ -436,7 +441,10 @@ void MainWindow::set_transmit_mode(char com)
         ui->tb_data_on->setChecked(false);
              ui->tb_custom_on->setEnabled(false);
               ui->tb_custom_on->setChecked(false);
+              ui->tb_custom_pp->setChecked(false);
+              ui->tb_custom_rau->setChecked(false);
               settings.setValue("ComPort/Mode", com);
+
               comPort->setControlByte(com);
         break;
     }
@@ -471,15 +479,14 @@ void MainWindow::set_transmit_mode(char com)
                                            ui->tb_custom_rau->setEnabled(false);
                                            ui->tb_custom_pp->setChecked(false);
                                            ui->tb_custom_rau->setChecked(false);
+                                           ui->tb_custom_pp->setChecked(false);
+                                           ui->tb_custom_rau->setChecked(false);
+                                            ui->PPN_wgt->setHidden(true);
                    comPort->setControlByte(com);
         break;
     }
     }
 
-    //    dataToMc[0]=(unsigned char)'d'; // only data
-    //    dataToMc[0]=(unsigned char)'j'; // data and joy
-    //    dataToMc[0]=(unsigned char)'c'; // data and joy RauControl
-    //    dataToMc[0]=(unsigned char)'r'; // data and rauContol
 
 }
 
@@ -555,11 +562,28 @@ void MainWindow::on_pushButton_2_clicked()
 }
 
 
-
-
-
 void MainWindow::on_listWidgetSettings_clicked(const QModelIndex &index)
 {
 
     ui->stackedWidgetServerSettings->setCurrentIndex(index.row());
 }
+
+void MainWindow::on_tb_custom_pp_clicked(bool checked)
+{
+    ui->PPN_wgt->setHidden(!checked);
+    if (checked)
+    {
+        connect(ui->ppn_rudder,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomPPNr(int)));
+        connect(ui->ppn_ailerons,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomPPNa(int)));
+                connect(ui->ppn_stab,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomPPNs(int)));
+    }
+    else {
+    ui->ppn_rudder->setValue(127);
+    ui->ppn_ailerons->setValue(127);
+    ui->ppn_stab->setValue(127);
+    }
+}
+
+
+
+

@@ -281,3 +281,23 @@ void ComPortTransmitter::setControlByte(char cbyte)
 
 
 }
+
+void ComPortTransmitter::setCustomPPNr(int rudder)
+{
+    dataToMc[7]=(unsigned char)rudder;
+}
+
+void ComPortTransmitter::setCustomPPNa(int aileron)
+{
+
+    dataToMc[8]=(unsigned char)aileron;
+
+}
+
+void ComPortTransmitter::setCustomPPNs(int stabilisator)
+{
+    dataToMc[9]=(unsigned char)stabilisator;
+
+}
+
+

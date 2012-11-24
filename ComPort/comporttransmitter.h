@@ -30,8 +30,7 @@ private:
     int findStartSeq(int from);
 
 public:
-    //port_trasmitt_thread* thr;
-    explicit ComPortTransmitter(QObject *parent = 0);
+     explicit ComPortTransmitter(QObject *parent = 0);
     ~ComPortTransmitter();
     bool COM_reconnect();
     bool COM_isConnected();
@@ -50,7 +49,9 @@ public slots:
     void slot_Write(QByteArray data);
     void COM_disconnect();
     void setControlByte(char cbyte);
-    //void setDataToMC(QByteArray data);
+    void setCustomPPNr(int rudder);
+    void setCustomPPNa(int aileron);
+    void setCustomPPNs(int stabilisator);
 
     void slotJoyXChanged(int value);
     void slotJoyYChanged(int value);

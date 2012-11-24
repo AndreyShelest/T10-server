@@ -79,6 +79,8 @@ private slots:
 
     void on_listWidgetSettings_clicked(const QModelIndex &index);
 
+    void on_tb_custom_pp_clicked(bool checked);
+
 public slots:
     void log(QString data);
 
