@@ -35,6 +35,12 @@
         <height>400</height>
        </size>
       </property>
+      <property name="mouseTracking">
+       <bool>false</bool>
+      </property>
+      <property name="acceptDrops">
+       <bool>false</bool>
+      </property>
       <property name="layoutDirection">
        <enum>Qt::LeftToRight</enum>
       </property>
@@ -51,7 +57,7 @@
        <bool>false</bool>
       </property>
       <property name="movable">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <widget class="QWidget" name="tab_server">
        <attribute name="icon">
@@ -390,26 +396,12 @@
            </sizepolicy>
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_14">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Data transmited to Com Port</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QListWidget" name="list_toCom">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-            </widget>
-           </item>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
            <item row="1" column="1">
             <widget class="QWidget" name="widget_7" native="true">
              <property name="sizePolicy">
@@ -623,7 +615,49 @@
                 </property>
                </widget>
               </item>
+              <item row="2" column="0">
+               <widget class="QToolButton" name="pBsimulate">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;simulate data&lt;/p&gt;&lt;p&gt;from board&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="text">
+                 <string>Simulate</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
              </layout>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_14">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Data transmited to Com Port</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QListWidget" name="list_toCom">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
             </widget>
            </item>
            <item row="0" column="1">
@@ -746,159 +780,18 @@
            <string>Control Parameters</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_6">
-           <item row="1" column="5" rowspan="2">
-            <widget class="QWidget" name="PPN_wgt" native="true">
-             <property name="enabled">
-              <bool>true</bool>
+           <item row="0" column="4">
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
              </property>
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>3</width>
+               <height>20</height>
+              </size>
              </property>
-             <property name="inputMethodHints">
-              <set>Qt::ImhNone</set>
-             </property>
-             <widget class="QDial" name="ppn_stab">
-              <property name="geometry">
-               <rect>
-                <x>270</x>
-                <y>10</y>
-                <width>50</width>
-                <height>64</height>
-               </rect>
-              </property>
-              <property name="acceptDrops">
-               <bool>false</bool>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">image: url(:/resources/html/for_net_server/images/09.jpg);</string>
-              </property>
-              <property name="inputMethodHints">
-               <set>Qt::ImhNone</set>
-              </property>
-              <property name="maximum">
-               <number>255</number>
-              </property>
-              <property name="singleStep">
-               <number>5</number>
-              </property>
-              <property name="value">
-               <number>127</number>
-              </property>
-              <property name="tracking">
-               <bool>false</bool>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="invertedControls">
-               <bool>false</bool>
-              </property>
-              <property name="wrapping">
-               <bool>false</bool>
-              </property>
-              <property name="notchTarget">
-               <double>1.000000000000000</double>
-              </property>
-              <property name="notchesVisible">
-               <bool>true</bool>
-              </property>
-             </widget>
-             <widget class="QDial" name="ppn_ailerons">
-              <property name="geometry">
-               <rect>
-                <x>150</x>
-                <y>10</y>
-                <width>50</width>
-                <height>64</height>
-               </rect>
-              </property>
-              <property name="acceptDrops">
-               <bool>false</bool>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">image: url(:/resources/html/for_net_server/images/09.jpg);</string>
-              </property>
-              <property name="inputMethodHints">
-               <set>Qt::ImhNone</set>
-              </property>
-              <property name="maximum">
-               <number>255</number>
-              </property>
-              <property name="singleStep">
-               <number>5</number>
-              </property>
-              <property name="value">
-               <number>127</number>
-              </property>
-              <property name="tracking">
-               <bool>false</bool>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="invertedControls">
-               <bool>false</bool>
-              </property>
-              <property name="wrapping">
-               <bool>false</bool>
-              </property>
-              <property name="notchTarget">
-               <double>1.000000000000000</double>
-              </property>
-              <property name="notchesVisible">
-               <bool>true</bool>
-              </property>
-             </widget>
-             <widget class="QDial" name="ppn_rudder">
-              <property name="geometry">
-               <rect>
-                <x>40</x>
-                <y>10</y>
-                <width>50</width>
-                <height>64</height>
-               </rect>
-              </property>
-              <property name="acceptDrops">
-               <bool>false</bool>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">image: url(:/resources/html/for_net_server/images/09.jpg);</string>
-              </property>
-              <property name="inputMethodHints">
-               <set>Qt::ImhNone</set>
-              </property>
-              <property name="maximum">
-               <number>255</number>
-              </property>
-              <property name="singleStep">
-               <number>5</number>
-              </property>
-              <property name="value">
-               <number>127</number>
-              </property>
-              <property name="tracking">
-               <bool>false</bool>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="invertedControls">
-               <bool>false</bool>
-              </property>
-              <property name="wrapping">
-               <bool>false</bool>
-              </property>
-              <property name="notchTarget">
-               <double>1.000000000000000</double>
-              </property>
-              <property name="notchesVisible">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </widget>
+            </spacer>
            </item>
            <item row="0" column="0">
             <spacer name="verticalSpacer">
@@ -940,6 +833,213 @@
              </property>
             </widget>
            </item>
+           <item row="1" column="4" rowspan="2">
+            <widget class="QWidget" name="PPN_wgt" native="true">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>100</height>
+              </size>
+             </property>
+             <property name="inputMethodHints">
+              <set>Qt::ImhNone</set>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_11">
+              <item row="1" column="2">
+               <widget class="QDial" name="ppn_stab">
+                <property name="acceptDrops">
+                 <bool>false</bool>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">image: url(:/resources/html/for_net_server/images/09.jpg);</string>
+                </property>
+                <property name="inputMethodHints">
+                 <set>Qt::ImhNone</set>
+                </property>
+                <property name="maximum">
+                 <number>255</number>
+                </property>
+                <property name="singleStep">
+                 <number>5</number>
+                </property>
+                <property name="value">
+                 <number>127</number>
+                </property>
+                <property name="tracking">
+                 <bool>false</bool>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="invertedControls">
+                 <bool>false</bool>
+                </property>
+                <property name="wrapping">
+                 <bool>false</bool>
+                </property>
+                <property name="notchTarget">
+                 <double>1.000000000000000</double>
+                </property>
+                <property name="notchesVisible">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLabel" name="lbl_dial2">
+                <property name="text">
+                 <string>Aileron</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QDial" name="ppn_rudder">
+                <property name="acceptDrops">
+                 <bool>false</bool>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">image: url(:/resources/html/for_net_server/images/09.jpg);</string>
+                </property>
+                <property name="inputMethodHints">
+                 <set>Qt::ImhNone</set>
+                </property>
+                <property name="maximum">
+                 <number>255</number>
+                </property>
+                <property name="singleStep">
+                 <number>5</number>
+                </property>
+                <property name="value">
+                 <number>127</number>
+                </property>
+                <property name="tracking">
+                 <bool>false</bool>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="invertedControls">
+                 <bool>false</bool>
+                </property>
+                <property name="wrapping">
+                 <bool>false</bool>
+                </property>
+                <property name="notchTarget">
+                 <double>1.000000000000000</double>
+                </property>
+                <property name="notchesVisible">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QDial" name="ppn_ailerons">
+                <property name="acceptDrops">
+                 <bool>false</bool>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">image: url(:/resources/html/for_net_server/images/09.jpg);</string>
+                </property>
+                <property name="inputMethodHints">
+                 <set>Qt::ImhNone</set>
+                </property>
+                <property name="maximum">
+                 <number>255</number>
+                </property>
+                <property name="singleStep">
+                 <number>5</number>
+                </property>
+                <property name="value">
+                 <number>127</number>
+                </property>
+                <property name="tracking">
+                 <bool>false</bool>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="invertedControls">
+                 <bool>false</bool>
+                </property>
+                <property name="wrapping">
+                 <bool>false</bool>
+                </property>
+                <property name="notchTarget">
+                 <double>1.000000000000000</double>
+                </property>
+                <property name="notchesVisible">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="QLabel" name="lbl_dial3">
+                <property name="text">
+                 <string>Stabilisators</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="lbl_dial1">
+                <property name="text">
+                 <string>Rudder</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+             <zorder>ppn_stab</zorder>
+             <zorder>ppn_ailerons</zorder>
+             <zorder>ppn_rudder</zorder>
+             <zorder>lbl_dial1</zorder>
+             <zorder>lbl_dial2</zorder>
+             <zorder>lbl_dial3</zorder>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QToolButton" name="tb_data_rau_joy">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;rau by joy&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normalon>:/resources/icons/Wrench.svg</normalon>
+              </iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>24</width>
+               <height>24</height>
+              </size>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
            <item row="2" column="2">
             <widget class="QToolButton" name="tb_custom_on">
              <property name="enabled">
@@ -966,33 +1066,6 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QToolButton" name="tb_data_on">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Turn ON aircraft data&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>PushButton</string>
-             </property>
-             <property name="icon">
-              <iconset>
-               <normalon>:/resources/icons/airplane2.svg</normalon>
-              </iconset>
-             </property>
-             <property name="iconSize">
-              <size>
-               <width>24</width>
-               <height>24</height>
-              </size>
-             </property>
-             <property name="checkable">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
            <item row="1" column="3">
             <widget class="QToolButton" name="tb_custom_rau">
              <property name="enabled">
@@ -1004,33 +1077,6 @@
              <property name="icon">
               <iconset>
                <normalon>:/resources/icons/airplane2.svg</normalon>
-              </iconset>
-             </property>
-             <property name="iconSize">
-              <size>
-               <width>24</width>
-               <height>24</height>
-              </size>
-             </property>
-             <property name="checkable">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="2">
-            <widget class="QToolButton" name="tb_data_rau_joy">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;rau by joy&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>PushButton</string>
-             </property>
-             <property name="icon">
-              <iconset>
-               <normalon>:/resources/icons/Wrench.svg</normalon>
               </iconset>
              </property>
              <property name="iconSize">
@@ -1071,18 +1117,32 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="5">
-            <spacer name="horizontalSpacer">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
+           <item row="1" column="0">
+            <widget class="QToolButton" name="tb_data_on">
+             <property name="enabled">
+              <bool>true</bool>
              </property>
-             <property name="sizeHint" stdset="0">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Turn ON aircraft data&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normalon>:/resources/icons/airplane2.svg</normalon>
+              </iconset>
+             </property>
+             <property name="iconSize">
               <size>
-               <width>3</width>
-               <height>20</height>
+               <width>24</width>
+               <height>24</height>
               </size>
              </property>
-            </spacer>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -1234,6 +1294,83 @@
         </widget>
        </widget>
       </widget>
+      <widget class="QWidget" name="tab_data">
+       <attribute name="title">
+        <string>Data from board</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QTableWidget" name="tableWidget">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::Panel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::MultiSelection</enum>
+          </property>
+          <attribute name="horizontalHeaderDefaultSectionSize">
+           <number>83</number>
+          </attribute>
+          <row>
+           <property name="text">
+            <string>param</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>angle</string>
+           </property>
+          </row>
+          <column>
+           <property name="text">
+            <string>rudder</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>ailerons</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>stabLeft</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>stabRight</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>posX</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>posY</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>posZ</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="tab_settings">
        <attribute name="icon">
         <iconset resource="T10_Server3.qrc">
@@ -1267,7 +1404,7 @@
            <number>2</number>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="stackedWidgetServerSettingsPage1">
            <widget class="QWidget" name="widget" native="true">
@@ -1323,47 +1460,6 @@
               <widget class="QLineEdit" name="lineEdit_3">
                <property name="text">
                 <string>1989</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-           <widget class="QWidget" name="widget_6" native="true">
-            <property name="geometry">
-             <rect>
-              <x>260</x>
-              <y>10</y>
-              <width>235</width>
-              <height>90</height>
-             </rect>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_9">
-             <item row="0" column="0">
-              <widget class="QCheckBox" name="checkBox">
-               <property name="text">
-                <string>Send joy data
- at first</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QLabel" name="label_simulate">
-               <property name="text">
-                <string>simulate data
- from board</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1">
-              <widget class="QPushButton" name="pBsimulate">
-               <property name="text">
-                <string>Simulate</string>
-               </property>
-               <property name="checkable">
-                <bool>true</bool>
-               </property>
-               <property name="checked">
-                <bool>false</bool>
                </property>
               </widget>
              </item>
@@ -1448,7 +1544,7 @@
    <addaction name="separator"/>
    <addaction name="actionShow_info_about_clients"/>
    <addaction name="actionShowDataFromCom"/>
-   <addaction name="actionShow_data_from_aircraft_model"/>
+   <addaction name="aircraft_Simulate"/>
    <addaction name="separator"/>
    <addaction name="actionSettings"/>
    <addaction name="separator"/>
@@ -1522,13 +1618,19 @@
     <string>Show data from COM port</string>
    </property>
   </action>
-  <action name="actionShow_data_from_aircraft_model">
+  <action name="aircraft_Simulate">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="T10_Server3.qrc">
      <normaloff>:/resources/icons/airplane.svg</normaloff>:/resources/icons/airplane.svg</iconset>
    </property>
    <property name="text">
-    <string>Show data from aircraft model</string>
+    <string>aircraft Simulate</string>
+   </property>
+   <property name="toolTip">
+    <string>Start aircraft simulate</string>
    </property>
   </action>
   <action name="actionAbout">

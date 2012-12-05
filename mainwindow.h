@@ -29,7 +29,7 @@ private slots:
     void on_actionServer_toggled(bool arg1);
     void on_actionCom_port_toggled(bool arg1);
 
-    void on_dataFromComPort(QByteArray data);
+
     void peerConnected(PeerInfo *peerInfo);
     void peerDisconnected(PeerInfo *peerInfo);
     void peerNameChanged(PeerInfo* peerInfo, QString oldName);
@@ -46,18 +46,13 @@ private slots:
 
     void on_actionAbout_Qt_triggered();
 
-    void on_horizontalSlider_sliderMoved(int position);
-
     void on_actionJoystick_toggled(bool arg1);
-    void repositionOnSidebar();
+
 
     void on_actionSettings_triggered(bool checked);
 
     void on_pushButton_comPortReconnect_clicked();
     void showDataToCom(QByteArray dataToMc);
-
-
-    void on_pBsimulate_clicked();
 
     void on_pb_joy_refresh_clicked();
 
@@ -79,7 +74,15 @@ private slots:
 
     void on_listWidgetSettings_clicked(const QModelIndex &index);
 
-    void on_tb_custom_pp_clicked(bool checked);
+
+    void on_aircraft_Simulate_triggered(bool checked);
+
+
+    void on_tb_custom_rau_toggled(bool checked);
+
+    void on_tb_custom_pp_toggled(bool checked);
+
+    void on_pBsimulate_toggled(bool checked);
 
 public slots:
     void log(QString data);

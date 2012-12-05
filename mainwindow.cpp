@@ -53,6 +53,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->set_transmit_mode('d');
     ui->PPN_wgt->setHidden(!ui->tb_custom_pp->isChecked());
+    aircraft=new Aircraft(this);
+    //aircraft->startSimulation();
+
 
     //    ui->listWidget_Log->clear();
     //    this->log(tr("Server started") + " [0.0.0.0:1989]");
@@ -132,8 +135,8 @@ void MainWindow::on_actionServer_toggled(bool arg1)
         {
             this->log(tr("Unable to start server: ") + server->errorString());
             ui->actionServer->setChecked(false);
-            //ui->groupBox_netServer->show();
-            this->repositionOnSidebar();
+
+
         }
     }
     else
@@ -185,9 +188,7 @@ void MainWindow::on_actionJoystick_toggled(bool arg1)
             //ui->label_Joystick_status->setText("<font color=red>"+tr("Not connected")+"</font>");
             //labelJoystickStatus->setText(tr("Joystick: ") + "<span style=\"color:#ff0000;font-weight:bold;\">" + tr("unable to connect to joystick") + "</span>");
             ui->actionJoystick->setChecked(false);
-            //ui->groupBox_joystick->show();
-            this->repositionOnSidebar();
-            qDebug() << "Unable to connect to joystick: " << joystick->getJoystickName();
+                       qDebug() << "Unable to connect to joystick: " << joystick->getJoystickName();
         }
 
     }
@@ -205,10 +206,6 @@ void MainWindow::on_actionJoystick_toggled(bool arg1)
     }
 }
 
-void MainWindow::repositionOnSidebar()
-{
-
-}
 
 void MainWindow::on_actionCom_port_toggled(bool arg1)
 {
@@ -230,8 +227,7 @@ void MainWindow::on_actionCom_port_toggled(bool arg1)
             //delete comPort;
             //comPort = 0;
             ui->actionCom_port->setChecked(false);
-            //ui->groupBox_comPort->show();
-            this->repositionOnSidebar();
+
         }
 
         ////        connect(trans, SIGNAL(DataReady(QByteArray)), dataContainer, SLOT(comPortDataReady(QByteArray)));
@@ -256,10 +252,6 @@ void MainWindow::on_actionCom_port_toggled(bool arg1)
     }
 }
 
-void MainWindow::on_dataFromComPort(QByteArray data)
-{
-
-}
 
 void MainWindow::peerConnected(PeerInfo *peerInfo)
 {
@@ -313,15 +305,6 @@ void MainWindow::on_actionAbout_Qt_triggered()
     QApplication::aboutQt();
 }
 
-void MainWindow::on_horizontalSlider_sliderMoved(int position)
-{
-    //    QByteArray ba;
-    //    ba.clear();
-    //    ba.append((unsigned char)position);
-    //    ui->label_14->setText(QString::number(position));
-    //    comPort->setDataToMC(ba);
-}
-
 
 
 
@@ -356,16 +339,14 @@ void MainWindow::showDataToCom(QByteArray dataToMc)
         }
 
         ui->list_toCom->addItem(buf);
+        if (ui->list_toCom->count()>50)
+            ui->list_toCom->clear();
 
         ui->list_toCom->scrollToBottom();
     }
 
 }
 
-void MainWindow::on_pBsimulate_clicked()
-{
-    connect(comPort,SIGNAL(dataTransmitedToCom(QByteArray)),server,SLOT(dataFromJoystic(QByteArray)));
-}
 
 
 void MainWindow::on_pb_joy_refresh_clicked()
@@ -575,22 +556,79 @@ void MainWindow::on_listWidgetSettings_clicked(const QModelIndex &index)
     ui->stackedWidgetServerSettings->setCurrentIndex(index.row());
 }
 
-void MainWindow::on_tb_custom_pp_clicked(bool checked)
+
+void MainWindow::on_aircraft_Simulate_triggered(bool checked)
 {
-    ui->PPN_wgt->setHidden(!checked);
     if (checked)
-    {
-        connect(ui->ppn_rudder,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomPPNr(int)));
-        connect(ui->ppn_ailerons,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomPPNa(int)));
-                connect(ui->ppn_stab,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomPPNs(int)));
-    }
-    else {
-    ui->ppn_rudder->setValue(127);
-    ui->ppn_ailerons->setValue(127);
-    ui->ppn_stab->setValue(127);
-    }
+    {aircraft->startSimulation();}
+    else aircraft->stopSimulation();
 }
 
 
 
 
+void MainWindow::on_tb_custom_rau_toggled(bool checked)
+{
+    if (checked)
+    {
+        emit on_tb_custom_pp_toggled(false);
+        ui->lbl_dial1->setText("Rau Roll");
+        ui->lbl_dial2->setText("Rau Pitch");
+        ui->lbl_dial3->setText("Rau Yaw");
+        connect(ui->ppn_rudder,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomRauX(int)));
+        connect(ui->ppn_ailerons,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomRauY(int)));
+                connect(ui->ppn_stab,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomRauZ(int)));
+   ui->tb_custom_pp->setEnabled(false);
+
+   ui->PPN_wgt->setHidden(!checked);
+    }
+    else {
+    ui->ppn_rudder->setValue(128);
+    ui->ppn_ailerons->setValue(128);
+    ui->ppn_stab->setValue(128);
+    ui->tb_custom_pp->setEnabled(true);
+    ui->PPN_wgt->setHidden(!checked);
+    }
+
+}
+
+void MainWindow::on_tb_custom_pp_toggled(bool checked)
+{
+    if (checked)
+    {
+                 emit on_tb_custom_rau_toggled(false);
+                 ui->lbl_dial1->setText("Rudder");
+                 ui->lbl_dial2->setText("Aileron");
+                 ui->lbl_dial3->setText("Stabilisators");
+        connect(ui->ppn_rudder,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomPPNr(int)));
+        connect(ui->ppn_ailerons,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomPPNa(int)));
+                connect(ui->ppn_stab,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomPPNs(int)));
+   ui->tb_custom_rau->setEnabled(false);
+   ui->PPN_wgt->setHidden(!checked);
+
+
+    }
+    else {
+    ui->ppn_rudder->setValue(128);
+    ui->ppn_ailerons->setValue(128);
+    ui->ppn_stab->setValue(128);
+    ui->tb_custom_rau->setEnabled(true);
+    ui->PPN_wgt->setHidden(!checked);
+    }
+
+}
+
+void MainWindow::on_pBsimulate_toggled(bool checked)
+{
+    ui->pBsimulate->setChecked(checked);
+    if (checked)
+    {
+       ui->actionCom_port->setChecked(false);
+                connect(joystick, SIGNAL(sigXAxisChanged(int)), aircraft, SLOT(setJoyX(int)));
+            connect(joystick, SIGNAL(sigYAxisChanged(int)), aircraft, SLOT(setJoyY(int)));
+            connect(joystick, SIGNAL(sigZAxisChanged(int)), aircraft, SLOT(setJoyZ(int)));
+            connect(aircraft,SIGNAL(joyDataReady(QList<int>)),server,SLOT(dataFromJoystick(QList<int>)));
+             //connect(server,SIGNAL(needJoyData()),server,SLOT(dataFromJoystick()));
+
+    }
+}

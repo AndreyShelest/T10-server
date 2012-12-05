@@ -22,7 +22,7 @@ public:
 
 private:
     MikroHttpServer* httpServer;
-
+QList<float> clientData;
     QHash<QString, quint8> comPortDataIndexes;
     
 signals:
@@ -30,6 +30,7 @@ signals:
     void peerDisconnected(PeerInfo *peerInfo);
     void peerNameChanged(PeerInfo* peerInfo, QString oldName);
     void toThreadsDataReady(QList<float>);
+    void needJoyData();
     
 public slots:
    void peerConnected_slot(PeerInfo* peerInfo);
@@ -37,7 +38,7 @@ public slots:
    void incomingMessage_slot(PeerInfo* peerInfo, QByteArray msg);
    //void dataReady(QList<float> data);
    void dataFromComPort(const QByteArray data);
-   void dataFromJoystic(const QByteArray data);
+   void dataFromJoystick(QList<int> data);
     
 };
 

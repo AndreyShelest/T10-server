@@ -282,6 +282,21 @@ void ComPortTransmitter::setControlByte(char cbyte)
 
 }
 
+void ComPortTransmitter::setCustomRauX(int raux)
+{
+    dataToMc[4]=(unsigned char)raux;
+}
+
+void ComPortTransmitter::setCustomRauY(int rauy)
+{
+    dataToMc[5]=(unsigned char)rauy;
+}
+
+void ComPortTransmitter::setCustomRauZ(int rauz)
+{
+    dataToMc[6]=(unsigned char)rauz;
+}
+
 void ComPortTransmitter::setCustomPPNr(int rudder)
 {
     dataToMc[7]=(unsigned char)rudder;
@@ -299,5 +314,6 @@ void ComPortTransmitter::setCustomPPNs(int stabilisator)
     dataToMc[9]=(unsigned char)stabilisator;
 
 }
+
 
 

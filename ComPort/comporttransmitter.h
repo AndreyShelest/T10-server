@@ -52,6 +52,9 @@ public slots:
     void setCustomPPNr(int rudder);
     void setCustomPPNa(int aileron);
     void setCustomPPNs(int stabilisator);
+    void setCustomRauX(int raux);
+    void setCustomRauY(int rauy);
+    void setCustomRauZ(int rauz);
 
     void slotJoyXChanged(int value);
     void slotJoyYChanged(int value);

@@ -15,6 +15,7 @@ class Aircraft : public QObject
 public:
     explicit Aircraft(QObject *parent = 0);
     ~Aircraft();
+    QList<int> getJoyData();
 
 private:
     float time;             // модельное время, секунд
@@ -33,6 +34,9 @@ private:
     QVector3D* velocity;     // м/с
     QVector3D* aerodynamicForce;
     QVector3D* aerodynamicMoments;
+    int joyX;
+    int joyY;
+    int joyZ;
     float dVx, dVy, dVz;
     float mx, my, mz;       // коэффициенты моментов аэродинамических сил относительно осей связанной системы координат
     float cx, cy, cz;       // коэффициенты проекций аэродинамических сил относительно на оси связанной системы координат
@@ -54,8 +58,11 @@ private:
     
     QTimer modelingTimer;
 signals:
-    
+   void joyDataReady(QList<int>);
 public slots:
+    void setJoyX(int param);
+    void setJoyY(int param);
+    void setJoyZ(int param);
     void modelingStep();
     void startSimulation();
     void stopSimulation();

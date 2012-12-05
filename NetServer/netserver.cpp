@@ -27,8 +27,9 @@ void NetServer::incomingConnection(int socketDescriptor)
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     connect(thread, SIGNAL(peerConnected(PeerInfo*)), this, SLOT(peerConnected_slot(PeerInfo*)));
     connect(thread, SIGNAL(peerDisconnected(PeerInfo*)), this, SLOT(peerDisconnected_slot(PeerInfo*)));
-    connect(thread, SIGNAL(incomingMessage(PeerInfo*,QByteArray)), this, SLOT(incomingMessage_slot(PeerInfo*,QByteArray)));
-    thread->start();
+     connect(thread, SIGNAL(incomingMessage(PeerInfo*,QByteArray)), this, SLOT(incomingMessage_slot(PeerInfo*,QByteArray)));
+
+       thread->start();
 }
 
 void NetServer::peerConnected_slot(PeerInfo *peerInfo)
@@ -41,11 +42,11 @@ void NetServer::peerConnected_slot(PeerInfo *peerInfo)
 void NetServer::peerDisconnected_slot(PeerInfo *peerInfo)
 {
     qDebug() << tr("Disconnected: ") << peerInfo->id << " ::: "  << peerInfo->address;
-    int n = peers.indexOf(peerInfo);
+        int n = peers.indexOf(peerInfo);
     if (n != -1)
 
     //peers.at(peerInfo)->pThread->currentThread()->destroyed();
-    delete peers.at(n)->pThread;
+   // delete peers.at(n)->pThread;
      peers.removeAt(n);
     emit peerDisconnected(peerInfo);
 }
@@ -58,7 +59,6 @@ void NetServer::incomingMessage_slot(PeerInfo *peerInfo, QByteArray msg)
         peerInfo->pThread->SendMessage(httpServer->request(msg));
         return;
     }
-
     QString s = msg;
     qDebug() << s;
     QStringList sl = s.split('\n');
@@ -82,10 +82,13 @@ void NetServer::incomingMessage_slot(PeerInfo *peerInfo, QByteArray msg)
 
             if (s.startsWith("Start data transfer"))
             {
-                connect(this, SIGNAL(toThreadsDataReady(QList<float>)), peerInfo->pThread, SLOT(DataReady(QList<float>)));
-//                QList<float> gh;
+
+                //emit needJoyData();
+               connect(this, SIGNAL(toThreadsDataReady(QList<float>)), peerInfo->pThread, SLOT(DataReady(QList<float>)));
+                //                QList<float> gh;
 //                gh.append(323);
-//                emit peerInfo->pThread->DataReady(gh);
+
+
             } else
 {
                 if (s.startsWith("Set data mode: "))
@@ -141,16 +144,17 @@ void NetServer::dataFromComPort(const QByteArray data)
 }
 
 
-void NetServer::dataFromJoystic(const QByteArray data)
+void NetServer::dataFromJoystick(QList<int> data)
 {
     QList<float> lData;
-    for (int i=0;i<data.size();i++)
-    {
-        lData.append((float)data[i]);
-    }
-    for (int i=lData.size();i<33;i++)
-    {
+    foreach(int i,data){
         lData.append((float)i);
     }
-  emit  this->toThreadsDataReady(lData);
+//    for (int i=lData.size();i<33;i++)
+//    {
+//        lData.append((float)i);
+//    }
+
+  clientData=lData;
+  emit toThreadsDataReady(clientData);
 }

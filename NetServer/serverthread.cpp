@@ -30,6 +30,7 @@ void ServerThread::run()
 
     connect(tcpServerConnection, SIGNAL(readyRead()), this, SLOT(incomingData_slot()));
     connect(tcpServerConnection, SIGNAL(disconnected()), this, SLOT(disconnected()));
+    connect(tcpServerConnection, SIGNAL(disconnected()), tcpServerConnection, SLOT(deleteLater()));
     connect(this, SIGNAL(write(QByteArray)), tcpServerConnection, SLOT(onWrite(QByteArray)));
 
     emit peerConnected(&peerInfo);
@@ -59,6 +60,7 @@ void ServerThread::floatArr2ByteArr(QList<float> *floatArr, QByteArray *byteArr)
         i++;
         c++;
     }
+
 }
 
 void ServerThread::incomingData_slot()
@@ -117,7 +119,7 @@ void ServerThread::DataReady(QList<float> msg)
         }
         case DataModes(visualisation_programm):
         {
-            break;
+                break;
         }
         case DataModes(web_browser):
         {

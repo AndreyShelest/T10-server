@@ -6,8 +6,7 @@ Aircraft::Aircraft(QObject *parent) :
     velocity = new QVector3D();
     aerodynamicForce = new QVector3D();
     aerodynamicMoments = new QVector3D();
-
-    // TODO: what is lambda
+        // TODO: what is lambda
     QSettings settings(QSettings::IniFormat, QSettings::UserScope,
                        QCoreApplication::organizationName(), QCoreApplication::applicationName());
 
@@ -69,14 +68,38 @@ Aircraft::~Aircraft()
     //qDebug() << "Aircraft deleted";
 }
 
+QList<int> Aircraft::getJoyData()
+{
+    QList<int> data;
+     data.append(joyX);
+    data.append(joyY);
+    data.append(joyZ);
+    return data;
+}
+
 float Aircraft::trapz(float previous, float current, float t)
 {
     return ((previous+current)/2) * t;
 }
 
+void Aircraft::setJoyX(int param)
+{
+    this->joyX=param;
+}
+
+void Aircraft::setJoyY(int param)
+{
+    this->joyY=param;
+}
+
+void Aircraft::setJoyZ(int param)
+{
+    this->joyZ=param;
+}
+
 void Aircraft::modelingStep()
 {
-    qDebug() << wx << wy << wz << velocity->length() << time;
+  //  qDebug() << wx << wy << wz << velocity->length() << time;
 
     // расчет высоты
     float temp = velocity->x() * qSin(pitch) +
@@ -140,6 +163,8 @@ void Aircraft::modelingStep()
 
 
     time = time + dt;
+
+    emit joyDataReady(getJoyData());
 }
 
 void Aircraft::startSimulation()
