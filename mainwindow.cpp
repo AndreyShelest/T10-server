@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->set_transmit_mode('d');
     ui->PPN_wgt->setHidden(!ui->tb_custom_pp->isChecked());
     aircraft=new Aircraft(this);
-    //aircraft->startSimulation();
+    ////aircraft->startSimulation();
 
 
     //    ui->listWidget_Log->clear();
