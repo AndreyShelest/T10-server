@@ -30,15 +30,13 @@ signals:
     void peerDisconnected(PeerInfo *peerInfo);
     void peerNameChanged(PeerInfo* peerInfo, QString oldName);
     void toThreadsDataReady(QList<float>);
-    void needJoyData();
-    
+
 public slots:
    void peerConnected_slot(PeerInfo* peerInfo);
    void peerDisconnected_slot(PeerInfo* peerInfo);
    void incomingMessage_slot(PeerInfo* peerInfo, QByteArray msg);
-   //void dataReady(QList<float> data);
-   void dataFromComPort(const QByteArray data);
-   void dataFromJoystick(QList<int> data);
+   void setServerData (QList<int> indata);
+
     
 };
 

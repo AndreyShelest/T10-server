@@ -26,7 +26,7 @@ struct PeerInfo
     QHostAddress address;
     quint16 port;
     DataModes dataMode;
-    QList<float*> dataComponents;
+    QList<int*> dataComponents;
 };
 
 

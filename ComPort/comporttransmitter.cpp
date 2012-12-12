@@ -158,6 +158,29 @@ void ComPortTransmitter::slotJoyZChanged(int value)
     dataToMc[3] = val;
 }
 
+void ComPortTransmitter::slotCustomAll(QList<int> indata)
+{
+    int i=4;
+    unsigned char val;
+    foreach(int value,indata)
+    {
+
+    val = (value+32767) / 256;
+    dataToMc[i] = val;
+    i++;
+    }
+
+    //invert Stab
+    int value=indata[5];
+            if (value<=0)
+            {value=abs(value);}
+            else {value=0-value;}
+            val = (value+32767) / 256;
+           dataToMc[9]=val ;
+
+
+}
+
 void ComPortTransmitter::slot_Recieved()
 {
     watchDog.start(1000);
@@ -173,7 +196,6 @@ void ComPortTransmitter::slot_Recieved()
 
     while (buff.length() > 2)
     {
-        //qDebug() << "aaaaa";
         int first_seq, second_seq;
         first_seq = findStartSeq(0);
         if (first_seq == -1)

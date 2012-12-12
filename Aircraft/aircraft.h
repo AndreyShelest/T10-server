@@ -18,6 +18,9 @@ public:
     QList<int> getJoyData();
 
 private:
+    int naviDataLength;
+    int clientDataLength;
+    QList<int> dataFromBoard;
     float time;             // модельное время, секунд
     float dt;               // период квантования, секунд
     float pitch;            // тангаж
@@ -37,6 +40,9 @@ private:
     int joyX;
     int joyY;
     int joyZ;
+    float X_coord,Y_coord,Z_coord;
+    float slide_angle;
+    float attack_angle;
     float dVx, dVy, dVz;
     float mx, my, mz;       // коэффициенты моментов аэродинамических сил относительно осей связанной системы координат
     float cx, cy, cz;       // коэффициенты проекций аэродинамических сил относительно на оси связанной системы координат
@@ -59,10 +65,16 @@ private:
     QTimer modelingTimer;
 signals:
    void joyDataReady(QList<int>);
+   void customDataReady(QList<int>);
+   void serverDataReady(QList<int>);
+   void signal_modelingStep();
 public slots:
+   void slotCalculateControl(QList<int> inJoy);
     void setJoyX(int param);
     void setJoyY(int param);
     void setJoyZ(int param);
+    void setDataFromBoard(QByteArray indata);
+    void setServerData();
     void modelingStep();
     void startSimulation();
     void stopSimulation();

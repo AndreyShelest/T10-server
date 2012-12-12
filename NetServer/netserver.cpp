@@ -41,6 +41,8 @@ void NetServer::peerConnected_slot(PeerInfo *peerInfo)
 
 void NetServer::peerDisconnected_slot(PeerInfo *peerInfo)
 {
+    disconnect(this, SIGNAL(toThreadsDataReady(QList<float>)),
+               peerInfo->pThread, SLOT(DataReady(QList<float>)));
     qDebug() << tr("Disconnected: ") << peerInfo->id << " ::: "  << peerInfo->address;
         int n = peers.indexOf(peerInfo);
     if (n != -1)
@@ -82,13 +84,7 @@ void NetServer::incomingMessage_slot(PeerInfo *peerInfo, QByteArray msg)
 
             if (s.startsWith("Start data transfer"))
             {
-
-                //emit needJoyData();
-               connect(this, SIGNAL(toThreadsDataReady(QList<float>)), peerInfo->pThread, SLOT(DataReady(QList<float>)));
-                //                QList<float> gh;
-//                gh.append(323);
-
-
+  connect(this, SIGNAL(toThreadsDataReady(QList<float>)), peerInfo->pThread, SLOT(DataReady(QList<float>)));
             } else
 {
                 if (s.startsWith("Set data mode: "))
@@ -106,7 +102,7 @@ void NetServer::incomingMessage_slot(PeerInfo *peerInfo, QByteArray msg)
                     else if (s == "visualisation_programm")
                     {
                         peerInfo->dataMode = DataModes(matlab);
-                        peerInfo->pThread->SendMessage("OK. Data mode: visualisation_programm\n");
+                        peerInfo->pThread->SendMessage("OK. Data mode: floatvisualisation_programm\n");
                         qDebug()<<"Подключено";
                     }
                     else if (s == "filtered")
@@ -138,23 +134,17 @@ void NetServer::incomingMessage_slot(PeerInfo *peerInfo, QByteArray msg)
     }
 }
 
-void NetServer::dataFromComPort(const QByteArray data)
-{
-    //data=0;
-}
-
-
-void NetServer::dataFromJoystick(QList<int> data)
+void NetServer::setServerData(QList<int> indata)
 {
     QList<float> lData;
-    foreach(int i,data){
+    foreach(int i,indata){
         lData.append((float)i);
-    }
-//    for (int i=lData.size();i<33;i++)
-//    {
-//        lData.append((float)i);
-//    }
 
+    }
+//qDebug()<<lData;
   clientData=lData;
-  emit toThreadsDataReady(clientData);
+  emit toThreadsDataReady(lData);
+
 }
+
+

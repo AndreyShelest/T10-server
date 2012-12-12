@@ -18,10 +18,20 @@ Aircraft::Aircraft(QObject *parent) :
 //    settings.setValue("AircraftModel/initialHeading", 0);
 //    settings.setValue("AircraftModel/initialHeight", 3000);
 //    settings.setValue("AircraftModel/initialVelocityMagnitude", 100);
-
+    naviDataLength=settings.value("AircraftModel/naviDataLength", 18).toInt();
+    clientDataLength=settings.value("AircraftModel/naviDataLength", 50).toInt();
+    X_coord=settings.value("AircraftModel/initialX", 0).toFloat();
+    Y_coord=settings.value("AircraftModel/initialY", 0).toFloat();
+    Z_coord=settings.value("AircraftModel/initialZ", 0).toFloat();
+    slide_angle= settings.value("AircraftModel/slide_angle", 0).toFloat();
+    attack_angle= settings.value("AircraftModel/attack_angle", 0).toFloat();
     time = settings.value("AircraftModel/initialTime", 0).toFloat();
     dt = settings.value("AircraftModel/dt", 0.1).toFloat();
-    pitch = settings.value("AircraftModel/initialPitch", 0).toFloat();
+    pitch = settings.value("AircraftModel/initialPitch", 0).toFloat();float temp = velocity->x() * qSin(pitch) +
+            velocity->y() * qCos(pitch) * qCos(roll) -
+            velocity->z() * qCos(pitch) * qSin(roll);
+height = height + trapz(dhdt, temp, dt);
+dhdt = temp;
     roll = settings.value("AircraftModel/initialRoll", 0).toFloat();
     yaw = settings.value("AircraftModel/initialYaw", 0).toFloat();
     heading = settings.value("AircraftModel/initialHeading", 0).toFloat();
@@ -58,6 +68,7 @@ Aircraft::Aircraft(QObject *parent) :
     dVz = 0;
 
     connect(&modelingTimer, SIGNAL(timeout()), this, SLOT(modelingStep()));
+
 }
 
 Aircraft::~Aircraft()
@@ -65,7 +76,6 @@ Aircraft::~Aircraft()
     delete velocity;
     delete aerodynamicForce;
     delete aerodynamicMoments;
-    //qDebug() << "Aircraft deleted";
 }
 
 QList<int> Aircraft::getJoyData()
@@ -97,82 +107,148 @@ void Aircraft::setJoyZ(int param)
     this->joyZ=param;
 }
 
+void Aircraft::setDataFromBoard(QByteArray indata)
+{
+
+    dataFromBoard.clear();
+    foreach(int i,indata)
+    {
+    dataFromBoard.append(i);
+    }
+    roll=(int)dataFromBoard[4]+76;
+    pitch=(int)dataFromBoard[5]-113;
+ if (pitch<-13)
+        pitch=-13;
+    yaw=(int)dataFromBoard[6]+101;
+
+}
+
+void Aircraft::setServerData()
+{
+    QList<int> dataToserver;
+     dataToserver.clear();
+    dataToserver.append(joyX);         //0
+   dataToserver.append(joyY);          //1
+   dataToserver.append(joyZ);          //2
+   dataToserver.append((int)heading);  //3
+   dataToserver.append((int)velocity->x()); //4
+   dataToserver.append((int)velocity->y()); //5
+   dataToserver.append((int)velocity->z()); //6
+   dataToserver.append(0);             //7
+   dataToserver.append((int)X_coord);  //8
+   dataToserver.append((int)Y_coord);  //9
+   dataToserver.append((int)Z_coord);  //10
+   dataToserver.append(0);             //11
+   dataToserver.append((int)slide_angle);   //12
+   dataToserver.append((int)attack_angle);   //13
+   for (int i=dataToserver.length();i<naviDataLength;i++)
+       dataToserver.append(0);
+//    dataToserver.append((joyX) / 256);
+//dataToserver.append((joyY) / 256);
+// dataToserver.append((joyZ) / 256);
+ for (int i=0;i<clientDataLength-naviDataLength;i++)
+     dataToserver.append((int)dataFromBoard[i]);
+dataToserver[naviDataLength+4]=(int)roll;
+dataToserver[naviDataLength+5]=(int)pitch;
+dataToserver[naviDataLength+6]=(int)yaw;
+  emit serverDataReady(dataToserver);
+}
+
 void Aircraft::modelingStep()
 {
   //  qDebug() << wx << wy << wz << velocity->length() << time;
 
     // расчет высоты
-    float temp = velocity->x() * qSin(pitch) +
-                 velocity->y() * qCos(pitch) * qCos(roll) -
-                 velocity->z() * qCos(pitch) * qSin(roll);
-    height = height + trapz(dhdt, temp, dt);
-    dhdt = temp;
+//    float temp = velocity->x() * qSin(pitch) +
+//                 velocity->y() * qCos(pitch) * qCos(roll) -
+//                 velocity->z() * qCos(pitch) * qSin(roll);
+//    height = height + trapz(dhdt, temp, dt);
+//    dhdt = temp;
 
-    // плотность воздуха
-    airDensity = 0.125 * qExp(-0.0001*height);
-    // скоростной напор
-    ramAir = (airDensity * qPow(velocity->length(), 2)) / 2;
+//    // плотность воздуха
+//    airDensity = 0.125 * qExp(-0.0001*height);
+//    // скоростной напор
+//    ramAir = (airDensity * qPow(velocity->length(), 2)) / 2;
 
-    // аэродинамические моменты
-    aerodynamicMoments->setX(mx * ramAir * S * l);
-    aerodynamicMoments->setY(my * ramAir * S * l);
-    aerodynamicMoments->setZ(mz * ramAir * S * ba);
+//    // аэродинамические моменты
+//    aerodynamicMoments->setX(mx * ramAir * S * l);
+//    aerodynamicMoments->setY(my * ramAir * S * l);
+//    aerodynamicMoments->setZ(mz * ramAir * S * ba);
 
-    // угловые скорости
-    temp = (aerodynamicMoments->x() - (Ix-Iy) * wy * wz) / Ix;
-    wx = wx + trapz(dwx, temp, dt);
-    dwx = temp;
-    temp = (aerodynamicMoments->y() - (Ix-Iz) * wy * wx) / Iy;
-    wy = wy + trapz(dwy, temp, dt);
-    dwy = temp;
-    temp = (aerodynamicMoments->z() - (Iy-Ix) * wx * wy) / Iz;
-    wz = wz + trapz(dwz, temp, dt);
-    dwz = temp;
+//    // угловые скорости
+//    temp = (aerodynamicMoments->x() - (Ix-Iy) * wy * wz) / Ix;
+//    wx = wx + trapz(dwx, temp, dt);
+//    dwx = temp;
+//    temp = (aerodynamicMoments->y() - (Ix-Iz) * wy * wx) / Iy;
+//    wy = wy + trapz(dwy, temp, dt);
+//    dwy = temp;
+//    temp = (aerodynamicMoments->z() - (Iy-Ix) * wx * wy) / Iz;
+//    wz = wz + trapz(dwz, temp, dt);
+//    dwz = temp;
 
-    // углы
-    temp = ((1/qCos(pitch)) * (wy*qCos(roll) - wz*qSin(roll)));
-    yaw = yaw + trapz(dYaw, temp, dt);
-    dYaw = temp;
-    temp = wy*qSin(roll) + wz*qCos(roll);
-    pitch = pitch + trapz(dPitch, temp, dt);
-    dPitch = temp;
-    temp = wx - qTan(pitch) * (wy*qCos(roll) - wz*qSin(roll));
-    roll = roll + trapz(dRoll, temp, dt);
-    dRoll = temp;
+//    // углы
+//    temp = ((1/qCos(pitch)) * (wy*qCos(roll) - wz*qSin(roll)));
+//    yaw = yaw + trapz(dYaw, temp, dt);
+//    dYaw = temp;
+//    temp = wy*qSin(roll) + wz*qCos(roll);
+//    pitch = pitch + trapz(dPitch, temp, dt);
+//    dPitch = temp;
+//    temp = wx - qTan(pitch) * (wy*qCos(roll) - wz*qSin(roll));
+//    roll = roll + trapz(dRoll, temp, dt);
+//    dRoll = temp;
 
-    // аэродинамические силы
-    aerodynamicForce->setX(-cx * ramAir * S);
-    aerodynamicForce->setY(cy * ramAir * S);
-    aerodynamicForce->setZ(cz * ramAir * S);
+//    // аэродинамические силы
+//    aerodynamicForce->setX(-cx * ramAir * S);
+//    aerodynamicForce->setY(cy * ramAir * S);
+//    aerodynamicForce->setZ(cz * ramAir * S);
 
-    // проекции силы тяжести на оси связанной СК
-    Gx = -G * qSin(pitch);
-    Gy = -G * qCos(pitch) * qCos(roll);
-    Gz = G * qCos(pitch) * qCos(roll);
+//    // проекции силы тяжести на оси связанной СК
+//    Gx = -G * qSin(pitch);
+//    Gy = -G * qCos(pitch) * qCos(roll);
+//    Gz = G * qCos(pitch) * qCos(roll);
 
-    // скорость
-    temp = ((aerodynamicForce->x() + Gx) / m) - wy*velocity->z() + wz*velocity->y();
-    velocity->setX(velocity->x() + trapz(dVx, temp, dt));
-    dVx = temp;
-    temp = ((aerodynamicForce->y() + Gy) / m) - wz*velocity->x() + wx*velocity->z();
-    velocity->setY(velocity->y() + trapz(dVy, temp, dt));
-    dVy = temp;
-    temp = ((aerodynamicForce->z() + Gz) / m) - wx*velocity->y() + wy*velocity->x();
-    velocity->setZ(velocity->z() + trapz(dVz, temp, dt));
-    dVz = temp;
+//    // скорость
+//    temp = ((aerodynamicForce->x() + Gx) / m) - wy*velocity->z() + wz*velocity->y();
+//    velocity->setX(velocity->x() + trapz(dVx, temp, dt));
+//    dVx = temp;
+//    temp = ((aerodynamicForce->y() + Gy) / m) - wz*velocity->x() + wx*velocity->z();
+//    velocity->setY(velocity->y() + trapz(dVy, temp, dt));
+//    dVy = temp;
+//    temp = ((aerodynamicForce->z() + Gz) / m) - wx*velocity->y() + wy*velocity->x();
+//    velocity->setZ(velocity->z() + trapz(dVz, temp, dt));
+//    dVz = temp;
 
 
     time = time + dt;
 
     emit joyDataReady(getJoyData());
+    emit signal_modelingStep();
+
 }
 
 void Aircraft::startSimulation()
 {
+    if(!modelingTimer.isActive())
+    {
     modelingTimer.start(dt*1000);
+    }
 }
 
 void Aircraft::stopSimulation()
 {
     modelingTimer.stop();
+}
+
+
+void Aircraft::slotCalculateControl(QList<int> inJoy)
+{
+   QList<int> out;
+    foreach(int i,inJoy)
+    {
+        out.append(i);
+    }
+    out.append(inJoy.at(2));
+    out.append(inJoy.at(0));
+    out.append(inJoy.at(1));
+        emit customDataReady(out);
 }

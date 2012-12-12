@@ -27,7 +27,9 @@ SOURCES += main.cpp\
     NetServer/mikrohttpserver.cpp \
     ComPort/comporttransmitter.cpp \
     Aircraft/aircraft.cpp \
-    Joystick/v_joystick_adapter.cpp
+    Joystick/v_joystick_adapter.cpp \
+    ./qCustomPlot/qcustomplot.cpp
+
 
 HEADERS  += mainwindow.h \
     NetServer/netserver.h \
@@ -36,7 +38,9 @@ HEADERS  += mainwindow.h \
     NetServer/mikrohttpserver.h \
     ComPort/comporttransmitter.h \
     Aircraft/aircraft.h \
-    Joystick/v_joystick_adapter.h
+    Joystick/v_joystick_adapter.h \
+    ./qCustomPlot/qcustomplot.h
+
 
 FORMS    += mainwindow.ui \
 

@@ -12,6 +12,7 @@
 #include "Joystick/v_joystick_adapter.h"
 #include "QListWidget"
 #include "QStandardItemModel"
+#include "qCustomPlot/qcustomplot.h"
 
 namespace Ui {
 class MainWindow;
@@ -53,7 +54,7 @@ private slots:
 
     void on_pushButton_comPortReconnect_clicked();
     void showDataToCom(QByteArray dataToMc);
-
+    void showAircraftData(QList<int> data);
     void on_pb_joy_refresh_clicked();
 
 
@@ -92,7 +93,7 @@ private:
     QLabel* labelServerStatus;
     QLabel* labelComPortStatus;
     QLabel* labelJoystickStatus;
-            NetServer* server;
+    NetServer* server;
 
     ComPortTransmitter* comPort;
     Aircraft* aircraft;

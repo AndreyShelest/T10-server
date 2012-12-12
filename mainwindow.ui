@@ -48,7 +48,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <property name="documentMode">
        <bool>false</bool>
@@ -287,7 +287,7 @@
           </property>
           <property name="maximumSize">
            <size>
-            <width>150</width>
+            <width>190</width>
             <height>16777215</height>
            </size>
           </property>
@@ -627,7 +627,7 @@
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;simulate data&lt;/p&gt;&lt;p&gt;from board&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                 <property name="text">
-                 <string>Simulate</string>
+                 <string>to Clients</string>
                 </property>
                 <property name="checkable">
                  <bool>true</bool>
@@ -1293,6 +1293,16 @@
          </widget>
         </widget>
        </widget>
+       <widget class="QWidget" name="widget_5" native="true">
+        <property name="geometry">
+         <rect>
+          <x>260</x>
+          <y>20</y>
+          <width>401</width>
+          <height>321</height>
+         </rect>
+        </property>
+       </widget>
       </widget>
       <widget class="QWidget" name="tab_data">
        <attribute name="title">
@@ -1300,7 +1310,7 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QTableWidget" name="tableWidget">
+         <widget class="QTableWidget" name="table_aitcraftData">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
@@ -1354,19 +1364,26 @@
           </column>
           <column>
            <property name="text">
-            <string>posX</string>
+            <string>angleX</string>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>posY</string>
+            <string>angleY</string>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>posZ</string>
+            <string>angleZ</string>
            </property>
           </column>
+         </widget>
+        </item>
+        <item>
+         <widget class="QListWidget" name="list_fromCom">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
          </widget>
         </item>
        </layout>

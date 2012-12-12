@@ -59,6 +59,7 @@ public slots:
     void slotJoyXChanged(int value);
     void slotJoyYChanged(int value);
     void slotJoyZChanged(int value);
+    void slotCustomAll(QList<int> indata);
 
 };
 

@@ -54,6 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->set_transmit_mode('d');
     ui->PPN_wgt->setHidden(!ui->tb_custom_pp->isChecked());
     aircraft=new Aircraft(this);
+    ui->pBsimulate->setChecked(settings.value("NetServer/dataToClients", "true").toBool());
     ////aircraft->startSimulation();
 
 
@@ -188,7 +189,7 @@ void MainWindow::on_actionJoystick_toggled(bool arg1)
             //ui->label_Joystick_status->setText("<font color=red>"+tr("Not connected")+"</font>");
             //labelJoystickStatus->setText(tr("Joystick: ") + "<span style=\"color:#ff0000;font-weight:bold;\">" + tr("unable to connect to joystick") + "</span>");
             ui->actionJoystick->setChecked(false);
-                       qDebug() << "Unable to connect to joystick: " << joystick->getJoystickName();
+            qDebug() << "Unable to connect to joystick: " << joystick->getJoystickName();
         }
 
     }
@@ -218,22 +219,18 @@ void MainWindow::on_actionCom_port_toggled(bool arg1)
             this->log(tr("COM port: connected to ") + comPort->getDeviceName());
             labelComPortStatus->setText(tr("COM port: ") + "<span style=\"color:#008800;font-weight:bold;\">" + tr("connected") + "</span>");
             ui->pushButton_comPortReconnect->setEnabled(true);
-            //            connect(comPort, SIGNAL(Zavislo()), this, SLOT(comPortNotResponding()));
+            connect(aircraft, SIGNAL(serverDataReady(QList<int>)), this, SLOT(showAircraftData(QList<int>)));
+                       //            connect(comPort, SIGNAL(Zavislo()), this, SLOT(comPortNotResponding()));
             //            connect(comPort, SIGNAL(Otvislo()), this, SLOT(comPortRepaired()));
         }
         else
         {
 
-            //delete comPort;
-            //comPort = 0;
-            ui->actionCom_port->setChecked(false);
+                     ui->actionCom_port->setChecked(false);
 
         }
 
-        ////        connect(trans, SIGNAL(DataReady(QByteArray)), dataContainer, SLOT(comPortDataReady(QByteArray)));
-        ////        connect(dataContainer, SIGNAL(ready2com(QByteArray)), trans, SLOT(slot_Write(QByteArray)));
-
-    }
+          }
     else
     {
         if (!comPort->COM_isConnected())
@@ -247,8 +244,11 @@ void MainWindow::on_actionCom_port_toggled(bool arg1)
             labelComPortStatus->setText(tr("COM port: ") + "<span style=\"color:#ff0000;font-weight:bold;\">" + tr("disconnected") + "</span>");
         }
         comPort->COM_disconnect();
+        disconnect(aircraft, SIGNAL(serverDataReady(QList<int>)), this, SLOT(showAircraftData(QList<int>)));
+
         ui->actionCom_port->setStatusTip(tr("Connect to COM port"));
         ui->actionCom_port->setToolTip(ui->actionCom_port->statusTip());
+
     }
 }
 
@@ -275,7 +275,7 @@ void MainWindow::on_actionShowDataFromCom_toggled(bool arg1)
 {
     if (arg1)
     {
-        ui->stackedWidget->setCurrentIndex(1);
+       // ui->stackedWidget->setCurrentIndex(1);
     }
 }
 
@@ -334,7 +334,7 @@ void MainWindow::showDataToCom(QByteArray dataToMc)
 
         for(int i=0; i<dataToMc.size();i++)
         {
-          buf.append(QString::number((unsigned char)dataToMc[i])+", ");
+            buf.append(QString::number((unsigned char)dataToMc[i])+", ");
 
         }
 
@@ -345,6 +345,40 @@ void MainWindow::showDataToCom(QByteArray dataToMc)
         ui->list_toCom->scrollToBottom();
     }
 
+}
+
+void MainWindow::showAircraftData(QList<int> data)
+{
+    QString buf;
+    if (comPort->COM_isConnected())
+    {
+        for(int i=18; i<data.size();i++)
+        {
+            buf.append(QString::number(data[i])+", ");
+
+        }
+
+        ui->list_fromCom->addItem(buf);
+        if (ui->list_fromCom->count()>50)
+            ui->list_fromCom->clear();
+
+        ui->list_fromCom->scrollToBottom();
+
+        QStandardItemModel model(ui->table_aitcraftData->rowCount(),ui->table_aitcraftData->columnCount());
+        int n=0;
+        for (int i=0;i<ui->table_aitcraftData->columnCount();i++)
+        {
+            for (int j=0;j<ui->table_aitcraftData->rowCount()-1;j++)
+            {
+                ui->table_aitcraftData->model()->setData(model.index(j,i),data[n+18]);
+                n++;
+            }
+        }
+
+    }
+    else{
+        ui->list_fromCom->clear();
+    }
 }
 
 
@@ -395,65 +429,65 @@ void MainWindow::set_transmit_mode(char com)
     {
         ui->tb_data_on->setEnabled(true);
         ui->tb_data_on->setChecked(true);
-         ui->tb_data_on_Joy->setEnabled(false);
-         ui->tb_data_on_Joy->setChecked(false);
+        ui->tb_data_on_Joy->setEnabled(false);
+        ui->tb_data_on_Joy->setChecked(false);
         ui->tb_data_rau_joy->setEnabled(false);
         ui->tb_data_rau_joy->setChecked(false);
-             ui->tb_custom_on->setEnabled(false);
-              ui->tb_custom_on->setChecked(false);
-              ui->tb_custom_pp->setChecked(false);
-              ui->tb_custom_rau->setChecked(false);
-              settings.setValue("ComPort/Mode", com);
-                   comPort->setControlByte(com);
-         break;
+        ui->tb_custom_on->setEnabled(false);
+        ui->tb_custom_on->setChecked(false);
+        ui->tb_custom_pp->setChecked(false);
+        ui->tb_custom_rau->setChecked(false);
+        settings.setValue("ComPort/Mode", com);
+        comPort->setControlByte(com);
+        break;
     }
     case 'j': // data and joy
     {
         ui->tb_data_on_Joy->setEnabled(true);
         ui->tb_data_on_Joy->setChecked(true);
-         ui->tb_data_on->setEnabled(false);
-          ui->tb_data_on->setChecked(false);
-          ui->tb_data_rau_joy->setEnabled(false);
-          ui->tb_data_rau_joy->setChecked(false);
-               ui->tb_custom_on->setEnabled(false);
-                ui->tb_custom_on->setChecked(false);
-                ui->tb_custom_pp->setChecked(false);
-                ui->tb_custom_rau->setChecked(false);
-                settings.setValue("ComPort/Mode",com);
-                 comPort->setControlByte(com);
+        ui->tb_data_on->setEnabled(false);
+        ui->tb_data_on->setChecked(false);
+        ui->tb_data_rau_joy->setEnabled(false);
+        ui->tb_data_rau_joy->setChecked(false);
+        ui->tb_custom_on->setEnabled(false);
+        ui->tb_custom_on->setChecked(false);
+        ui->tb_custom_pp->setChecked(false);
+        ui->tb_custom_rau->setChecked(false);
+        settings.setValue("ComPort/Mode",com);
+        comPort->setControlByte(com);
         break;
     }
     case 'c':// control rau by joy
     {
         ui->tb_data_rau_joy->setEnabled(true);
         ui->tb_data_rau_joy->setChecked(true);
-         ui->tb_data_on_Joy->setEnabled(false);
-         ui->tb_data_on_Joy->setChecked(false);
+        ui->tb_data_on_Joy->setEnabled(false);
+        ui->tb_data_on_Joy->setChecked(false);
         ui->tb_data_on->setEnabled(false);
         ui->tb_data_on->setChecked(false);
-             ui->tb_custom_on->setEnabled(false);
-              ui->tb_custom_on->setChecked(false);
-              ui->tb_custom_pp->setChecked(false);
-              ui->tb_custom_rau->setChecked(false);
-              settings.setValue("ComPort/Mode", com);
+        ui->tb_custom_on->setEnabled(false);
+        ui->tb_custom_on->setChecked(false);
+        ui->tb_custom_pp->setChecked(false);
+        ui->tb_custom_rau->setChecked(false);
+        settings.setValue("ComPort/Mode", com);
 
-              comPort->setControlByte(com);
+        comPort->setControlByte(com);
         break;
     }
     case 'r':// custom rau and ppn control
     {
         ui->tb_custom_on->setEnabled(true);
         ui->tb_custom_on->setChecked(true);
-         ui->tb_data_on_Joy->setEnabled(false);
-         ui->tb_data_on_Joy->setChecked(false);
+        ui->tb_data_on_Joy->setEnabled(false);
+        ui->tb_data_on_Joy->setChecked(false);
         ui->tb_data_rau_joy->setEnabled(false);
         ui->tb_data_rau_joy->setChecked(false);
-             ui->tb_data_on->setEnabled(false);
-              ui->tb_data_on->setChecked(false);
-                   comPort->setControlByte(com);
-                   ui->tb_custom_pp->setEnabled(true);
-                   ui->tb_custom_rau->setEnabled(true);
-                    settings.setValue("ComPort/Mode", com);
+        ui->tb_data_on->setEnabled(false);
+        ui->tb_data_on->setChecked(false);
+        comPort->setControlByte(com);
+        ui->tb_custom_pp->setEnabled(true);
+        ui->tb_custom_rau->setEnabled(true);
+        settings.setValue("ComPort/Mode", com);
         break;
     }
 
@@ -461,20 +495,20 @@ void MainWindow::set_transmit_mode(char com)
     {
         ui->tb_data_on->setEnabled(true);
         ui->tb_data_on->setChecked(false);
-         ui->tb_data_on_Joy->setEnabled(true);
-         ui->tb_data_on_Joy->setChecked(false);
+        ui->tb_data_on_Joy->setEnabled(true);
+        ui->tb_data_on_Joy->setChecked(false);
         ui->tb_data_rau_joy->setEnabled(true);
         ui->tb_data_rau_joy->setChecked(false);
-             ui->tb_custom_on->setEnabled(true);
-              ui->tb_custom_on->setChecked(false);
-                                           ui->tb_custom_pp->setEnabled(false);
-                                           ui->tb_custom_rau->setEnabled(false);
-                                           ui->tb_custom_pp->setChecked(false);
-                                           ui->tb_custom_rau->setChecked(false);
-                                           ui->tb_custom_pp->setChecked(false);
-                                           ui->tb_custom_rau->setChecked(false);
-                                            ui->PPN_wgt->setHidden(true);
-                   comPort->setControlByte(com);
+        ui->tb_custom_on->setEnabled(true);
+        ui->tb_custom_on->setChecked(false);
+        ui->tb_custom_pp->setEnabled(false);
+        ui->tb_custom_rau->setEnabled(false);
+        ui->tb_custom_pp->setChecked(false);
+        ui->tb_custom_rau->setChecked(false);
+        ui->tb_custom_pp->setChecked(false);
+        ui->tb_custom_rau->setChecked(false);
+        ui->PPN_wgt->setHidden(true);
+        comPort->setControlByte(com);
         break;
     }
     }
@@ -494,7 +528,7 @@ void MainWindow::on_tb_data_on_toggled(bool checked)
     {
         QSettings settings(QSettings::IniFormat, QSettings::UserScope,
                            QCoreApplication::organizationName(), QCoreApplication::applicationName());
-this->set_transmit_mode('d');
+        this->set_transmit_mode('d');
         settings.setValue("ComPort/Mode", 'd');
 
     }
@@ -508,7 +542,7 @@ void MainWindow::on_tb_data_rau_joy_toggled(bool checked)
     {
         QSettings settings(QSettings::IniFormat, QSettings::UserScope,
                            QCoreApplication::organizationName(), QCoreApplication::applicationName());
-this->set_transmit_mode('c');
+        this->set_transmit_mode('c');
         settings.setValue("ComPort/Mode", 'c');
 
     }
@@ -522,12 +556,21 @@ void MainWindow::on_tb_data_on_Joy_toggled(bool checked)
     {
         QSettings settings(QSettings::IniFormat, QSettings::UserScope,
                            QCoreApplication::organizationName(), QCoreApplication::applicationName());
-this->set_transmit_mode('j');
-        settings.setValue("ComPort/Mode", 'j');
 
+        settings.setValue("ComPort/Mode", 'j');
+        //this->on_aircraft_Simulate_triggered(true);
+        ui->aircraft_Simulate->setChecked(true);
+        connect(aircraft,SIGNAL(joyDataReady(QList<int>)),aircraft,SLOT(slotCalculateControl(QList<int>)));
+        connect(aircraft,SIGNAL(customDataReady(QList<int>)),comPort,SLOT(slotCustomAll(QList<int>)));
+        this->set_transmit_mode('j');
     }
     else {
-        this->set_transmit_mode('q');}
+        //this->on_aircraft_Simulate_triggered(false);
+        //ui->aircraft_Simulate->setChecked(false);
+        disconnect(aircraft,SIGNAL(joyDataReady(QList<int>)),aircraft,SLOT(slotCalculateControl(QList<int>)));
+        disconnect(aircraft,SIGNAL(customDataReady(QList<int>)),comPort,SLOT(slotCustomAll(QList<int>)));
+        this->set_transmit_mode('q');
+    }
 }
 
 void MainWindow::on_tb_custom_on_toggled(bool checked)
@@ -536,7 +579,7 @@ void MainWindow::on_tb_custom_on_toggled(bool checked)
     {
         QSettings settings(QSettings::IniFormat, QSettings::UserScope,
                            QCoreApplication::organizationName(), QCoreApplication::applicationName());
-this->set_transmit_mode('r');
+        this->set_transmit_mode('r');
         settings.setValue("ComPort/Mode", 'r');
 
     }
@@ -560,8 +603,19 @@ void MainWindow::on_listWidgetSettings_clicked(const QModelIndex &index)
 void MainWindow::on_aircraft_Simulate_triggered(bool checked)
 {
     if (checked)
-    {aircraft->startSimulation();}
-    else aircraft->stopSimulation();
+    {
+        aircraft->startSimulation();
+        connect(joystick, SIGNAL(sigXAxisChanged(int)), aircraft, SLOT(setJoyX(int)));
+        connect(joystick, SIGNAL(sigYAxisChanged(int)), aircraft, SLOT(setJoyY(int)));
+        connect(joystick, SIGNAL(sigZAxisChanged(int)), aircraft, SLOT(setJoyZ(int)));
+    }
+    else
+    {
+        aircraft->stopSimulation();
+        disconnect(joystick, SIGNAL(sigXAxisChanged(int)), aircraft, SLOT(setJoyX(int)));
+        disconnect(joystick, SIGNAL(sigYAxisChanged(int)), aircraft, SLOT(setJoyY(int)));
+        disconnect(joystick, SIGNAL(sigZAxisChanged(int)), aircraft, SLOT(setJoyZ(int)));
+    }
 }
 
 
@@ -577,17 +631,21 @@ void MainWindow::on_tb_custom_rau_toggled(bool checked)
         ui->lbl_dial3->setText("Rau Yaw");
         connect(ui->ppn_rudder,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomRauX(int)));
         connect(ui->ppn_ailerons,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomRauY(int)));
-                connect(ui->ppn_stab,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomRauZ(int)));
-   ui->tb_custom_pp->setEnabled(false);
+        connect(ui->ppn_stab,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomRauZ(int)));
+        ui->tb_custom_pp->setEnabled(false);
 
-   ui->PPN_wgt->setHidden(!checked);
+        ui->PPN_wgt->setHidden(!checked);
     }
     else {
-    ui->ppn_rudder->setValue(128);
-    ui->ppn_ailerons->setValue(128);
-    ui->ppn_stab->setValue(128);
-    ui->tb_custom_pp->setEnabled(true);
-    ui->PPN_wgt->setHidden(!checked);
+        disconnect(ui->ppn_rudder,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomRauX(int)));
+        disconnect(ui->ppn_ailerons,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomRauY(int)));
+        disconnect(ui->ppn_stab,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomRauZ(int)));
+
+        ui->ppn_rudder->setValue(128);
+        ui->ppn_ailerons->setValue(128);
+        ui->ppn_stab->setValue(128);
+        ui->tb_custom_pp->setEnabled(true);
+        ui->PPN_wgt->setHidden(!checked);
     }
 
 }
@@ -596,39 +654,46 @@ void MainWindow::on_tb_custom_pp_toggled(bool checked)
 {
     if (checked)
     {
-                 emit on_tb_custom_rau_toggled(false);
-                 ui->lbl_dial1->setText("Rudder");
-                 ui->lbl_dial2->setText("Aileron");
-                 ui->lbl_dial3->setText("Stabilisators");
+        emit on_tb_custom_rau_toggled(false);
+        ui->lbl_dial1->setText("Rudder");
+        ui->lbl_dial2->setText("Aileron");
+        ui->lbl_dial3->setText("Stabilisators");
         connect(ui->ppn_rudder,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomPPNr(int)));
         connect(ui->ppn_ailerons,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomPPNa(int)));
-                connect(ui->ppn_stab,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomPPNs(int)));
-   ui->tb_custom_rau->setEnabled(false);
-   ui->PPN_wgt->setHidden(!checked);
+        connect(ui->ppn_stab,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomPPNs(int)));
+        ui->tb_custom_rau->setEnabled(false);
+        ui->PPN_wgt->setHidden(!checked);
 
 
     }
     else {
-    ui->ppn_rudder->setValue(128);
-    ui->ppn_ailerons->setValue(128);
-    ui->ppn_stab->setValue(128);
-    ui->tb_custom_rau->setEnabled(true);
-    ui->PPN_wgt->setHidden(!checked);
+        disconnect(ui->ppn_rudder,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomPPNr(int)));
+        disconnect(ui->ppn_ailerons,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomPPNa(int)));
+        disconnect(ui->ppn_stab,SIGNAL(valueChanged(int)),comPort,SLOT(setCustomPPNs(int)));
+        ui->ppn_rudder->setValue(128);
+        ui->ppn_ailerons->setValue(128);
+        ui->ppn_stab->setValue(128);
+        ui->tb_custom_rau->setEnabled(true);
+        ui->PPN_wgt->setHidden(!checked);
     }
 
 }
 
 void MainWindow::on_pBsimulate_toggled(bool checked)
 {
-    ui->pBsimulate->setChecked(checked);
     if (checked)
     {
-       ui->actionCom_port->setChecked(false);
-                connect(joystick, SIGNAL(sigXAxisChanged(int)), aircraft, SLOT(setJoyX(int)));
-            connect(joystick, SIGNAL(sigYAxisChanged(int)), aircraft, SLOT(setJoyY(int)));
-            connect(joystick, SIGNAL(sigZAxisChanged(int)), aircraft, SLOT(setJoyZ(int)));
-            connect(aircraft,SIGNAL(joyDataReady(QList<int>)),server,SLOT(dataFromJoystick(QList<int>)));
-             //connect(server,SIGNAL(needJoyData()),server,SLOT(dataFromJoystick()));
+        this->on_aircraft_Simulate_triggered(true);
+         //ui->aircraft_Simulate->setChecked(true);
+        connect(aircraft,SIGNAL(signal_modelingStep()),aircraft,SLOT(setServerData()));
+        connect(comPort,SIGNAL(DataReady(QByteArray)),aircraft,SLOT(setDataFromBoard(QByteArray)));
+        connect(aircraft,SIGNAL(serverDataReady(QList<int>)),server,SLOT(setServerData(QList<int>)));
 
+    }
+    else
+    {
+        disconnect(aircraft,SIGNAL(signal_modelingStep()),aircraft,SLOT(setServerData()));
+        disconnect(comPort,SIGNAL(DataReady(QByteArray)),aircraft,SLOT(setDataFromBoard(QByteArray)));
+        disconnect(aircraft,SIGNAL(serverDataReady(QList<int>)),server,SLOT(setServerData(QList<int>)));
     }
 }

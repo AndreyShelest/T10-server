@@ -95,7 +95,7 @@ void ServerThread::DataReady(QList<float> msg)
                 s.append(QString::number((float)msg.at(i)));
                          s.append(10);
 
-                         qDebug()<<s;
+                      //   qDebug()<<s;
                 send(s);
 
             }
