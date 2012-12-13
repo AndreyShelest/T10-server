@@ -1,22 +1,17 @@
-#include "graphwidget.h"
-#include "ui_graphwidget.h"
+#include "graphwindow.h"
+#include "ui_graphwindow.h"
 #include <cmath>
 #include <cstdlib>
 #include <QDebug>
 #include <QDesktopWidget>
 #include <QMessageBox>
 
-
-GraphWidget::GraphWidget(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::GraphWidget)
+GraphWindow::GraphWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::GraphWindow)
 {
-
-   ui->setupUi(this);
-//statusbar=new QStatusBar();
+    ui->setupUi(this);
     setGeometry(150, 150, 546, 390);
-
-
 
     setupDemo(10);
 
@@ -39,7 +34,7 @@ GraphWidget::GraphWidget(QWidget *parent) :
     //QTimer::singleShot(350, this, SLOT(allScreenShots()));
     //QTimer::singleShot(1000, this, SLOT(screenShot()));
 }
-void GraphWidget::setupDemo(int demoIndex)
+void GraphWindow::setupDemo(int demoIndex)
 {
   switch (demoIndex)
   {
@@ -59,12 +54,12 @@ void GraphWidget::setupDemo(int demoIndex)
     case 13: setupStatisticalDemo(ui->customPlot); break;
   }
   setWindowTitle("QCustomPlot: "+demoName);
-  //statusBar()->clearMessage();
+  statusBar()->clearMessage();
   currentDemoIndex = demoIndex;
   ui->customPlot->replot();
 }
 
-void GraphWidget::setupQuadraticDemo(QCustomPlot *customPlot)
+void GraphWindow::setupQuadraticDemo(QCustomPlot *customPlot)
 {
   demoName = "Quadratic Demo";
   // generate some data:
@@ -85,7 +80,7 @@ void GraphWidget::setupQuadraticDemo(QCustomPlot *customPlot)
   customPlot->yAxis->setRange(0, 1);
 }
 
-void GraphWidget::setupSimpleDemo(QCustomPlot *customPlot)
+void GraphWindow::setupSimpleDemo(QCustomPlot *customPlot)
 {
   demoName = "Simple Demo";
 
@@ -125,7 +120,7 @@ void GraphWidget::setupSimpleDemo(QCustomPlot *customPlot)
   customPlot->setInteraction(QCustomPlot::iSelectPlottables); // allow selection of graphs via mouse click
 }
 
-void GraphWidget::setupSincScatterDemo(QCustomPlot *customPlot)
+void GraphWindow::setupSincScatterDemo(QCustomPlot *customPlot)
 {
   demoName = "Sinc Scatter Demo";
   customPlot->legend->setVisible(true);
@@ -203,7 +198,7 @@ void GraphWidget::setupSincScatterDemo(QCustomPlot *customPlot)
   customPlot->setupFullAxesBox();
 }
 
-void GraphWidget::setupScatterStyleDemo(QCustomPlot *customPlot)
+void GraphWindow::setupScatterStyleDemo(QCustomPlot *customPlot)
 {
   demoName = "Scatter Style Demo";
   customPlot->legend->setVisible(true);
@@ -246,7 +241,7 @@ void GraphWidget::setupScatterStyleDemo(QCustomPlot *customPlot)
   customPlot->setupFullAxesBox();
 }
 
-void GraphWidget::setupLineStyleDemo(QCustomPlot *customPlot)
+void GraphWindow::setupLineStyleDemo(QCustomPlot *customPlot)
 {
   demoName = "Line Style Demo";
   customPlot->legend->setVisible(true);
@@ -288,7 +283,7 @@ void GraphWidget::setupLineStyleDemo(QCustomPlot *customPlot)
   customPlot->setupFullAxesBox();
 }
 
-void GraphWidget::setupScatterPixmapDemo(QCustomPlot *customPlot)
+void GraphWindow::setupScatterPixmapDemo(QCustomPlot *customPlot)
 {
   demoName = "Scatter Pixmap Demo";
   customPlot->setAxisBackground(QPixmap("./solarpanels.jpg"));
@@ -333,7 +328,7 @@ void GraphWidget::setupScatterPixmapDemo(QCustomPlot *customPlot)
   customPlot->legend->setPositionStyle(QCPLegend::psTopLeft);
 }
 
-void GraphWidget::setupDateDemo(QCustomPlot *customPlot)
+void GraphWindow::setupDateDemo(QCustomPlot *customPlot)
 {
   demoName = "Date Demo";
   // set locale to english, so we get english month names:
@@ -399,7 +394,7 @@ void GraphWidget::setupDateDemo(QCustomPlot *customPlot)
   customPlot->legend->setPositionStyle(QCPLegend::psTopLeft);
 }
 
-void GraphWidget::setupTextureBrushDemo(QCustomPlot *customPlot)
+void GraphWindow::setupTextureBrushDemo(QCustomPlot *customPlot)
 {
   demoName = "Texture Brush Demo";
   // add two graphs with a textured fill:
@@ -444,7 +439,7 @@ void GraphWidget::setupTextureBrushDemo(QCustomPlot *customPlot)
   customPlot->setupFullAxesBox();
 }
 
-void GraphWidget::setupMultiAxisDemo(QCustomPlot *customPlot)
+void GraphWindow::setupMultiAxisDemo(QCustomPlot *customPlot)
 {
   demoName = "Multi Axis Demo";
 
@@ -452,7 +447,7 @@ void GraphWidget::setupMultiAxisDemo(QCustomPlot *customPlot)
   customPlot->setAntialiasedElement(QCustomPlot::aeScatters);
 
   customPlot->legend->setVisible(true);
-  QFont legendFont = font();  // start out with GraphWidget's font..
+  QFont legendFont = font();  // start out with GraphWindow's font..
   legendFont.setPointSize(9); // and make a bit smaller for legend
   customPlot->legend->setFont(legendFont);
   customPlot->legend->setPositionStyle(QCPLegend::psBottomRight);
@@ -566,7 +561,7 @@ void GraphWidget::setupMultiAxisDemo(QCustomPlot *customPlot)
   customPlot->yAxis2->setSubTickLength(1, 1);
 }
 
-void GraphWidget::setupLogarithmicDemo(QCustomPlot *customPlot)
+void GraphWindow::setupLogarithmicDemo(QCustomPlot *customPlot)
 {
   demoName = "Logarithmic Demo";
   customPlot->addGraph();
@@ -645,7 +640,7 @@ void GraphWidget::setupLogarithmicDemo(QCustomPlot *customPlot)
   customPlot->legend->setBrush(QBrush(QColor(255,255,255,150)));
 }
 
-void GraphWidget::setupRealtimeDataDemo(QCustomPlot *customPlot)
+void GraphWindow::setupRealtimeDataDemo(QCustomPlot *customPlot)
 {
 #if QT_VERSION < QT_VERSION_CHECK(4, 7, 0)
   QMessageBox::critical(this, "", "You're using Qt < 4.7, the realtime data demo needs functions that are available with Qt 4.7 to work properly");
@@ -686,12 +681,12 @@ void GraphWidget::setupRealtimeDataDemo(QCustomPlot *customPlot)
   connect(customPlot->xAxis, SIGNAL(rangeChanged(QCPRange)), customPlot->xAxis2, SLOT(setRange(QCPRange)));
   connect(customPlot->yAxis, SIGNAL(rangeChanged(QCPRange)), customPlot->yAxis2, SLOT(setRange(QCPRange)));
 
-  // setup a timer that repeatedly calls GraphWidget::realtimeDataSlot:
+  // setup a timer that repeatedly calls GraphWindow::realtimeDataSlot:
   connect(&realRealtimeDataTimer, SIGNAL(timeout()), this, SLOT(realtimeDataSlot()));
   realRealtimeDataTimer.start(0); // Interval 0 means to refresh as fast as possible
 }
 
-void GraphWidget::setupParametricCurveDemo(QCustomPlot *customPlot)
+void GraphWindow::setupParametricCurveDemo(QCustomPlot *customPlot)
 {
   demoName = "Parametric Curves Demo";
 
@@ -742,7 +737,7 @@ void GraphWidget::setupParametricCurveDemo(QCustomPlot *customPlot)
   customPlot->rescaleAxes();
 }
 
-void GraphWidget::setupBarChartDemo(QCustomPlot *customPlot)
+void GraphWindow::setupBarChartDemo(QCustomPlot *customPlot)
 {
   demoName = "Bar Chart Demo";
   // create empty bar chart objects:
@@ -824,7 +819,7 @@ void GraphWidget::setupBarChartDemo(QCustomPlot *customPlot)
 
 }
 
-void GraphWidget::setupStatisticalDemo(QCustomPlot *customPlot)
+void GraphWindow::setupStatisticalDemo(QCustomPlot *customPlot)
 {
   demoName = "Statistical Demo";
   // create empty statistical box plottables:
@@ -885,7 +880,7 @@ void GraphWidget::setupStatisticalDemo(QCustomPlot *customPlot)
   customPlot->setRangeZoom(Qt::Horizontal|Qt::Vertical);
 }
 
-void GraphWidget::realtimeDataSlot()
+void GraphWindow::realtimeDataSlot()
 {
   // calculate two new data points:
 #if QT_VERSION < QT_VERSION_CHECK(4, 7, 0)
@@ -920,17 +915,17 @@ void GraphWidget::realtimeDataSlot()
   ++frameCount;
   if (key-lastSec > 2) // average fps over 2 seconds
   {
-//    ui->statusBar->showMessage(
-//          QString("%1 FPS, Total Data points: %2")
-//          .arg(frameCount/(key-lastSec), 0, 'f', 0)
-//          .arg(ui->customPlot->graph(0)->data()->count()+ui->customPlot->graph(1)->data()->count())
-//          , 0);
+    ui->statusBar->showMessage(
+          QString("%1 FPS, Total Data points: %2")
+          .arg(frameCount/(key-lastSec), 0, 'f', 0)
+          .arg(ui->customPlot->graph(0)->data()->count()+ui->customPlot->graph(1)->data()->count())
+          , 0);
     lastSec = key;
     frameCount = 0;
   }
 }
 
-void GraphWidget::setupPlayground(QCustomPlot *customPlot)
+void GraphWindow::setupPlayground(QCustomPlot *customPlot)
 {
   Q_UNUSED(customPlot)
   /*
@@ -951,9 +946,12 @@ void GraphWidget::setupPlayground(QCustomPlot *customPlot)
   */
 }
 
+GraphWindow::~GraphWindow()
+{
+  delete ui;
+}
 
-
-void GraphWidget::screenShot()
+void GraphWindow::screenShot()
 {
   QPixmap pm = QPixmap::grabWindow(qApp->desktop()->winId(), this->x()+5, this->y(), this->frameGeometry().width()-10, this->frameGeometry().height()-5);
   QString fileName = "qcustomplot-"+demoName.toLower()+".png";
@@ -965,7 +963,7 @@ void GraphWidget::screenShot()
   // ui->customPlot->savePdf("./outsave.pdf", true);
 }
 
-void GraphWidget::allScreenShots()
+void GraphWindow::allScreenShots()
 {
   QPixmap pm = QPixmap::grabWindow(qApp->desktop()->winId(), this->x()+5, this->y(), this->frameGeometry().width()-10, this->frameGeometry().height()-5);
   QString fileName = "qcustomplot-"+demoName.toLower()+".png";
@@ -977,8 +975,8 @@ void GraphWidget::allScreenShots()
     if (realRealtimeDataTimer.isActive())
       realRealtimeDataTimer.stop();
     delete ui->customPlot;
-   // ui->customPlot = new QCustomPlot(ui->centralWidget);
-    //ui->verticalLayout->addWidget(ui->customPlot);
+    //ui->customPlot = new QCustomPlot(ui->centralWidget);
+    ui->verticalLayout->addWidget(ui->customPlot);
     setupDemo(currentDemoIndex+1);
     int delay = 100;
     if (demoName == "Real Time Data Demo")
@@ -988,8 +986,4 @@ void GraphWidget::allScreenShots()
   {
     qApp->quit();
   }
-}
-GraphWidget::~GraphWidget()
-{
-    delete ui;
 }

@@ -13,7 +13,7 @@
 #include "QListWidget"
 #include "QStandardItemModel"
 #include "qCustomPlot/qcustomplot.h"
-#include "qCustomPlot/graphwidget.h"
+#include "qCustomPlot/graphwindow.h"
 
 namespace Ui {
 class MainWindow;
@@ -101,7 +101,7 @@ private:
     ComPortTransmitter* comPort;
     Aircraft* aircraft;
     VJoystickAdapter* joystick;
-    GraphWidget graphWindow;
+    GraphWindow graphWindow;
 
     void rebuildPeerList(PeerInfo* pinfo, bool disconnected = false, bool renamed = false);
 };

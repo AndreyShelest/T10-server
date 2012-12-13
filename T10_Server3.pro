@@ -29,7 +29,7 @@ SOURCES += main.cpp\
     Aircraft/aircraft.cpp \
     Joystick/v_joystick_adapter.cpp \
     ./qCustomPlot/qcustomplot.cpp \
-    qCustomPlot/graphwidget.cpp
+    qCustomPlot/graphwindow.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -41,11 +41,11 @@ HEADERS  += mainwindow.h \
     Aircraft/aircraft.h \
     Joystick/v_joystick_adapter.h \
     ./qCustomPlot/qcustomplot.h \
-    qCustomPlot/graphwidget.h
+    qCustomPlot/graphwindow.h
 
 
 FORMS    += mainwindow.ui \
-    qCustomPlot/graphwidget.ui
+    qCustomPlot/graphwindow.ui
 
 RESOURCES += \
     T10_Server3.qrc
