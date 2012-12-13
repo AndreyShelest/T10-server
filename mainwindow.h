@@ -13,6 +13,7 @@
 #include "QListWidget"
 #include "QStandardItemModel"
 #include "qCustomPlot/qcustomplot.h"
+#include "qCustomPlot/graphwidget.h"
 
 namespace Ui {
 class MainWindow;
@@ -85,6 +86,8 @@ private slots:
 
     void on_pBsimulate_toggled(bool checked);
 
+    void on_actionPlots_toggled(bool arg1);
+
 public slots:
     void log(QString data);
 
@@ -98,6 +101,7 @@ private:
     ComPortTransmitter* comPort;
     Aircraft* aircraft;
     VJoystickAdapter* joystick;
+    GraphWidget graphWindow;
 
     void rebuildPeerList(PeerInfo* pinfo, bool disconnected = false, bool renamed = false);
 };

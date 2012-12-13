@@ -697,3 +697,15 @@ void MainWindow::on_pBsimulate_toggled(bool checked)
         disconnect(aircraft,SIGNAL(serverDataReady(QList<int>)),server,SLOT(setServerData(QList<int>)));
     }
 }
+
+void MainWindow::on_actionPlots_toggled(bool arg1)
+{
+    if (arg1)
+    {
+    graphWindow.show();
+    }
+        else
+    {
+        graphWindow.hide();
+    }
+}

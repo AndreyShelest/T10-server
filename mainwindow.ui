@@ -1293,16 +1293,6 @@
          </widget>
         </widget>
        </widget>
-       <widget class="QWidget" name="widget_5" native="true">
-        <property name="geometry">
-         <rect>
-          <x>260</x>
-          <y>20</y>
-          <width>401</width>
-          <height>321</height>
-         </rect>
-        </property>
-       </widget>
       </widget>
       <widget class="QWidget" name="tab_data">
        <attribute name="title">
@@ -1562,6 +1552,7 @@
    <addaction name="actionShow_info_about_clients"/>
    <addaction name="actionShowDataFromCom"/>
    <addaction name="aircraft_Simulate"/>
+   <addaction name="actionPlots"/>
    <addaction name="separator"/>
    <addaction name="actionSettings"/>
    <addaction name="separator"/>
@@ -1699,6 +1690,24 @@
    </property>
    <property name="toolTip">
     <string>Connect to joystick</string>
+   </property>
+  </action>
+  <action name="actionPlots">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="T10_Server3.qrc">
+     <normaloff>:/resources/icons/Watch.svg</normaloff>:/resources/icons/Watch.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Plots</string>
+   </property>
+   <property name="toolTip">
+    <string>show plots window</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
    </property>
   </action>
  </widget>

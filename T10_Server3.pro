@@ -28,7 +28,8 @@ SOURCES += main.cpp\
     ComPort/comporttransmitter.cpp \
     Aircraft/aircraft.cpp \
     Joystick/v_joystick_adapter.cpp \
-    ./qCustomPlot/qcustomplot.cpp
+    ./qCustomPlot/qcustomplot.cpp \
+    qCustomPlot/graphwidget.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -39,10 +40,12 @@ HEADERS  += mainwindow.h \
     ComPort/comporttransmitter.h \
     Aircraft/aircraft.h \
     Joystick/v_joystick_adapter.h \
-    ./qCustomPlot/qcustomplot.h
+    ./qCustomPlot/qcustomplot.h \
+    qCustomPlot/graphwidget.h
 
 
 FORMS    += mainwindow.ui \
+    qCustomPlot/graphwidget.ui
 
 RESOURCES += \
     T10_Server3.qrc
