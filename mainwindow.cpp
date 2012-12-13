@@ -702,10 +702,14 @@ void MainWindow::on_actionPlots_toggled(bool arg1)
 {
     if (arg1)
     {
+
     graphWindow.show();
+    graphWindow.setupDemo(14,aircraft);
     }
         else
     {
+        //graphWindow.setupDemo(20);
         graphWindow.hide();
+
     }
 }

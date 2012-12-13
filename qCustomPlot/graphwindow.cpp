@@ -13,7 +13,7 @@ GraphWindow::GraphWindow(QWidget *parent) :
     ui->setupUi(this);
     setGeometry(150, 150, 546, 390);
 
-    setupDemo(10);
+    //setupDemo(14);
 
     // 0:  setupQuadraticDemo(ui->customPlot);
     // 1:  setupSimpleDemo(ui->customPlot);
@@ -34,7 +34,7 @@ GraphWindow::GraphWindow(QWidget *parent) :
     //QTimer::singleShot(350, this, SLOT(allScreenShots()));
     //QTimer::singleShot(1000, this, SLOT(screenShot()));
 }
-void GraphWindow::setupDemo(int demoIndex)
+void GraphWindow::setupDemo(int demoIndex, Aircraft *acrft)
 {
   switch (demoIndex)
   {
@@ -52,6 +52,7 @@ void GraphWindow::setupDemo(int demoIndex)
     case 11: setupParametricCurveDemo(ui->customPlot); break;
     case 12: setupBarChartDemo(ui->customPlot); break;
     case 13: setupStatisticalDemo(ui->customPlot); break;
+    case 14: setupRealtimeT10Data(ui->customPlot,acrft); break;
   }
   setWindowTitle("QCustomPlot: "+demoName);
   statusBar()->clearMessage();
@@ -685,7 +686,52 @@ void GraphWindow::setupRealtimeDataDemo(QCustomPlot *customPlot)
   connect(&realRealtimeDataTimer, SIGNAL(timeout()), this, SLOT(realtimeDataSlot()));
   realRealtimeDataTimer.start(0); // Interval 0 means to refresh as fast as possible
 }
+void GraphWindow::setupRealtimeT10Data(QCustomPlot *customPlot, Aircraft *acrft)
+{
+#if QT_VERSION < QT_VERSION_CHECK(4, 7, 0)
+  QMessageBox::critical(this, "", "You're using Qt < 4.7, the realtime data demo needs functions that are available with Qt 4.7 to work properly");
+#endif
+  demoName = "Real Time T10 data";
+  /*
+  // include this section to fully disable antialiasing for higher performance:
+  customPlot->setAntialiasedElements(0);
+  QFont font;
+  font.setStyleStrategy(QFont::NoAntialias);
+  customPlot->xAxis->setTickFont(font);
+  customPlot->yAxis->setTickFont(font);
+  customPlot->legend->setFont(font);
+  */
+  customPlot->addGraph(); // blue line
+  customPlot->graph(0)->setPen(QPen(Qt::blue));
+  customPlot->graph(0)->setBrush(QBrush(QColor(240, 255, 200)));
+  customPlot->addGraph(); // red line
+  customPlot->graph(1)->setPen(QPen(Qt::red));
+  customPlot->graph(0)->setChannelFillGraph(customPlot->graph(1));
 
+  customPlot->addGraph(); // blue dot
+  customPlot->graph(2)->setPen(QPen(Qt::blue));
+  customPlot->graph(2)->setLineStyle(QCPGraph::lsNone);
+  customPlot->graph(2)->setScatterStyle(QCPGraph::ssDisc);
+  customPlot->addGraph(); // red dot
+  customPlot->graph(3)->setPen(QPen(Qt::red));
+  customPlot->graph(3)->setLineStyle(QCPGraph::lsNone);
+  customPlot->graph(3)->setScatterStyle(QCPGraph::ssDisc);
+
+  customPlot->xAxis->setTickLabelType(QCPAxis::ltDateTime);
+  customPlot->xAxis->setDateTimeFormat("hh:mm:ss");
+  customPlot->xAxis->setAutoTickStep(false);
+  customPlot->xAxis->setTickStep(2);
+  customPlot->setupFullAxesBox();
+
+  // make left and bottom axes transfer their ranges to right and top axes:
+  connect(customPlot->xAxis, SIGNAL(rangeChanged(QCPRange)), customPlot->xAxis2, SLOT(setRange(QCPRange)));
+  connect(customPlot->yAxis, SIGNAL(rangeChanged(QCPRange)), customPlot->yAxis2, SLOT(setRange(QCPRange)));
+
+  // setup a timer that repeatedly calls GraphWindow::realtimeDataSlot:
+  connect(acrft, SIGNAL(serverDataReady(QList<int>)), this, SLOT(realtimeT10Slot(QList<int>)));
+  //connect(&realRealtimeDataTimer, SIGNAL(timeout()), this, SLOT(realtimeDataSlot()));
+  //realRealtimeDataTimer.start(0); // Interval 0 means to refresh as fast as possible
+}
 void GraphWindow::setupParametricCurveDemo(QCustomPlot *customPlot)
 {
   demoName = "Parametric Curves Demo";
@@ -925,6 +971,52 @@ void GraphWindow::realtimeDataSlot()
   }
 }
 
+void GraphWindow::realtimeT10Slot(QList<int> indata)
+{
+    // calculate two new data points:
+  #if QT_VERSION < QT_VERSION_CHECK(4, 7, 0)
+    double key = 0;
+  #else
+    double key = QDateTime::currentDateTime().toMSecsSinceEpoch()/1000.0;
+  #endif
+    double value0 = (double)indata[0];
+    double value1 = (double)indata[1];
+    // add data to lines:
+    ui->customPlot->graph(0)->addData(key, value0);
+    ui->customPlot->graph(1)->addData(key, value1);
+    // set data of dots:
+    ui->customPlot->graph(2)->clearData();
+    ui->customPlot->graph(2)->addData(key, value0);
+    ui->customPlot->graph(3)->clearData();
+    ui->customPlot->graph(3)->addData(key, value1);
+    // remove data of lines that's outside visible range:
+    ui->customPlot->graph(0)->removeDataBefore(key-8);
+    ui->customPlot->graph(1)->removeDataBefore(key-8);
+    // rescale value (vertical) axis to fit the current data:
+    ui->customPlot->graph(0)->rescaleValueAxis();
+    ui->customPlot->graph(1)->rescaleValueAxis(true);
+    // make key axis range scroll with the data (at a constant range size of 8):
+    ui->customPlot->xAxis->setRange(key+0.25, 8, Qt::AlignRight);
+
+    ui->customPlot->replot();
+
+    // calculate frames per second:
+    static double lastSec;
+    static int frameCount;
+    ++frameCount;
+    if (key-lastSec > 2) // average fps over 2 seconds
+    {
+      ui->statusBar->showMessage(
+            QString("%1 FPS, Total Data points: %2")
+            .arg(frameCount/(key-lastSec), 0, 'f', 0)
+            .arg(ui->customPlot->graph(0)->data()->count()+ui->customPlot->graph(1)->data()->count())
+            , 0);
+      lastSec = key;
+      frameCount = 0;
+    }
+
+}
+
 void GraphWindow::setupPlayground(QCustomPlot *customPlot)
 {
   Q_UNUSED(customPlot)
@@ -987,3 +1079,5 @@ void GraphWindow::allScreenShots()
     qApp->quit();
   }
 }
+
+

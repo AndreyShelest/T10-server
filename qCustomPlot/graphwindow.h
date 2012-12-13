@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QTimer>
 #include "qCustomPlot/qcustomplot.h"
+#include "Aircraft/aircraft.h"
 namespace Ui {
 class GraphWindow;
 }
@@ -16,7 +17,7 @@ public:
   explicit GraphWindow(QWidget *parent = 0);
   ~GraphWindow();
 
-  void setupDemo(int demoIndex);
+  void setupDemo(int demoIndex,Aircraft *acrft=0);
   void setupQuadraticDemo(QCustomPlot *customPlot);
   void setupSimpleDemo(QCustomPlot *customPlot);
   void setupSincScatterDemo(QCustomPlot *customPlot);
@@ -32,9 +33,11 @@ public:
   void setupBarChartDemo(QCustomPlot *customPlot);
   void setupStatisticalDemo(QCustomPlot *customPlot);
   void setupPlayground(QCustomPlot *customPlot);
+  void setupRealtimeT10Data(QCustomPlot *customPlot,Aircraft *acrft);
 
 private slots:
   void realtimeDataSlot();
+  void realtimeT10Slot(QList<int> indata);
   void screenShot();
   void allScreenShots();
 
