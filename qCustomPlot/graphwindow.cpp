@@ -979,8 +979,8 @@ void GraphWindow::realtimeT10Slot(QList<int> indata)
   #else
     double key = QDateTime::currentDateTime().toMSecsSinceEpoch()/1000.0;
   #endif
-    double value0 = (double)indata[0];
-    double value1 = (double)indata[1];
+    double value0 = (double)indata[23];
+    double value1 = (double)indata[24];
     // add data to lines:
     ui->customPlot->graph(0)->addData(key, value0);
     ui->customPlot->graph(1)->addData(key, value1);
