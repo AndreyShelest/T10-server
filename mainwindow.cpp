@@ -34,7 +34,6 @@ MainWindow::MainWindow(QWidget *parent) :
     server = new NetServer();
     if (settings.value("NetServer/autostart", true).toBool())
         ui->actionServer->setChecked(true);
-
     comPort = new ComPortTransmitter(this);
     connect(comPort, SIGNAL(Zavislo()), this, SLOT(comPortNotResponding()));
     connect(comPort, SIGNAL(Otvislo()), this, SLOT(comPortRepaired()));
@@ -54,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->set_transmit_mode('d');
     ui->PPN_wgt->setHidden(!ui->tb_custom_pp->isChecked());
     aircraft=new Aircraft(this);
-    ui->pBsimulate->setChecked(settings.value("NetServer/dataToClients", "true").toBool());
+    ui->pBsimulate->setChecked(settings.value("NetServer/dataToClients", "false").toBool());
     ////aircraft->startSimulation();
 
 
@@ -684,7 +683,7 @@ void MainWindow::on_pBsimulate_toggled(bool checked)
     if (checked)
     {
         this->on_aircraft_Simulate_triggered(true);
-         //ui->aircraft_Simulate->setChecked(true);
+         ui->aircraft_Simulate->setChecked(true);
         connect(aircraft,SIGNAL(signal_modelingStep()),aircraft,SLOT(setServerData()));
         connect(comPort,SIGNAL(DataReady(QByteArray)),aircraft,SLOT(setDataFromBoard(QByteArray)));
         connect(aircraft,SIGNAL(serverDataReady(QList<int>)),server,SLOT(setServerData(QList<int>)));
@@ -710,6 +709,7 @@ void MainWindow::on_actionPlots_toggled(bool arg1)
     {
         //graphWindow.setupDemo(20);
         graphWindow.hide();
+       // graphWindow.close();
 
     }
 }

@@ -16,8 +16,9 @@ public:
     explicit Aircraft(QObject *parent = 0);
     ~Aircraft();
     QList<int> getJoyData();
-
+ static QMap <int,QString> getQmapData();
 private:
+
     int naviDataLength;
     int clientDataLength;
     QList<int> dataFromBoard;

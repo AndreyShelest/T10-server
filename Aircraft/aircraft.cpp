@@ -23,6 +23,9 @@ Aircraft::Aircraft(QObject *parent) :
     X_coord=settings.value("AircraftModel/initialX", 0).toFloat();
     Y_coord=settings.value("AircraftModel/initialY", 0).toFloat();
     Z_coord=settings.value("AircraftModel/initialZ", 0).toFloat();
+    joyX=0;
+    joyY=0;
+    joyZ=0;
     slide_angle= settings.value("AircraftModel/slide_angle", 0).toFloat();
     attack_angle= settings.value("AircraftModel/attack_angle", 0).toFloat();
     time = settings.value("AircraftModel/initialTime", 0).toFloat();
@@ -87,6 +90,44 @@ QList<int> Aircraft::getJoyData()
     return data;
 }
 
+QMap<int, QString> Aircraft::getQmapData()
+{
+    QMap<int, QString> mapOfdata;
+    mapOfdata[0]="JoyX";         //0
+    mapOfdata[1]="JoyY";          //1
+    mapOfdata[2]="JoyZ";          //2
+    mapOfdata[3]="heading";  //3
+    mapOfdata[4]="velocity->X"; //4
+    mapOfdata[5]="velocity->Y"; //5
+    mapOfdata[6]="velocity->Z"; //6
+    mapOfdata[7]="unused7"  ;           //7
+    mapOfdata[8]="X_coord";  //8
+    mapOfdata[9]="Y_coord";  //9
+    mapOfdata[10]="Z_coord";  //10
+    mapOfdata[11]="unused11";             //11
+    mapOfdata[12]="slide_angle"; //12
+    mapOfdata[13]="attack_angle";  //13
+    mapOfdata[14]="unused14";
+    mapOfdata[15]="unused15";
+    mapOfdata[16]="unused16";
+    mapOfdata[17]="unused17";
+   mapOfdata[18]="rudder";
+   mapOfdata[19]="aileron";
+   mapOfdata[20]="right_stab";
+   mapOfdata[21]="left_stab";
+   mapOfdata[22]="roll";
+   mapOfdata[23]="pitch";
+   mapOfdata[24]="yaw";
+   mapOfdata[25]="Dus1";
+   mapOfdata[26]="Dus2";
+   mapOfdata[26]="Dus3";
+   mapOfdata[26]="Dus4";
+    return mapOfdata;
+}
+
+
+
+
 float Aircraft::trapz(float previous, float current, float t)
 {
     return ((previous+current)/2) * t;
@@ -141,16 +182,20 @@ void Aircraft::setServerData()
    dataToserver.append(0);             //11
    dataToserver.append((int)slide_angle);   //12
    dataToserver.append((int)attack_angle);   //13
-   for (int i=dataToserver.length();i<naviDataLength;i++)
+   for (int i=dataToserver.size();i<naviDataLength;i++)
+   {
        dataToserver.append(0);
+   }
 //    dataToserver.append((joyX) / 256);
 //dataToserver.append((joyY) / 256);
 // dataToserver.append((joyZ) / 256);
- for (int i=0;i<clientDataLength-naviDataLength;i++)
+ for (int i=0;i<dataFromBoard.size();i++)
+ {
      dataToserver.append((int)dataFromBoard[i]);
-dataToserver[naviDataLength+4]=(int)roll;
-dataToserver[naviDataLength+5]=(int)pitch;
-dataToserver[naviDataLength+6]=(int)yaw;
+ }
+//dataToserver[naviDataLength+4]=(int)roll;
+//dataToserver[naviDataLength+5]=(int)pitch;
+//dataToserver[naviDataLength+6]=(int)yaw;
   emit serverDataReady(dataToserver);
 }
 

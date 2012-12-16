@@ -11,8 +11,14 @@ GraphWindow::GraphWindow(QWidget *parent) :
     ui(new Ui::GraphWindow)
 {
     ui->setupUi(this);
-    setGeometry(150, 150, 546, 390);
-
+   // setGeometry(150, 150, 546, 390);
+screenShotCount=0;
+graphMap=Aircraft::getQmapData();
+QMap<int, QString> ::iterator it=graphMap.begin();
+for(;it!=graphMap.end();++it)
+{
+ui->cb_data->addItem(it.value());
+}
     //setupDemo(14);
 
     // 0:  setupQuadraticDemo(ui->customPlot);
@@ -58,6 +64,7 @@ void GraphWindow::setupDemo(int demoIndex, Aircraft *acrft)
   statusBar()->clearMessage();
   currentDemoIndex = demoIndex;
   ui->customPlot->replot();
+
 }
 
 void GraphWindow::setupQuadraticDemo(QCustomPlot *customPlot)
@@ -701,21 +708,23 @@ void GraphWindow::setupRealtimeT10Data(QCustomPlot *customPlot, Aircraft *acrft)
   customPlot->yAxis->setTickFont(font);
   customPlot->legend->setFont(font);
   */
-  customPlot->addGraph(); // blue line
-  customPlot->graph(0)->setPen(QPen(Qt::blue));
-  customPlot->graph(0)->setBrush(QBrush(QColor(240, 255, 200)));
-  customPlot->addGraph(); // red line
-  customPlot->graph(1)->setPen(QPen(Qt::red));
-  customPlot->graph(0)->setChannelFillGraph(customPlot->graph(1));
+  int n=ui->tableGraphics->count();
 
-  customPlot->addGraph(); // blue dot
-  customPlot->graph(2)->setPen(QPen(Qt::blue));
-  customPlot->graph(2)->setLineStyle(QCPGraph::lsNone);
-  customPlot->graph(2)->setScatterStyle(QCPGraph::ssDisc);
-  customPlot->addGraph(); // red dot
-  customPlot->graph(3)->setPen(QPen(Qt::red));
-  customPlot->graph(3)->setLineStyle(QCPGraph::lsNone);
-  customPlot->graph(3)->setScatterStyle(QCPGraph::ssDisc);
+  for (int i=0;i<n;i++)
+  {
+
+      customPlot->addGraph(); // blue line
+      customPlot->graph(i)->setPen(QPen(getColor(i)));
+      //customPlot->graph(i)->setBrush(QBrush(QColor(240, 255, 200)));
+       }
+  for (int i=n;i<2*n;i++)
+  {
+      customPlot->addGraph(); // blue dot
+      customPlot->graph(i)->setPen(QPen(getColor(i-n)));
+      customPlot->graph(i)->setLineStyle(QCPGraph::lsNone);
+      customPlot->graph(i)->setScatterStyle(QCPGraph::ssDisc);
+  }
+
 
   customPlot->xAxis->setTickLabelType(QCPAxis::ltDateTime);
   customPlot->xAxis->setDateTimeFormat("hh:mm:ss");
@@ -728,7 +737,8 @@ void GraphWindow::setupRealtimeT10Data(QCustomPlot *customPlot, Aircraft *acrft)
   connect(customPlot->yAxis, SIGNAL(rangeChanged(QCPRange)), customPlot->yAxis2, SLOT(setRange(QCPRange)));
 
   // setup a timer that repeatedly calls GraphWindow::realtimeDataSlot:
-  connect(acrft, SIGNAL(serverDataReady(QList<int>)), this, SLOT(realtimeT10Slot(QList<int>)));
+  graphAircraft=acrft;
+  //connect(graphAircraft, SIGNAL(serverDataReady(QList<int>)), this, SLOT(realtimeT10Slot(QList<int>)));
   //connect(&realRealtimeDataTimer, SIGNAL(timeout()), this, SLOT(realtimeDataSlot()));
   //realRealtimeDataTimer.start(0); // Interval 0 means to refresh as fast as possible
 }
@@ -979,22 +989,55 @@ void GraphWindow::realtimeT10Slot(QList<int> indata)
   #else
     double key = QDateTime::currentDateTime().toMSecsSinceEpoch()/1000.0;
   #endif
-    double value0 = (double)indata[23];
-    double value1 = (double)indata[24];
-    // add data to lines:
-    ui->customPlot->graph(0)->addData(key, value0);
-    ui->customPlot->graph(1)->addData(key, value1);
-    // set data of dots:
-    ui->customPlot->graph(2)->clearData();
-    ui->customPlot->graph(2)->addData(key, value0);
-    ui->customPlot->graph(3)->clearData();
-    ui->customPlot->graph(3)->addData(key, value1);
+int n=ui->tableGraphics->count();
+    QVector<double> value;
+//    QMap<int, QString> ::iterator it=graphMap.begin();
+//    for(;it!=graphMap.end();++it)
+//    {
+//        for (int i;i<ui->tableGraphics->count();++i)
+//        {
+//            if(ui->tableGraphics->item(i)->text()==it.value())
+//                value.append((float)indata[it.key()]);
+//        }
+
+//    }
+   value.append((float)indata[0]);
+    value.append((float)indata[1]);
+     value.append((float)indata[2]);
+    int indexOfMax=0;
+    for (int i=0; i<value.size();++i)
+    {
+        if (value[indexOfMax]<value[i])
+        {
+        indexOfMax=i;
+        }
+            }
+    int indexOfMin=0;
+    for (int i=0; i<value.size();++i)
+    {
+        if (value[i]<value[indexOfMin])
+        {
+        indexOfMin=i;
+        }
+            }
+
+// add data to lines:
+    for (int i=0;i<n;i++)
+    {
+    ui->customPlot->graph(i)->addData(key, value[i]);
     // remove data of lines that's outside visible range:
-    ui->customPlot->graph(0)->removeDataBefore(key-8);
-    ui->customPlot->graph(1)->removeDataBefore(key-8);
+    ui->customPlot->graph(i)->removeDataBefore(key-8);
+
+    }
+    for (int i=n;i<2*n;i++)
+    {
+    // set data of dots:
+    ui->customPlot->graph(i)->clearData();
+    ui->customPlot->graph(i)->addData(key, value[i-n]);
+    }
     // rescale value (vertical) axis to fit the current data:
-    ui->customPlot->graph(0)->rescaleValueAxis();
-    ui->customPlot->graph(1)->rescaleValueAxis(true);
+    ui->customPlot->graph(indexOfMax)->rescaleValueAxis(false);
+    ui->customPlot->graph(indexOfMin)->rescaleValueAxis(true);
     // make key axis range scroll with the data (at a constant range size of 8):
     ui->customPlot->xAxis->setRange(key+0.25, 8, Qt::AlignRight);
 
@@ -1003,13 +1046,18 @@ void GraphWindow::realtimeT10Slot(QList<int> indata)
     // calculate frames per second:
     static double lastSec;
     static int frameCount;
+    int pointsCount=0;
+    for(int i=0; i<ui->customPlot->graphCount();++i)
+    {
+    pointsCount+=ui->customPlot->graph(i)->data()->count();
+    }
     ++frameCount;
     if (key-lastSec > 2) // average fps over 2 seconds
     {
       ui->statusBar->showMessage(
             QString("%1 FPS, Total Data points: %2")
             .arg(frameCount/(key-lastSec), 0, 'f', 0)
-            .arg(ui->customPlot->graph(0)->data()->count()+ui->customPlot->graph(1)->data()->count())
+            .arg(pointsCount)
             , 0);
       lastSec = key;
       frameCount = 0;
@@ -1045,11 +1093,12 @@ GraphWindow::~GraphWindow()
 
 void GraphWindow::screenShot()
 {
+    screenShotCount++;
   QPixmap pm = QPixmap::grabWindow(qApp->desktop()->winId(), this->x()+5, this->y(), this->frameGeometry().width()-10, this->frameGeometry().height()-5);
-  QString fileName = "qcustomplot-"+demoName.toLower()+".png";
+  QString fileName = QString::number(screenShotCount)+"_qcustomplot-"+demoName.toLower()+".png";
   fileName.replace(" ", "");
   pm.save("./screenshots/"+fileName);
-  qApp->quit();
+  //qApp->quit();
 
   // ui->customPlot->savePng("./outsave.png");
   // ui->customPlot->savePdf("./outsave.pdf", true);
@@ -1081,3 +1130,95 @@ void GraphWindow::allScreenShots()
 }
 
 
+
+
+void GraphWindow::on_actionShot_triggered()
+{
+
+    this->screenShot();
+
+}
+
+Qt::GlobalColor GraphWindow::getColor(int kind)
+{
+    switch (kind)
+    {
+    case 0:
+    {
+    return Qt::blue;
+    break;
+    }
+    case 1:
+    {
+    return Qt::red;
+    break;
+    }
+    case 2:
+    {
+    return Qt::green;
+    break;
+    }
+    case 3:
+    {
+    return Qt::cyan;
+    break;
+    }
+    case 4:
+    {
+    return Qt::gray;
+    break;
+    }
+    case 5:
+    {
+    return Qt::magenta;
+    break;
+    }
+    case 6:
+    {
+    return Qt::yellow;
+    break;
+    }
+
+    default:
+    {
+    return Qt::black;
+    break;
+    }
+
+    }
+
+}
+
+void GraphWindow::on_pb_add_clicked()
+{
+    bool unique=true;
+    for(int i=0;i<ui->tableGraphics->count();i++)
+    {
+        if(ui->cb_data->currentText()==ui->tableGraphics->itemAt(i,0)->text())
+            unique=false;
+    }
+    if (unique)
+    ui->tableGraphics->addItem(ui->cb_data->currentText());
+}
+
+void GraphWindow::on_pb_start_toggled(bool checked)
+{
+    if (checked)
+    {
+        ui->pb_pause->setEnabled(true);
+        ui->pb_start->setEnabled(false);
+        connect(graphAircraft, SIGNAL(serverDataReady(QList<int>)), this, SLOT(realtimeT10Slot(QList<int>)));
+    }
+    else
+    {
+       disconnect(graphAircraft, SIGNAL(serverDataReady(QList<int>)), this, SLOT(realtimeT10Slot(QList<int>)));
+        ui->pb_pause->setEnabled(false);
+         ui->pb_start->setEnabled(true);
+    }
+}
+
+void GraphWindow::on_pb_pause_clicked()
+{
+    ui->pb_pause->setEnabled(false);
+    ui->pb_start->setChecked(false);
+}

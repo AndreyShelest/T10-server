@@ -41,10 +41,23 @@ private slots:
   void screenShot();
   void allScreenShots();
 
+
+  void on_actionShot_triggered();
+
+  void on_pb_add_clicked();
+
+  void on_pb_start_toggled(bool checked);
+
+  void on_pb_pause_clicked();
+
 private:
+  Aircraft *graphAircraft;
+  QMap<int, QString> graphMap;
+  Qt::GlobalColor getColor(int kind);
   Ui::GraphWindow *ui;
   QString demoName;
   QTimer realRealtimeDataTimer;
+  int screenShotCount;
   int currentDemoIndex;
 };
 
