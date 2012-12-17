@@ -29,7 +29,7 @@ Aircraft::Aircraft(QObject *parent) :
     slide_angle= settings.value("AircraftModel/slide_angle", 0).toFloat();
     attack_angle= settings.value("AircraftModel/attack_angle", 0).toFloat();
     time = settings.value("AircraftModel/initialTime", 0).toFloat();
-    dt = settings.value("AircraftModel/dt", 0.1).toFloat();
+    dt = settings.value("AircraftModel/dt", 0.01).toFloat();
     pitch = settings.value("AircraftModel/initialPitch", 0).toFloat();float temp = velocity->x() * qSin(pitch) +
             velocity->y() * qCos(pitch) * qCos(roll) -
             velocity->z() * qCos(pitch) * qSin(roll);
@@ -102,7 +102,7 @@ QMap<int, QString> Aircraft::getQmapData()
     mapOfdata[4]="velocity->X"; //4
     mapOfdata[5]="velocity->Y"; //5
     mapOfdata[6]="velocity->Z"; //6
-    mapOfdata[7]="unused7"  ;           //7
+    mapOfdata[7]="time"  ;           //7
     mapOfdata[8]="X_coord";  //8
     mapOfdata[9]="Y_coord";  //9
     mapOfdata[10]="Z_coord";  //10
@@ -124,7 +124,13 @@ QMap<int, QString> Aircraft::getQmapData()
    mapOfdata[26]="Dus2";
    mapOfdata[27]="Dus3";
    mapOfdata[28]="Dus4";
-    return mapOfdata;
+   return mapOfdata;
+}
+
+float Aircraft::getCurrentTime()
+{
+
+    return time;
 }
 
 
@@ -177,7 +183,7 @@ void Aircraft::setServerData()
    dataToserver.append((int)velocity->x()); //4
    dataToserver.append((int)velocity->y()); //5
    dataToserver.append((int)velocity->z()); //6
-   dataToserver.append(0);             //7
+   dataToserver.append((int)time*1000);             //7
    dataToserver.append((int)X_coord);  //8
    dataToserver.append((int)Y_coord);  //9
    dataToserver.append((int)Z_coord);  //10

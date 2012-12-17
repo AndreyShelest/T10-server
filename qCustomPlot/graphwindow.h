@@ -77,6 +77,9 @@ private:
   QString demoName;
   QTimer realRealtimeDataTimer;
   QVector <double> time;
+  double timePoint;
+  bool addTime;
+
   int screenShotCount;
   int currentDemoIndex;
   QComboBox* currentgraphList;

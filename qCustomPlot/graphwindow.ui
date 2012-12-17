@@ -199,6 +199,9 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../T10_Server3.qrc">
      <normaloff>:/resources/icons/shift.png</normaloff>:/resources/icons/shift.png</iconset>
@@ -211,6 +214,9 @@
    </property>
   </action>
   <action name="actionSave_to_File">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../T10_Server3.qrc">
      <normaloff>:/resources/icons/save.png</normaloff>:/resources/icons/save.png</iconset>

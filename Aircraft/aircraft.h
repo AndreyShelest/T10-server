@@ -17,6 +17,7 @@ public:
     ~Aircraft();
     QList<int> getJoyData();
  static QMap <int,QString> getQmapData();
+float getCurrentTime();
 private:
 
     int naviDataLength;

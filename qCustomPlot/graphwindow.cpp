@@ -13,6 +13,8 @@ GraphWindow::GraphWindow(QWidget *parent) :
     ui->setupUi(this);
    // setGeometry(150, 150, 546, 390);
 screenShotCount=0;
+timePoint=0;
+addTime=false;
 graphMap=Aircraft::getQmapData();
 ui->cb_data->addItems(graphMap.values());
     //setupDemo(14);
@@ -728,10 +730,10 @@ void GraphWindow::setupRealtimeT10Data(QCustomPlot *customPlot)
   customPlot->yAxis->setTickFont(font);
   customPlot->legend->setFont(font);
   */
-  time.clear();
+time.clear();
   dataVector.clear();
 QVector<double> buf;
-buf.append(0);
+//buf.append(0);
   int n=ui->tableGraphics->count();
 QMap<int, QString> ::iterator it=currentgraphMap.begin();
   for (int i=0;i<n;i++)
@@ -762,7 +764,7 @@ QMap<int, QString> ::iterator it=currentgraphMap.begin();
   // make left and bottom axes transfer their ranges to right and top axes:
   connect(customPlot->xAxis, SIGNAL(rangeChanged(QCPRange)), customPlot->xAxis2, SLOT(setRange(QCPRange)));
   connect(customPlot->yAxis, SIGNAL(rangeChanged(QCPRange)), customPlot->yAxis2, SLOT(setRange(QCPRange)));
-
+timePoint=QDateTime::currentDateTime().toMSecsSinceEpoch()/1000.0;
   // setup a timer that repeatedly calls GraphWindow::realtimeDataSlot:
   //connect(graphAircraft, SIGNAL(serverDataReady(QList<int>)), this, SLOT(realtimeT10Slot(QList<int>)));
   //connect(&realRealtimeDataTimer, SIGNAL(timeout()), this, SLOT(realtimeDataSlot()));
@@ -1014,6 +1016,7 @@ void GraphWindow::realtimeT10Slot(QList<int> indata)
     double key = 0;
   #else
     double key = QDateTime::currentDateTime().toMSecsSinceEpoch()/1000.0;
+
   #endif
 int n=ui->tableGraphics->count();
     QVector<double> value;
@@ -1023,7 +1026,7 @@ int n=ui->tableGraphics->count();
         value.append((float)indata[it.key()]);
 
     }
-time.append(key);
+
 // add data to lines:
     for (int i=0;i<n;i++)
     {
@@ -1044,11 +1047,15 @@ time.append(key);
     // make key axis range scroll with the data (at a constant range size of 8):
     ui->customPlot->xAxis->setRange(key+0.25, 8, Qt::AlignRight);
 
-
 //    ui->customPlot->legend->setVisible(true);
     ui->customPlot->replot();
-// data saved to file
-    emit readyToSaveData(value);
+    if (addTime)
+    { // data saved to file
+        emit readyToSaveData(value);
+  time.append(key-timePoint);
+
+}
+
        // calculate frames per second:
     static double lastSec;
     static int frameCount;
@@ -1145,21 +1152,22 @@ void GraphWindow::slotSaveData(QVector<double> aVectorData)
         dataVector[i].append(aVectorData.value(i));
             }
 
-
 }
 
 void GraphWindow::on_actionWriteDataToFile_toggled(bool arg1)
 {
     if(arg1)
     {
-        //dataVector.clear();
+        time.clear();
+        addTime=true;
         connect(this,SIGNAL(readyToSaveData(QVector<double>)),this,SLOT(slotSaveData(QVector<double>)));
 
     }
     else
     {
     disconnect(this,SIGNAL(readyToSaveData(QVector<double>)),this,SLOT(slotSaveData(QVector<double>)));
-    time.clear();
+    ui->actionSave_to_File->setEnabled(true);
+addTime=false;
     }
 
 }
@@ -1240,13 +1248,14 @@ void GraphWindow::on_pb_add_clicked()
 void GraphWindow::on_actionStart_toggled(bool arg1)
 {
      ui->customPlot->clearGraphs();
-     //ui->customPlot->legend->clearItems();
+
     if (arg1)
     {
         if(ui->tableGraphics->count()>0)
         {
         ui->actionPause->setEnabled(true);
         ui->actionStart->setEnabled(false);
+        ui->actionWriteDataToFile->setEnabled(true);
         setupDemo(14);
         connect(graphAircraft, SIGNAL(serverDataReady(QList<int>)), this, SLOT(realtimeT10Slot(QList<int>)));
         ui->pb_add->setEnabled(false);
@@ -1261,6 +1270,11 @@ void GraphWindow::on_actionStart_toggled(bool arg1)
        time.clear();
         ui->actionPause->setEnabled(false);
          ui->actionStart->setEnabled(true);
+         if(ui->tableGraphics->count()>0)
+         {
+         ui->actionWriteDataToFile->setEnabled(false);
+         ui->actionWriteDataToFile->setChecked(true);
+         }
     }
 }
 
@@ -1443,10 +1457,10 @@ void GraphWindow::on_actionSave_to_File_triggered()
         dialog->setNameFilters(filters);
         QLayout *layout = dialog->layout();
         QGridLayout *gridbox = qobject_cast<QGridLayout*>(layout);
-        if (gridbox) {
-            gridbox->addWidget(new QLabel("Select data parameter:"));
-            gridbox->addWidget(currentgraphList);
-        }
+//        if (gridbox) {
+//            gridbox->addWidget(new QLabel("Select data parameter:"));
+//            gridbox->addWidget(currentgraphList);
+//        }
         dialog->setLayout(gridbox);
         dialog->setOption(QFileDialog::DontUseNativeDialog);
         connect(dialog, SIGNAL(filterSelected(QString)), this, SLOT(saveFilterChanged(QString)));
@@ -1462,6 +1476,8 @@ void GraphWindow::on_actionSave_to_File_triggered()
         QString tmp = "Robot" + QString::number(selecteddata + 1);
         QString tmp1, tmp2;
         QList<QString> varNames=currentgraphMap.values();
+        varNames.append("time");
+        dataVector.append(time);
            bool btmp;
 
         switch (selectedExtension) {
