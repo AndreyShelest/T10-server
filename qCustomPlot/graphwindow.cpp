@@ -14,11 +14,7 @@ GraphWindow::GraphWindow(QWidget *parent) :
    // setGeometry(150, 150, 546, 390);
 screenShotCount=0;
 graphMap=Aircraft::getQmapData();
-QMap<int, QString> ::iterator it=graphMap.begin();
-for(;it!=graphMap.end();++it)
-{
-ui->cb_data->addItem(it.value());
-}
+ui->cb_data->addItems(graphMap.values());
     //setupDemo(14);
 
     // 0:  setupQuadraticDemo(ui->customPlot);
@@ -38,9 +34,33 @@ ui->cb_data->addItem(it.value());
 
     // for making screenshots of the current demo or all demos (for website screenshots):
     //QTimer::singleShot(350, this, SLOT(allScreenShots()));
-    //QTimer::singleShot(1000, this, SLOT(screenShot()));
+//QTimer::singleShot(1000, this, SLOT(screenShot()));
+connect(ui->customPlot, SIGNAL(legendDoubleClick(QCPLegend*,QCPAbstractLegendItem*,QMouseEvent*)),
+        this, SLOT(legendDoubleClick(QCPLegend*,QCPAbstractLegendItem*)));
 }
-void GraphWindow::setupDemo(int demoIndex, Aircraft *acrft)
+void GraphWindow::legendDoubleClick(QCPLegend *legend, QCPAbstractLegendItem *item)
+{
+  // Rename a graph by double clicking on its legend item
+
+  Q_UNUSED(legend)
+  if (item) // only react if item was clicked (user could have clicked on border padding of legend where there is no item, then item is 0)
+  {
+    QCPPlottableLegendItem *plItem = qobject_cast<QCPPlottableLegendItem*>(item);
+    bool ok;
+    QString newName = QInputDialog::getText(this, "QCustomPlot example", "New graph name:", QLineEdit::Normal, plItem->plottable()->name(), &ok);
+    if (ok)
+    {
+      plItem->plottable()->setName(newName);
+      ui->customPlot->replot();
+    }
+  }
+}
+
+void GraphWindow::setAirctaftData(Aircraft *acrft)
+{
+    graphAircraft=acrft;
+}
+void GraphWindow::setupDemo(int demoIndex)
 {
   switch (demoIndex)
   {
@@ -58,7 +78,7 @@ void GraphWindow::setupDemo(int demoIndex, Aircraft *acrft)
     case 11: setupParametricCurveDemo(ui->customPlot); break;
     case 12: setupBarChartDemo(ui->customPlot); break;
     case 13: setupStatisticalDemo(ui->customPlot); break;
-    case 14: setupRealtimeT10Data(ui->customPlot,acrft); break;
+    case 14: setupRealtimeT10Data(ui->customPlot); break;
   }
   setWindowTitle("QCustomPlot: "+demoName);
   statusBar()->clearMessage();
@@ -693,7 +713,7 @@ void GraphWindow::setupRealtimeDataDemo(QCustomPlot *customPlot)
   connect(&realRealtimeDataTimer, SIGNAL(timeout()), this, SLOT(realtimeDataSlot()));
   realRealtimeDataTimer.start(0); // Interval 0 means to refresh as fast as possible
 }
-void GraphWindow::setupRealtimeT10Data(QCustomPlot *customPlot, Aircraft *acrft)
+void GraphWindow::setupRealtimeT10Data(QCustomPlot *customPlot)
 {
 #if QT_VERSION < QT_VERSION_CHECK(4, 7, 0)
   QMessageBox::critical(this, "", "You're using Qt < 4.7, the realtime data demo needs functions that are available with Qt 4.7 to work properly");
@@ -708,36 +728,42 @@ void GraphWindow::setupRealtimeT10Data(QCustomPlot *customPlot, Aircraft *acrft)
   customPlot->yAxis->setTickFont(font);
   customPlot->legend->setFont(font);
   */
+  time.clear();
+  dataVector.clear();
+QVector<double> buf;
+buf.append(0);
   int n=ui->tableGraphics->count();
-
+QMap<int, QString> ::iterator it=currentgraphMap.begin();
   for (int i=0;i<n;i++)
   {
-
       customPlot->addGraph(); // blue line
       customPlot->graph(i)->setPen(QPen(getColor(i)));
+       customPlot->graph(i)->setName(it.value());
+       dataVector.append(buf);
       //customPlot->graph(i)->setBrush(QBrush(QColor(240, 255, 200)));
+++it;
        }
+
   for (int i=n;i<2*n;i++)
   {
       customPlot->addGraph(); // blue dot
       customPlot->graph(i)->setPen(QPen(getColor(i-n)));
       customPlot->graph(i)->setLineStyle(QCPGraph::lsNone);
       customPlot->graph(i)->setScatterStyle(QCPGraph::ssDisc);
+      customPlot->legend->removeItem(customPlot->legend->item(n));
   }
-
 
   customPlot->xAxis->setTickLabelType(QCPAxis::ltDateTime);
   customPlot->xAxis->setDateTimeFormat("hh:mm:ss");
   customPlot->xAxis->setAutoTickStep(false);
   customPlot->xAxis->setTickStep(2);
   customPlot->setupFullAxesBox();
-
+    ui->customPlot->legend->setVisible(true);
   // make left and bottom axes transfer their ranges to right and top axes:
   connect(customPlot->xAxis, SIGNAL(rangeChanged(QCPRange)), customPlot->xAxis2, SLOT(setRange(QCPRange)));
   connect(customPlot->yAxis, SIGNAL(rangeChanged(QCPRange)), customPlot->yAxis2, SLOT(setRange(QCPRange)));
 
   // setup a timer that repeatedly calls GraphWindow::realtimeDataSlot:
-  graphAircraft=acrft;
   //connect(graphAircraft, SIGNAL(serverDataReady(QList<int>)), this, SLOT(realtimeT10Slot(QList<int>)));
   //connect(&realRealtimeDataTimer, SIGNAL(timeout()), this, SLOT(realtimeDataSlot()));
   //realRealtimeDataTimer.start(0); // Interval 0 means to refresh as fast as possible
@@ -991,36 +1017,13 @@ void GraphWindow::realtimeT10Slot(QList<int> indata)
   #endif
 int n=ui->tableGraphics->count();
     QVector<double> value;
-//    QMap<int, QString> ::iterator it=graphMap.begin();
-//    for(;it!=graphMap.end();++it)
-//    {
-//        for (int i;i<ui->tableGraphics->count();++i)
-//        {
-//            if(ui->tableGraphics->item(i)->text()==it.value())
-//                value.append((float)indata[it.key()]);
-//        }
-
-//    }
-   value.append((float)indata[0]);
-    value.append((float)indata[1]);
-     value.append((float)indata[2]);
-    int indexOfMax=0;
-    for (int i=0; i<value.size();++i)
+    QMap<int, QString> ::iterator it=currentgraphMap.begin();
+    for(;it!=currentgraphMap.end();++it)
     {
-        if (value[indexOfMax]<value[i])
-        {
-        indexOfMax=i;
-        }
-            }
-    int indexOfMin=0;
-    for (int i=0; i<value.size();++i)
-    {
-        if (value[i]<value[indexOfMin])
-        {
-        indexOfMin=i;
-        }
-            }
+        value.append((float)indata[it.key()]);
 
+    }
+time.append(key);
 // add data to lines:
     for (int i=0;i<n;i++)
     {
@@ -1034,23 +1037,28 @@ int n=ui->tableGraphics->count();
     // set data of dots:
     ui->customPlot->graph(i)->clearData();
     ui->customPlot->graph(i)->addData(key, value[i-n]);
+//ui->customPlot->legend->removeItem(i);
     }
     // rescale value (vertical) axis to fit the current data:
-    ui->customPlot->graph(indexOfMax)->rescaleValueAxis(false);
-    ui->customPlot->graph(indexOfMin)->rescaleValueAxis(true);
+    ui->customPlot->rescaleAxes();
     // make key axis range scroll with the data (at a constant range size of 8):
     ui->customPlot->xAxis->setRange(key+0.25, 8, Qt::AlignRight);
 
-    ui->customPlot->replot();
 
-    // calculate frames per second:
+//    ui->customPlot->legend->setVisible(true);
+    ui->customPlot->replot();
+// data saved to file
+    emit readyToSaveData(value);
+       // calculate frames per second:
     static double lastSec;
     static int frameCount;
     int pointsCount=0;
     for(int i=0; i<ui->customPlot->graphCount();++i)
     {
     pointsCount+=ui->customPlot->graph(i)->data()->count();
+
     }
+
     ++frameCount;
     if (key-lastSec > 2) // average fps over 2 seconds
     {
@@ -1129,12 +1137,36 @@ void GraphWindow::allScreenShots()
   }
 }
 
+void GraphWindow::slotSaveData(QVector<double> aVectorData)
+{
 
+    for (int i=0;i<dataVector.size();++i)
+    {
+        dataVector[i].append(aVectorData.value(i));
+            }
+
+
+}
+
+void GraphWindow::on_actionWriteDataToFile_toggled(bool arg1)
+{
+    if(arg1)
+    {
+        //dataVector.clear();
+        connect(this,SIGNAL(readyToSaveData(QVector<double>)),this,SLOT(slotSaveData(QVector<double>)));
+
+    }
+    else
+    {
+    disconnect(this,SIGNAL(readyToSaveData(QVector<double>)),this,SLOT(slotSaveData(QVector<double>)));
+    time.clear();
+    }
+
+}
 
 
 void GraphWindow::on_actionShot_triggered()
 {
-
     this->screenShot();
 
 }
@@ -1198,27 +1230,307 @@ void GraphWindow::on_pb_add_clicked()
             unique=false;
     }
     if (unique)
+    {
     ui->tableGraphics->addItem(ui->cb_data->currentText());
+    currentgraphMap[ui->cb_data->currentIndex()]=graphMap[ui->cb_data->currentIndex()];
+    }
 }
 
-void GraphWindow::on_pb_start_toggled(bool checked)
+
+void GraphWindow::on_actionStart_toggled(bool arg1)
 {
-    if (checked)
+     ui->customPlot->clearGraphs();
+     //ui->customPlot->legend->clearItems();
+    if (arg1)
     {
-        ui->pb_pause->setEnabled(true);
-        ui->pb_start->setEnabled(false);
+        if(ui->tableGraphics->count()>0)
+        {
+        ui->actionPause->setEnabled(true);
+        ui->actionStart->setEnabled(false);
+        setupDemo(14);
         connect(graphAircraft, SIGNAL(serverDataReady(QList<int>)), this, SLOT(realtimeT10Slot(QList<int>)));
+        ui->pb_add->setEnabled(false);
+        }
+        else ui->actionStart->setChecked(false);
+
     }
     else
     {
+      ui->pb_add->setEnabled(true);
        disconnect(graphAircraft, SIGNAL(serverDataReady(QList<int>)), this, SLOT(realtimeT10Slot(QList<int>)));
-        ui->pb_pause->setEnabled(false);
-         ui->pb_start->setEnabled(true);
+       time.clear();
+        ui->actionPause->setEnabled(false);
+         ui->actionStart->setEnabled(true);
     }
 }
 
-void GraphWindow::on_pb_pause_clicked()
+void GraphWindow::on_actionPause_triggered()
 {
-    ui->pb_pause->setEnabled(false);
-    ui->pb_start->setChecked(false);
+    ui->actionPause->setEnabled(false);
+    ui->actionStart->setChecked(false);
 }
+
+
+
+void GraphWindow::on_pb_remove_clicked()
+{
+
+
+
+    ui->tableGraphics->model()->removeRow(ui->tableGraphics->currentRow());
+    ui->tableGraphics->repaint();
+    ui->pb_remove->setEnabled(false);
+    ui->pb_add->setEnabled(true);
+    ui->tableGraphics->clearSelection();
+}
+
+
+void GraphWindow::on_tableGraphics_itemClicked(QListWidgetItem *item)
+{
+    ui->pb_remove->setEnabled(true);
+    ui->pb_add->setEnabled(false);
+}
+//void GraphWindow::closeEvent(QCloseEvent *event)
+//{
+//    event->accept();
+//    on_actionPause_triggered();
+//    emit windowClosed(false);
+//}
+
+/**
+ * This function is used to save the current data of the simulation in different formats, such as:.txt;.png;.pdf; etc,
+ *
+ */
+//void GraphsWindow::saveFile()
+//{
+//    int numRobots = robotGroup->actions().size();
+//    if (numRobots <= 0) {
+//        QMessageBox::warning(this, tr("Save"), tr("There are no robots in the scene"), QMessageBox::Ok);
+//        return;
+//    }
+
+//    robotList->clear();
+//    // robotList->addItem("All");       Future Implementation
+//    for(int i = 0; i < numRobots; i++)
+//        robotList->addItem("Robot " + QString::number(i+1));
+
+//    QFileDialog *dialog = new QFileDialog(this);
+//    dialog->setAcceptMode(QFileDialog::AcceptSave);
+//    QStringList filters;
+//    filters << ".MAT-files (*.mat)"
+//            << "CSV (comma-separate) (*.csv)"
+//            << "Text Document (*.txt)"
+//            << "Adobe PDF files (Current view) (*.pdf)"
+//            << "PNG file - Portable Network Graphics (Current view) (*.png)";
+//    dialog->setNameFilters(filters);
+//    QLayout *layout = dialog->layout();
+//    QGridLayout *gridbox = qobject_cast<QGridLayout*>(layout);
+//    if (gridbox) {
+//        gridbox->addWidget(new QLabel("Select Robot:"));
+//        gridbox->addWidget(robotList);
+//    }
+//    dialog->setLayout(gridbox);
+//    dialog->setOption(QFileDialog::DontUseNativeDialog);
+//    connect(dialog, SIGNAL(filterSelected(QString)), this, SLOT(saveFilterChanged(QString)));
+
+//    if (!dialog->exec())
+//        return;
+
+//    QString fileName = dialog->selectedFiles().first();
+//    int selectedExtension = filters.indexOf(dialog->selectedNameFilter());
+//    int selectedRobot = robotList->currentIndex();
+//    int l= fileName.length();
+
+//    QString tmp = "Robot" + QString::number(selectedRobot + 1);
+//    QString tmp1, tmp2;
+//    QList<QString> varNames;
+//    varNames.push_back(tmp + "Posx");
+//    varNames.push_back(tmp + "Posy");
+//    varNames.push_back(tmp + "Velx");
+//    varNames.push_back(tmp + "Vely");
+//    bool btmp;
+
+//    switch (selectedExtension) {
+//    case 0:             // .MAT-files (*.mat)
+//        if (!((fileName[l-4]=='.')&&(fileName[l-3]=='m')&&(fileName[l-2]=='a')&&(fileName[l-1]=='t')))
+//            fileName += ".mat";
+//        btmp = Writer::Save2MAT(fileName , &robotsDataList[selectedRobot], &varNames);
+//        break;
+//    case 1:             // CSV (comma-separate) (*.csv)
+//        if (!((fileName[l-4]=='.')&&(fileName[l-3]=='c')&&(fileName[l-2]=='s')&&(fileName[l-1]=='v')))
+//            fileName += ".csv";
+//        btmp = Writer::Save2CSV(fileName , &robotsDataList[selectedRobot], &varNames);
+//        break;
+//    case 2:             // Text Document (*.txt)
+//        if (!((fileName[l-4]=='.')&&(fileName[l-3]=='t')&&(fileName[l-2]=='x')&&(fileName[l-1]=='t')))
+//            fileName += ".txt";
+//        btmp = Writer::Save2TXT(fileName , &robotsDataList[selectedRobot], &varNames);
+//        break;
+//    case 3:             // Adobe PDF files (Current view) (*.pdf)
+//        if ((fileName[l-4]=='.')&&(fileName[l-3]=='p')&&(fileName[l-2]=='d')&&(fileName[l-1]=='f'))
+//            fileName.remove(l-4, 4);
+//        tmp1 = fileName + " (position).pdf";
+//        plotPosition->savePdf(tmp1);
+//        tmp2 = fileName + " (velocity).pdf";
+//        plotVelocity->savePdf(tmp2);
+//        break;
+//    case 4:             // PNG file - Portable Network Graphics (Current view) (*.png)
+//        if ((fileName[l-4]=='.')&&(fileName[l-3]=='p')&&(fileName[l-2]=='n')&&(fileName[l-1]=='g'))
+//            fileName.remove(l-4, 4);
+//        tmp1 = fileName + " (position).png";
+//        plotPosition->savePng(tmp1);
+//        tmp2 = fileName + " (velocity).png";
+//        plotVelocity->savePng(tmp2);
+//        break;
+//    }
+
+//}
+
+///**
+// * This function is used to determine the selected filter of a file.
+// *
+// *@param filter The selected filter of a file
+// */
+//void GraphsWindow::saveFilterChanged(const QString &filter)
+//{
+//    QStringList filters;
+//    filters << ".MAT-files (*.mat)"
+//            << "CSV (comma-separate) (*.csv)"
+//            << "Text Document (*.txt)"
+//            << "Adobe PDF files (Current view) (*.pdf)"
+//            << "PNG file - Portable Network Graphics (Current view) (*.png)";
+//    int selectedExtension = filters.indexOf(filter);
+//    switch (selectedExtension) {
+//    case 0:             // .MAT-files (*.mat)
+//        robotList->setEnabled(true);
+//        break;
+//    case 1:             // CSV (comma-separate) (*.csv)
+//        robotList->setEnabled(true);
+//        break;
+//    case 2:             // Text Document (*.txt)
+//        robotList->setEnabled(true);
+//        break;
+//    case 3:             // Adobe PDF files (Current view) (*.pdf)
+//        robotList->setDisabled(true);
+//        break;
+//    case 4:             // PNG file - Portable Network Graphics (Current view) (*.png)
+//        robotList->setDisabled(true);
+//        break;
+//    }
+//}
+
+void GraphWindow::on_actionSave_to_File_triggered()
+{
+        int numGraphs = currentgraphMap.size();
+        if (numGraphs <= 0) {
+            QMessageBox::warning(this, tr("Save"), tr("There are no graphics added"), QMessageBox::Ok);
+            return;
+        }
+
+
+
+        QFileDialog *dialog = new QFileDialog(this);
+        dialog->setAcceptMode(QFileDialog::AcceptSave);
+        currentgraphList=new QComboBox(dialog);
+                currentgraphList->clear();
+                currentgraphList->addItems(currentgraphMap.values());
+        QStringList filters;
+        filters << ".MAT-files (*.mat)"
+                << "CSV (comma-separate) (*.csv)"
+                << "Text Document (*.txt)"
+                << "Adobe PDF files (Current view) (*.pdf)"
+                << "PNG file - Portable Network Graphics (Current view) (*.png)";
+        dialog->setNameFilters(filters);
+        QLayout *layout = dialog->layout();
+        QGridLayout *gridbox = qobject_cast<QGridLayout*>(layout);
+        if (gridbox) {
+            gridbox->addWidget(new QLabel("Select data parameter:"));
+            gridbox->addWidget(currentgraphList);
+        }
+        dialog->setLayout(gridbox);
+        dialog->setOption(QFileDialog::DontUseNativeDialog);
+        connect(dialog, SIGNAL(filterSelected(QString)), this, SLOT(saveFilterChanged(QString)));
+
+        if (!dialog->exec())
+            return;
+
+        QString fileName = dialog->selectedFiles().first();
+        int selectedExtension = filters.indexOf(dialog->selectedNameFilter());
+        int selecteddata = currentgraphList->currentIndex();
+        int l= fileName.length();
+
+        QString tmp = "Robot" + QString::number(selecteddata + 1);
+        QString tmp1, tmp2;
+        QList<QString> varNames=currentgraphMap.values();
+           bool btmp;
+
+        switch (selectedExtension) {
+        case 0:             // .MAT-files (*.mat)
+            if (!((fileName[l-4]=='.')&&(fileName[l-3]=='m')&&(fileName[l-2]=='a')&&(fileName[l-1]=='t')))
+                fileName += ".mat";
+            btmp = Writer::Save2MAT(fileName , &dataVector, &varNames);
+        break;
+        case 1:             // CSV (comma-separate) (*.csv)
+            if (!((fileName[l-4]=='.')&&(fileName[l-3]=='c')&&(fileName[l-2]=='s')&&(fileName[l-1]=='v')))
+                fileName += ".csv";
+            btmp = Writer::Save2CSV(fileName , &dataVector, &varNames);
+            break;
+        case 2:             // Text Document (*.txt)
+            if (!((fileName[l-4]=='.')&&(fileName[l-3]=='t')&&(fileName[l-2]=='x')&&(fileName[l-1]=='t')))
+                fileName += ".txt";
+            btmp = Writer::Save2TXT(fileName , &dataVector, &varNames);
+            break;
+        case 3:             // Adobe PDF files (Current view) (*.pdf)
+            if ((fileName[l-4]=='.')&&(fileName[l-3]=='p')&&(fileName[l-2]=='d')&&(fileName[l-1]=='f'))
+                fileName.remove(l-4, 4);
+            tmp1 = fileName + " (position).pdf";
+
+            ui->customPlot->savePdf(tmp);
+            //tmp2 = fileName + " (velocity).pdf";
+            //plotVelocity->savePdf(tmp2);
+            break;
+        case 4:             // PNG file - Portable Network Graphics (Current view) (*.png)
+            if ((fileName[l-4]=='.')&&(fileName[l-3]=='p')&&(fileName[l-2]=='n')&&(fileName[l-1]=='g'))
+                fileName.remove(l-4, 4);
+            tmp1 = fileName + " (position).png";
+            ui->customPlot->savePng(tmp1);
+//            tmp2 = fileName + " (velocity).png";
+//            plotVelocity->savePng(tmp2);
+            break;
+            dataVector.clear();
+        }
+
+}
+/**
+ * This function is used to determine the selected filter of a file.
+ *
+ *@param filter The selected filter of a file
+ */
+void GraphWindow::saveFilterChanged(const QString &filter)
+{
+    QStringList filters;
+    filters << ".MAT-files (*.mat)"
+            << "CSV (comma-separate) (*.csv)"
+            << "Text Document (*.txt)"
+            << "Adobe PDF files (Current view) (*.pdf)"
+            << "PNG file - Portable Network Graphics (Current view) (*.png)";
+    int selectedExtension = filters.indexOf(filter);
+    switch (selectedExtension) {
+    case 0:             // .MAT-files (*.mat)
+        currentgraphList->setEnabled(true);
+        break;
+    case 1:             // CSV (comma-separate) (*.csv)
+        currentgraphList->setEnabled(true);
+        break;
+    case 2:             // Text Document (*.txt)
+        currentgraphList->setEnabled(true);
+        break;
+    case 3:             // Adobe PDF files (Current view) (*.pdf)
+        currentgraphList->setDisabled(true);
+        break;
+    case 4:             // PNG file - Portable Network Graphics (Current view) (*.png)
+        currentgraphList->setDisabled(true);
+        break;
+    }
+}
+

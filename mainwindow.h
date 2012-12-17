@@ -84,8 +84,6 @@ private slots:
 
     void on_tb_custom_pp_toggled(bool checked);
 
-    void on_pBsimulate_toggled(bool checked);
-
     void on_actionPlots_toggled(bool arg1);
 
 public slots:

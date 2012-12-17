@@ -69,7 +69,9 @@ dhdt = temp;
     dVx = 0;
     dVy = 0;
     dVz = 0;
-
+    for(int i=0;i<clientDataLength;++i)
+    {
+dataToserver.append(0);}
     connect(&modelingTimer, SIGNAL(timeout()), this, SLOT(modelingStep()));
 
 }
@@ -120,8 +122,8 @@ QMap<int, QString> Aircraft::getQmapData()
    mapOfdata[24]="yaw";
    mapOfdata[25]="Dus1";
    mapOfdata[26]="Dus2";
-   mapOfdata[26]="Dus3";
-   mapOfdata[26]="Dus4";
+   mapOfdata[27]="Dus3";
+   mapOfdata[28]="Dus4";
     return mapOfdata;
 }
 
@@ -166,7 +168,7 @@ void Aircraft::setDataFromBoard(QByteArray indata)
 
 void Aircraft::setServerData()
 {
-    QList<int> dataToserver;
+
      dataToserver.clear();
     dataToserver.append(joyX);         //0
    dataToserver.append(joyY);          //1
@@ -189,14 +191,25 @@ void Aircraft::setServerData()
 //    dataToserver.append((joyX) / 256);
 //dataToserver.append((joyY) / 256);
 // dataToserver.append((joyZ) / 256);
+   if (dataFromBoard.size()==32)
+   {
  for (int i=0;i<dataFromBoard.size();i++)
  {
      dataToserver.append((int)dataFromBoard[i]);
  }
-//dataToserver[naviDataLength+4]=(int)roll;
-//dataToserver[naviDataLength+5]=(int)pitch;
-//dataToserver[naviDataLength+6]=(int)yaw;
+   }
+   else
+   {
+       for (int i=0;i<clientDataLength-naviDataLength;i++)
+       {
+           dataToserver.append(0);
+       }
+   }
+dataToserver[naviDataLength+4]=(int)roll;
+dataToserver[naviDataLength+5]=(int)pitch;
+dataToserver[naviDataLength+6]=(int)yaw;
   emit serverDataReady(dataToserver);
+
 }
 
 void Aircraft::modelingStep()

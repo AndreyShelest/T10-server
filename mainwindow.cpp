@@ -53,7 +53,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->set_transmit_mode('d');
     ui->PPN_wgt->setHidden(!ui->tb_custom_pp->isChecked());
     aircraft=new Aircraft(this);
-    ui->pBsimulate->setChecked(settings.value("NetServer/dataToClients", "false").toBool());
+    ui->aircraft_Simulate->setChecked(settings.value("Aircraft/Simulate", "true").toBool());
+    on_aircraft_Simulate_triggered(settings.value("Aircraft/Simulate", "true").toBool());
     ////aircraft->startSimulation();
 
 
@@ -607,6 +608,9 @@ void MainWindow::on_aircraft_Simulate_triggered(bool checked)
         connect(joystick, SIGNAL(sigXAxisChanged(int)), aircraft, SLOT(setJoyX(int)));
         connect(joystick, SIGNAL(sigYAxisChanged(int)), aircraft, SLOT(setJoyY(int)));
         connect(joystick, SIGNAL(sigZAxisChanged(int)), aircraft, SLOT(setJoyZ(int)));
+        connect(aircraft,SIGNAL(signal_modelingStep()),aircraft,SLOT(setServerData()));
+        connect(comPort,SIGNAL(DataReady(QByteArray)),aircraft,SLOT(setDataFromBoard(QByteArray)));
+        connect(aircraft,SIGNAL(serverDataReady(QList<int>)),server,SLOT(setServerData(QList<int>)));
     }
     else
     {
@@ -614,6 +618,9 @@ void MainWindow::on_aircraft_Simulate_triggered(bool checked)
         disconnect(joystick, SIGNAL(sigXAxisChanged(int)), aircraft, SLOT(setJoyX(int)));
         disconnect(joystick, SIGNAL(sigYAxisChanged(int)), aircraft, SLOT(setJoyY(int)));
         disconnect(joystick, SIGNAL(sigZAxisChanged(int)), aircraft, SLOT(setJoyZ(int)));
+        disconnect(aircraft,SIGNAL(signal_modelingStep()),aircraft,SLOT(setServerData()));
+        disconnect(comPort,SIGNAL(DataReady(QByteArray)),aircraft,SLOT(setDataFromBoard(QByteArray)));
+        disconnect(aircraft,SIGNAL(serverDataReady(QList<int>)),server,SLOT(setServerData(QList<int>)));
     }
 }
 
@@ -678,24 +685,7 @@ void MainWindow::on_tb_custom_pp_toggled(bool checked)
 
 }
 
-void MainWindow::on_pBsimulate_toggled(bool checked)
-{
-    if (checked)
-    {
-        this->on_aircraft_Simulate_triggered(true);
-         ui->aircraft_Simulate->setChecked(true);
-        connect(aircraft,SIGNAL(signal_modelingStep()),aircraft,SLOT(setServerData()));
-        connect(comPort,SIGNAL(DataReady(QByteArray)),aircraft,SLOT(setDataFromBoard(QByteArray)));
-        connect(aircraft,SIGNAL(serverDataReady(QList<int>)),server,SLOT(setServerData(QList<int>)));
 
-    }
-    else
-    {
-        disconnect(aircraft,SIGNAL(signal_modelingStep()),aircraft,SLOT(setServerData()));
-        disconnect(comPort,SIGNAL(DataReady(QByteArray)),aircraft,SLOT(setDataFromBoard(QByteArray)));
-        disconnect(aircraft,SIGNAL(serverDataReady(QList<int>)),server,SLOT(setServerData(QList<int>)));
-    }
-}
 
 void MainWindow::on_actionPlots_toggled(bool arg1)
 {
@@ -703,7 +693,7 @@ void MainWindow::on_actionPlots_toggled(bool arg1)
     {
 
     graphWindow.show();
-    graphWindow.setupDemo(14,aircraft);
+    graphWindow.setAirctaftData(aircraft);
     }
         else
     {

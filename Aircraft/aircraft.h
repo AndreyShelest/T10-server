@@ -62,7 +62,7 @@ private:
 
 
     inline float trapz(float previous, float current, float t);
-    
+    QList<int> dataToserver;
     QTimer modelingTimer;
 signals:
    void joyDataReady(QList<int>);

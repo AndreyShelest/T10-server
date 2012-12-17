@@ -56,52 +56,10 @@
         <enum>QLayout::SetDefaultConstraint</enum>
        </property>
        <item>
-        <widget class="QSplitter" name="splitter_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <widget class="QPushButton" name="pb_add">
-          <property name="text">
-           <string>Add</string>
-          </property>
-         </widget>
-         <widget class="QPushButton" name="pushButton">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>Remove</string>
-          </property>
-         </widget>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="cb_data">
-         <property name="maxCount">
-          <number>60</number>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QListWidget" name="tableGraphics">
          <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>
          </property>
-         <item>
-          <property name="text">
-           <string>JoyX</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>JoyY</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>JoyZ</string>
-          </property>
-         </item>
         </widget>
        </item>
        <item>
@@ -121,24 +79,35 @@
         </spacer>
        </item>
        <item>
-        <widget class="QSplitter" name="splitter">
+        <widget class="QComboBox" name="cb_data">
+         <property name="maxCount">
+          <number>60</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="fb_filtered">
+         <property name="text">
+          <string>Filtered</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSplitter" name="splitter_2">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
-         <widget class="QPushButton" name="pb_pause">
+         <widget class="QPushButton" name="pb_add">
+          <property name="text">
+           <string>Add</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="pb_remove">
           <property name="enabled">
            <bool>false</bool>
           </property>
           <property name="text">
-           <string>Pause</string>
-          </property>
-         </widget>
-         <widget class="QPushButton" name="pb_start">
-          <property name="text">
-           <string>start</string>
-          </property>
-          <property name="checkable">
-           <bool>true</bool>
+           <string>Remove</string>
           </property>
          </widget>
         </widget>
@@ -169,12 +138,16 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionSave_to_File"/>
+   <addaction name="actionWriteDataToFile"/>
+   <addaction name="actionStart"/>
+   <addaction name="actionPause"/>
    <addaction name="actionShot"/>
   </widget>
   <action name="actionShot">
    <property name="icon">
     <iconset resource="../T10_Server3.qrc">
-     <normaloff>:/resources/icons/refresh.svg</normaloff>:/resources/icons/refresh.svg</iconset>
+     <normaloff>:/resources/icons/fit.png</normaloff>:/resources/icons/fit.png</iconset>
    </property>
    <property name="text">
     <string>Shot</string>
@@ -183,7 +156,70 @@
     <string>Make screenshot</string>
    </property>
    <property name="shortcut">
+    <string>Ctrl+H</string>
+   </property>
+  </action>
+  <action name="actionStart">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../T10_Server3.qrc">
+     <normaloff>:/resources/icons/play.png</normaloff>:/resources/icons/play.png</iconset>
+   </property>
+   <property name="text">
+    <string>start</string>
+   </property>
+   <property name="toolTip">
+    <string>start</string>
+   </property>
+   <property name="shortcut">
     <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionPause">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../T10_Server3.qrc">
+     <normaloff>:/resources/icons/pause.png</normaloff>:/resources/icons/pause.png</iconset>
+   </property>
+   <property name="text">
+    <string>pause</string>
+   </property>
+   <property name="toolTip">
+    <string>pause</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionWriteDataToFile">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../T10_Server3.qrc">
+     <normaloff>:/resources/icons/shift.png</normaloff>:/resources/icons/shift.png</iconset>
+   </property>
+   <property name="text">
+    <string>WriteDataToFile</string>
+   </property>
+   <property name="toolTip">
+    <string>start save data</string>
+   </property>
+  </action>
+  <action name="actionSave_to_File">
+   <property name="icon">
+    <iconset resource="../T10_Server3.qrc">
+     <normaloff>:/resources/icons/save.png</normaloff>:/resources/icons/save.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save to File</string>
+   </property>
+   <property name="toolTip">
+    <string>save data</string>
    </property>
   </action>
  </widget>
