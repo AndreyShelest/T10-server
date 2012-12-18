@@ -1273,7 +1273,7 @@ void GraphWindow::on_actionStart_toggled(bool arg1)
          if(ui->tableGraphics->count()>0)
          {
          ui->actionWriteDataToFile->setEnabled(false);
-         ui->actionWriteDataToFile->setChecked(true);
+         ui->actionWriteDataToFile->setChecked(false);
          }
     }
 }
