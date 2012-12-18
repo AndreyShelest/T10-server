@@ -689,17 +689,53 @@ void MainWindow::on_tb_custom_pp_toggled(bool checked)
 
 void MainWindow::on_actionPlots_toggled(bool arg1)
 {
+
     if (arg1)
     {
+//        if (graphWindow == NULL)
+//        {
+            graphWindow = new GraphWindow(this);
+            graphWindow->installEventFilter(this);
+        //}
+        graphWindow->show();
+        graphWindow->setAirctaftData(aircraft);
 
-    graphWindow.show();
-    graphWindow.setAirctaftData(aircraft);
+        ui->actionPlots->setStatusTip(tr("Hide aircraft data"));
     }
-        else
+    else
     {
-        //graphWindow.setupDemo(20);
-        graphWindow.hide();
-       // graphWindow.close();
-
+        disconnect(graphWindow);
+        delete graphWindow;
+        graphWindow = NULL;
+        ui->actionPlots->setStatusTip(tr("Show aircraft data"));
     }
 }
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+    if (obj == graphWindow)
+    {
+        if (event->type() == QEvent::Close)
+        {
+            ui->actionPlots->setChecked(false);
+            ui->actionPlots->setStatusTip(tr("Show graphics window"));
+            return true;
+        }
+    }
+    else
+        return QMainWindow::eventFilter(obj, event);
+}
+
+void MainWindow::closeEvent(QCloseEvent *e)
+{
+    if (QMessageBox::question(this, tr("T10_Server"),
+                              tr("Are you sure you want to exit?"),
+                              QMessageBox::Yes | QMessageBox::No,
+                              QMessageBox::No) == QMessageBox::Yes)
+    {
+        if (graphWindow != NULL)
+            delete graphWindow;
+    }
+    else
+        e->ignore();
+}
+

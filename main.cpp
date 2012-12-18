@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf-8"));
     QTextCodec::setCodecForTr(QTextCodec::codecForName("utf-8"));
 
-    QCoreApplication::setOrganizationName("Approximator soft");
+    QCoreApplication::setOrganizationName("T10_Server");
     QCoreApplication::setOrganizationDomain("approximator.org");
     QCoreApplication::setApplicationName("T10_server");
 

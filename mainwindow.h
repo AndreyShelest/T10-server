@@ -99,8 +99,9 @@ private:
     ComPortTransmitter* comPort;
     Aircraft* aircraft;
     VJoystickAdapter* joystick;
-    GraphWindow graphWindow;
-
+    GraphWindow* graphWindow;
+    void closeEvent(QCloseEvent *);
+    bool eventFilter(QObject *, QEvent *);
     void rebuildPeerList(PeerInfo* pinfo, bool disconnected = false, bool renamed = false);
 };
 

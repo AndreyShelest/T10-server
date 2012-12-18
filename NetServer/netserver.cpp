@@ -9,9 +9,9 @@ NetServer::NetServer(QObject *parent) :
     QSettings settings(QSettings::IniFormat, QSettings::UserScope,
                        QCoreApplication::organizationName(), QCoreApplication::applicationName());
 
-    settings.beginGroup("NetServer/dataIndexes/fromComPort");
-    settings.setValue("pitch_suspension", 1);
-    settings.endGroup();
+//    settings.beginGroup("NetServer/dataIndexes/fromComPort");
+//    settings.setValue("pitch_suspension", 1);
+//    settings.endGroup();
 
     httpServer = new MikroHttpServer();
 }
