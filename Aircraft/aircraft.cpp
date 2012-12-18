@@ -29,7 +29,7 @@ Aircraft::Aircraft(QObject *parent) :
     slide_angle= settings.value("AircraftModel/slide_angle", 0).toFloat();
     attack_angle= settings.value("AircraftModel/attack_angle", 0).toFloat();
     time = settings.value("AircraftModel/initialTime", 0).toFloat();
-    dt = settings.value("AircraftModel/dt", 0.01).toFloat();
+    dt = settings.value("AircraftModel/dt", 0.05).toFloat();
     pitch = settings.value("AircraftModel/initialPitch", 0).toFloat();float temp = velocity->x() * qSin(pitch) +
             velocity->y() * qCos(pitch) * qCos(roll) -
             velocity->z() * qCos(pitch) * qSin(roll);

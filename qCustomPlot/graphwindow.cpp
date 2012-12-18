@@ -730,7 +730,6 @@ void GraphWindow::setupRealtimeT10Data(QCustomPlot *customPlot)
   customPlot->yAxis->setTickFont(font);
   customPlot->legend->setFont(font);
   */
-time.clear();
   dataVector.clear();
 QVector<double> buf;
 //buf.append(0);
@@ -1168,6 +1167,11 @@ void GraphWindow::on_actionWriteDataToFile_toggled(bool arg1)
     disconnect(this,SIGNAL(readyToSaveData(QVector<double>)),this,SLOT(slotSaveData(QVector<double>)));
     ui->actionSave_to_File->setEnabled(true);
 addTime=false;
+dataVector.append(time);
+dataList.append(dataVector);
+currentGraphMapList.append(currentgraphMap);
+//dataVector.clear();
+//currentgraphMap.clear();
     }
 
 }
@@ -1267,13 +1271,12 @@ void GraphWindow::on_actionStart_toggled(bool arg1)
     {
       ui->pb_add->setEnabled(true);
        disconnect(graphAircraft, SIGNAL(serverDataReady(QList<int>)), this, SLOT(realtimeT10Slot(QList<int>)));
-       time.clear();
-        ui->actionPause->setEnabled(false);
+              ui->actionPause->setEnabled(false);
          ui->actionStart->setEnabled(true);
          if(ui->tableGraphics->count()>0)
          {
          ui->actionWriteDataToFile->setEnabled(false);
-         ui->actionWriteDataToFile->setChecked(false);
+        // ui->actionWriteDataToFile->setChecked(false);
          }
     }
 }
@@ -1435,19 +1438,24 @@ void GraphWindow::on_tableGraphics_itemClicked(QListWidgetItem *item)
 
 void GraphWindow::on_actionSave_to_File_triggered()
 {
-        int numGraphs = currentgraphMap.size();
-        if (numGraphs <= 0) {
+                if (currentGraphMapList.isEmpty()) {
             QMessageBox::warning(this, tr("Save"), tr("There are no graphics added"), QMessageBox::Ok);
             return;
         }
-
-
 
         QFileDialog *dialog = new QFileDialog(this);
         dialog->setAcceptMode(QFileDialog::AcceptSave);
         currentgraphList=new QComboBox(dialog);
                 currentgraphList->clear();
-                currentgraphList->addItems(currentgraphMap.values());
+                QList<QString> buf;
+                QString bufStr;
+                for (int i=0;i<currentGraphMapList.size();++i)
+                {
+                    bufStr=QString::number(i+1)+". "+currentGraphMapList[i].value(0);
+
+                    buf.append(bufStr);
+                }
+                currentgraphList->addItems(buf);
         QStringList filters;
         filters << ".MAT-files (*.mat)"
                 << "CSV (comma-separate) (*.csv)"
@@ -1457,13 +1465,13 @@ void GraphWindow::on_actionSave_to_File_triggered()
         dialog->setNameFilters(filters);
         QLayout *layout = dialog->layout();
         QGridLayout *gridbox = qobject_cast<QGridLayout*>(layout);
-//        if (gridbox) {
-//            gridbox->addWidget(new QLabel("Select data parameter:"));
-//            gridbox->addWidget(currentgraphList);
-//        }
+        if (gridbox) {
+            gridbox->addWidget(new QLabel("Exp number:"));
+            gridbox->addWidget(currentgraphList);
+        }
         dialog->setLayout(gridbox);
         dialog->setOption(QFileDialog::DontUseNativeDialog);
-        connect(dialog, SIGNAL(filterSelected(QString)), this, SLOT(saveFilterChanged(QString)));
+        //connect(dialog, SIGNAL(filterSelected(QString)), this, SLOT(saveFilterChanged(QString)));
 
         if (!dialog->exec())
             return;
@@ -1475,26 +1483,26 @@ void GraphWindow::on_actionSave_to_File_triggered()
 
         QString tmp = "Robot" + QString::number(selecteddata + 1);
         QString tmp1, tmp2;
-        QList<QString> varNames=currentgraphMap.values();
+        QList<QString> varNames=currentGraphMapList[currentgraphList->currentIndex()].values();
         varNames.append("time");
-        dataVector.append(time);
+
            bool btmp;
 
         switch (selectedExtension) {
         case 0:             // .MAT-files (*.mat)
             if (!((fileName[l-4]=='.')&&(fileName[l-3]=='m')&&(fileName[l-2]=='a')&&(fileName[l-1]=='t')))
                 fileName += ".mat";
-            btmp = Writer::Save2MAT(fileName , &dataVector, &varNames);
+            btmp = Writer::Save2MAT(fileName , &dataList[currentgraphList->currentIndex()], &varNames);
         break;
         case 1:             // CSV (comma-separate) (*.csv)
             if (!((fileName[l-4]=='.')&&(fileName[l-3]=='c')&&(fileName[l-2]=='s')&&(fileName[l-1]=='v')))
                 fileName += ".csv";
-            btmp = Writer::Save2CSV(fileName , &dataVector, &varNames);
+            btmp = Writer::Save2CSV(fileName , &dataList[currentgraphList->currentIndex()], &varNames);
             break;
         case 2:             // Text Document (*.txt)
             if (!((fileName[l-4]=='.')&&(fileName[l-3]=='t')&&(fileName[l-2]=='x')&&(fileName[l-1]=='t')))
                 fileName += ".txt";
-            btmp = Writer::Save2TXT(fileName , &dataVector, &varNames);
+            btmp = Writer::Save2TXT(fileName , &dataList[currentgraphList->currentIndex()], &varNames);
             break;
         case 3:             // Adobe PDF files (Current view) (*.pdf)
             if ((fileName[l-4]=='.')&&(fileName[l-3]=='p')&&(fileName[l-2]=='d')&&(fileName[l-1]=='f'))
@@ -1513,8 +1521,7 @@ void GraphWindow::on_actionSave_to_File_triggered()
 //            tmp2 = fileName + " (velocity).png";
 //            plotVelocity->savePng(tmp2);
             break;
-            dataVector.clear();
-        }
+                   }
 
 }
 /**

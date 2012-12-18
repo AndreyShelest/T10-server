@@ -79,7 +79,8 @@ private:
   QVector <double> time;
   double timePoint;
   bool addTime;
-
+ QList<QMap<int, QString > > currentGraphMapList;
+QList<QVector<QVector <double> > > dataList;
   int screenShotCount;
   int currentDemoIndex;
   QComboBox* currentgraphList;
