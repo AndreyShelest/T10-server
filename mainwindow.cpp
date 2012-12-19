@@ -712,14 +712,11 @@ void MainWindow::on_actionPlots_toggled(bool arg1)
 }
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
-    if (obj == graphWindow)
+    if ((obj == graphWindow)&&(event->type() == QEvent::Close))
     {
-        if (event->type() == QEvent::Close)
-        {
             ui->actionPlots->setChecked(false);
             ui->actionPlots->setStatusTip(tr("Show graphics window"));
             return true;
-        }
     }
     else
         return QMainWindow::eventFilter(obj, event);
