@@ -730,6 +730,7 @@ void GraphWindow::setupRealtimeT10Data(QCustomPlot *customPlot)
   customPlot->yAxis->setTickFont(font);
   customPlot->legend->setFont(font);
   */
+  filterVector.clear();
   dataVector.clear();
 QVector<double> buf;
 //buf.append(0);
@@ -741,6 +742,7 @@ QMap<int, QString> ::iterator it=currentgraphMap.begin();
       customPlot->graph(i)->setPen(QPen(getColor(i)));
        customPlot->graph(i)->setName(it.value());
        dataVector.append(buf);
+       filterVector.append(buf.toList());
       //customPlot->graph(i)->setBrush(QBrush(QColor(240, 255, 200)));
 ++it;
        }
@@ -1020,11 +1022,33 @@ void GraphWindow::realtimeT10Slot(QList<int> indata)
 int n=ui->tableGraphics->count();
     QVector<double> value;
     QMap<int, QString> ::iterator it=currentgraphMap.begin();
+    int i=0;
+
+    if(!ui->fb_filtered->isChecked()){
     for(;it!=currentgraphMap.end();++it)
     {
         value.append((float)indata[it.key()]);
-
     }
+    }
+    else
+    {
+        for(;it!=currentgraphMap.end();++it)
+        {
+            if(!filterVector[i].empty())
+            {
+            filterVector[i].append((filterVector[i].last()+(float)indata[it.key()])/2.0);
+            value.append(filterVector[i].last());
+            filterVector[i].removeFirst();
+        }
+        else
+        {
+                filterVector[i].append((float)indata[it.key()]);
+                 value.append(filterVector[i].last());
+
+        }
+            ++i;
+        }
+        }
 
 // add data to lines:
     for (int i=0;i<n;i++)
@@ -1045,7 +1069,7 @@ int n=ui->tableGraphics->count();
     ui->customPlot->rescaleAxes();
     // make key axis range scroll with the data (at a constant range size of 8):
     ui->customPlot->xAxis->setRange(key+0.25, 8, Qt::AlignRight);
-
+ ui->customPlot->yAxis->setRange(-15,15);
 //    ui->customPlot->legend->setVisible(true);
     ui->customPlot->replot();
     if (addTime)

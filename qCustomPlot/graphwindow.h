@@ -85,7 +85,7 @@ QList<QVector<QVector <double> > > dataList;
   int currentDemoIndex;
   QComboBox* currentgraphList;
   QVector<QVector <double> > dataVector;
-
+  QVector<QList <double> > filterVector;
 };
 
 #endif // GRAPHWINDOW_H

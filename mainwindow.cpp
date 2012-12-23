@@ -219,9 +219,8 @@ void MainWindow::on_actionCom_port_toggled(bool arg1)
             this->log(tr("COM port: connected to ") + comPort->getDeviceName());
             labelComPortStatus->setText(tr("COM port: ") + "<span style=\"color:#008800;font-weight:bold;\">" + tr("connected") + "</span>");
             ui->pushButton_comPortReconnect->setEnabled(true);
-            connect(aircraft, SIGNAL(serverDataReady(QList<int>)), this, SLOT(showAircraftData(QList<int>)));
-                       //            connect(comPort, SIGNAL(Zavislo()), this, SLOT(comPortNotResponding()));
-            //            connect(comPort, SIGNAL(Otvislo()), this, SLOT(comPortRepaired()));
+           // connect(aircraft, SIGNAL(serverDataReady(QList<int>)), this, SLOT(showAircraftData(QList<int>)));
+
         }
         else
         {
@@ -244,7 +243,7 @@ void MainWindow::on_actionCom_port_toggled(bool arg1)
             labelComPortStatus->setText(tr("COM port: ") + "<span style=\"color:#ff0000;font-weight:bold;\">" + tr("disconnected") + "</span>");
         }
         comPort->COM_disconnect();
-        disconnect(aircraft, SIGNAL(serverDataReady(QList<int>)), this, SLOT(showAircraftData(QList<int>)));
+       // disconnect(aircraft, SIGNAL(serverDataReady(QList<int>)), this, SLOT(showAircraftData(QList<int>)));
 
         ui->actionCom_port->setStatusTip(tr("Connect to COM port"));
         ui->actionCom_port->setToolTip(ui->actionCom_port->statusTip());
@@ -517,10 +516,6 @@ void MainWindow::set_transmit_mode(char com)
 }
 
 
-void MainWindow::on_tb_data_on_clicked(bool checked)
-{
-
-}
 
 void MainWindow::on_tb_data_on_toggled(bool checked)
 {
@@ -716,6 +711,8 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     {
             ui->actionPlots->setChecked(false);
             ui->actionPlots->setStatusTip(tr("Show graphics window"));
+           //ui->tb_data_on->setChecked(true);
+            this->on_actionCom_port_toggled(false);
             return true;
     }
     else

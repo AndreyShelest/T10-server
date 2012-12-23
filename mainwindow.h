@@ -61,8 +61,6 @@ private slots:
 
     void on_list_toCom_itemClicked(QListWidgetItem *item);
     void set_transmit_mode(char com);
-    void on_tb_data_on_clicked(bool checked);
-
     void on_tb_data_on_toggled(bool checked);
 
     void on_tb_data_rau_joy_toggled(bool checked);

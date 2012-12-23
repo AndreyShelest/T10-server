@@ -219,7 +219,7 @@ void ComPortTransmitter::slot_Recieved()
         s.clear();
         for (int i = 0; i < packet.size(); i++)
             s += QString::number(((unsigned char)packet[i]))+",";
-        qDebug() << s;
+        //qDebug() << s;
 
         emit DataReady(packet);
 
