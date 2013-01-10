@@ -611,6 +611,8 @@ void MainWindow::on_aircraft_Simulate_triggered(bool checked)
         connect(aircraft,SIGNAL(signal_modelingStep()),aircraft,SLOT(setServerData()));
         connect(comPort,SIGNAL(DataReady(QByteArray)),aircraft,SLOT(setDataFromBoard(QByteArray)));
         connect(aircraft,SIGNAL(serverDataReady(QList<int>)),server,SLOT(setServerData(QList<int>)));
+        connect(server,SIGNAL(getServerData(QList<int>)),aircraft,SLOT(setCustomServerData(QList<int>)));
+        connect(aircraft,SIGNAL(customDataReady(QList<int>)),server,SLOT(setCustomServerData(QList<int>)));
     }
     else
     {
@@ -621,6 +623,8 @@ void MainWindow::on_aircraft_Simulate_triggered(bool checked)
         disconnect(aircraft,SIGNAL(signal_modelingStep()),aircraft,SLOT(setServerData()));
         disconnect(comPort,SIGNAL(DataReady(QByteArray)),aircraft,SLOT(setDataFromBoard(QByteArray)));
         disconnect(aircraft,SIGNAL(serverDataReady(QList<int>)),server,SLOT(setServerData(QList<int>)));
+        disconnect(server,SIGNAL(getServerData(QList<int>)),aircraft,SLOT(setCustomServerData(QList<int>)));
+        disconnect(aircraft,SIGNAL(customDataReady(QList<int>)),server,SLOT(setCustomServerData(QList<int>)));
     }
 }
 

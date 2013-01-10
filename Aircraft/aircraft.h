@@ -17,9 +17,10 @@ public:
     ~Aircraft();
     QList<int> getJoyData();
  static QMap <int,QString> getQmapData();
+
 float getCurrentTime();
 private:
-
+QMap  <int,QString>* qmapData;
     int naviDataLength;
     int clientDataLength;
     QList<int> dataFromBoard;
@@ -69,14 +70,17 @@ signals:
    void joyDataReady(QList<int>);
    void customDataReady(QList<int>);
    void serverDataReady(QList<int>);
+   void serverCustomDataReady(QList<int>);
    void signal_modelingStep();
 public slots:
    void slotCalculateControl(QList<int> inJoy);
+
     void setJoyX(int param);
     void setJoyY(int param);
     void setJoyZ(int param);
     void setDataFromBoard(QByteArray indata);
     void setServerData();
+    void setCustomServerData(QList<int> dataNumbers);
     void modelingStep();
     void startSimulation();
     void stopSimulation();

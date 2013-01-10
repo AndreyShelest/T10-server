@@ -41,8 +41,7 @@ void NetServer::peerConnected_slot(PeerInfo *peerInfo)
 
 void NetServer::peerDisconnected_slot(PeerInfo *peerInfo)
 {
-    disconnect(this, SIGNAL(toThreadsDataReady(QList<float>)),
-               peerInfo->pThread, SLOT(DataReady(QList<float>)));
+
     qDebug() << tr("Disconnected: ") << peerInfo->id << " ::: "  << peerInfo->address;
         int n = peers.indexOf(peerInfo);
     if (n != -1)
@@ -64,6 +63,7 @@ void NetServer::incomingMessage_slot(PeerInfo *peerInfo, QByteArray msg)
         peerInfo->pThread->SendMessage(httpServer->request(msg));
         return;
     }
+    connect(this, SIGNAL(toThreadsCustomDataReady(QList<float>)), peerInfo->pThread, SLOT(DataReady(QList<float>)));
     QString s = msg;
     qDebug() << s;
     QStringList sl = s.split('\n');
@@ -134,10 +134,23 @@ void NetServer::incomingMessage_slot(PeerInfo *peerInfo, QByteArray msg)
         {
             s=s.remove(0,5);
             QStringList datalist = s.split(",");
-            peerInfo->pThread->SendMessage("you request"+datalist.size()+"\n");;
+           QList<int> dataNumbers;
+            foreach (QString st,datalist)
+            {
+            dataNumbers.append(st.toInt());
+            }
+            QString str="you request "+QString::number(dataNumbers.size())+"\n";
+
+            peerInfo->pThread->SendMessage(str.toAscii());
+            emit getServerData(dataNumbers);
+
         }
         if (s.startsWith("BYE"))
         {
+            disconnect(this, SIGNAL(toThreadsDataReady(QList<float>)),
+                       peerInfo->pThread, SLOT(DataReady(QList<float>)));
+            disconnect(this, SIGNAL(toThreadsCustomDataReady(QList<float>)),
+                       peerInfo->pThread, SLOT(DataReady(QList<float>)));
               emit peerDisconnected(peerInfo);
         }
     }
@@ -154,6 +167,17 @@ void NetServer::setServerData(QList<int> indata)
   clientData=lData;
   emit toThreadsDataReady(lData);
 
+}
+
+void NetServer::setCustomServerData(QList<int> indata)
+{
+    QList<float> lData;
+    foreach(int i,indata){
+        lData.append((float)i);
+
+    }
+  clientData=lData;
+  emit toThreadsCustomDataReady(lData);
 }
 
 

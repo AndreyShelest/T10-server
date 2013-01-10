@@ -6,6 +6,8 @@ Aircraft::Aircraft(QObject *parent) :
     velocity = new QVector3D();
     aerodynamicForce = new QVector3D();
     aerodynamicMoments = new QVector3D();
+    qmapData=new QMap<int, QString>(getQmapData());
+   // qmapData=&;
         // TODO: what is lambda
     QSettings settings(QSettings::IniFormat, QSettings::UserScope,
                        QCoreApplication::organizationName(), QCoreApplication::applicationName());
@@ -81,6 +83,7 @@ Aircraft::~Aircraft()
     delete velocity;
     delete aerodynamicForce;
     delete aerodynamicMoments;
+    delete qmapData;
 }
 
 QList<int> Aircraft::getJoyData()
@@ -216,6 +219,23 @@ dataToserver[naviDataLength+5]=(int)pitch;
 dataToserver[naviDataLength+6]=(int)yaw;
   emit serverDataReady(dataToserver);
 
+}
+
+void Aircraft::setCustomServerData(QList<int> dataNumbers)
+{
+ QList<int> clientData;
+    QMap<int, QString> ::iterator it=qmapData->begin();
+    for(;it!=qmapData->end();++it)
+    {
+        for(int i=0;i<dataNumbers.size();i++)
+        {
+            if (it.key()==dataNumbers[i])
+                clientData.append(dataToserver[it.key()]);
+        }
+
+    }
+
+    emit customDataReady(clientData);
 }
 
 void Aircraft::modelingStep()
