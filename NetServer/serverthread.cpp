@@ -10,6 +10,7 @@ ServerThread::ServerThread(int socketDescriptor, QObject *parent) :
 
 ServerThread::~ServerThread()
 {
+   this->exit(0);
 }
 
 void ServerThread::run()
@@ -20,10 +21,13 @@ void ServerThread::run()
         qDebug() << tr("Unable to set socket descriptor...");
         return;
     }
+    else{
     peerInfo.id = socketDescriptor;
     peerInfo.name = "Unnamed";
     peerInfo.address = tcpServerConnection->peerAddress();
     peerInfo.port = tcpServerConnection->peerPort();
+    peerInfo.packets_received=0;
+    peerInfo.packets_send=0;
     peerInfo.dataMode = DataModes(undefined);
     peerInfo.pThread = this;
 
@@ -35,9 +39,11 @@ void ServerThread::run()
 
     emit peerConnected(&peerInfo);
 
-    exec();
-    delete tcpServerConnection;
-    tcpServerConnection = 0;
+   exec();
+    }
+//    tcpServerConnection->disconnectFromHost();
+//    delete tcpServerConnection;
+//    tcpServerConnection = 0;
 }
 
 void ServerThread::send(QByteArray msg)
@@ -66,11 +72,13 @@ void ServerThread::floatArr2ByteArr(QList<float> *floatArr, QByteArray *byteArr)
 void ServerThread::incomingData_slot()
 {
     QByteArray msg = tcpServerConnection->readAll();
+    peerInfo.packets_received++;
     emit incomingMessage(&peerInfo, msg);
 }
 
 void ServerThread::disconnected()
 {
+
     emit peerDisconnected(&peerInfo);
     this->deleteLater();
 }
@@ -78,6 +86,7 @@ void ServerThread::disconnected()
 void ServerThread::SendMessage(QByteArray msg)
 {
     send(msg);
+    peerInfo.packets_send++;
 }
 
 void ServerThread::DataReady(QList<float> msg)

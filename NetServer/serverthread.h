@@ -25,6 +25,8 @@ struct PeerInfo
     ServerThread* pThread;
     QHostAddress address;
     quint16 port;
+    quint16 packets_received;
+    quint16 packets_send;
     DataModes dataMode;
     QList<int*> dataComponents;
 };
@@ -35,11 +37,12 @@ class ServerThread : public QThread
     Q_OBJECT
 public:
     ServerThread(int socketDescriptor, QObject *parent = 0);
+
     ~ServerThread();
 
 protected:
     void run();
-    void send(QByteArray msg);
+      void send(QByteArray msg);
 
 private:
     TcpSocket * tcpServerConnection;

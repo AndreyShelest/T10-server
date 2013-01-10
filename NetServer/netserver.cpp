@@ -46,11 +46,14 @@ void NetServer::peerDisconnected_slot(PeerInfo *peerInfo)
     qDebug() << tr("Disconnected: ") << peerInfo->id << " ::: "  << peerInfo->address;
         int n = peers.indexOf(peerInfo);
     if (n != -1)
+    {
+         // peers.at(n)->pThread->deleteLater();
 
-    //peers.at(peerInfo)->pThread->currentThread()->destroyed();
-   // delete peers.at(n)->pThread;
-     peers.removeAt(n);
-    emit peerDisconnected(peerInfo);
+            peers.removeAt(n);
+emit peerDisconnected(peerInfo);
+    }
+
+
 }
 
 void NetServer::incomingMessage_slot(PeerInfo *peerInfo, QByteArray msg)
@@ -102,8 +105,8 @@ void NetServer::incomingMessage_slot(PeerInfo *peerInfo, QByteArray msg)
                     else if (s == "visualisation_programm")
                     {
                         peerInfo->dataMode = DataModes(matlab);
-                        peerInfo->pThread->SendMessage("OK. Data mode: floatvisualisation_programm\n");
-                        qDebug()<<"Подключено";
+                        peerInfo->pThread->SendMessage("OK. Data mode: visualisation_programm\n");
+                        //qDebug()<<"Подключено";
                     }
                     else if (s == "filtered")
                     {
@@ -127,9 +130,15 @@ void NetServer::incomingMessage_slot(PeerInfo *peerInfo, QByteArray msg)
                     }
                 }
             }
+        if (s.startsWith("Get: "))
+        {
+            s=s.remove(0,5);
+            QStringList datalist = s.split(",");
+            peerInfo->pThread->SendMessage("you request"+datalist.size()+"\n");;
+        }
         if (s.startsWith("BYE"))
         {
-        emit peerDisconnected(peerInfo);
+              emit peerDisconnected(peerInfo);
         }
     }
 }

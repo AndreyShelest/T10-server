@@ -14,6 +14,7 @@
 #include "QStandardItemModel"
 #include "qCustomPlot/qcustomplot.h"
 #include "qCustomPlot/graphwindow.h"
+#include "NetServer/peerwidget.h"
 
 namespace Ui {
 class MainWindow;
@@ -83,6 +84,8 @@ private slots:
     void on_tb_custom_pp_toggled(bool checked);
 
     void on_actionPlots_toggled(bool arg1);
+
+    void on_listWidget_peerList_clicked(const QModelIndex &index);
 
 public slots:
     void log(QString data);

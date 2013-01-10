@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     Joystick/v_joystick_adapter.cpp \
     ./qCustomPlot/qcustomplot.cpp \
     qCustomPlot/graphwindow.cpp \
-    qCustomPlot/writer.cpp
+    qCustomPlot/writer.cpp \
+    NetServer/peerwidget.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -43,7 +44,8 @@ HEADERS  += mainwindow.h \
     Joystick/v_joystick_adapter.h \
     ./qCustomPlot/qcustomplot.h \
     qCustomPlot/graphwindow.h \
-    qCustomPlot/writer.h
+    qCustomPlot/writer.h \
+    NetServer/peerwidget.h
 
 
 FORMS    += mainwindow.ui \

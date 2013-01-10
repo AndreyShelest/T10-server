@@ -90,6 +90,19 @@
          <property name="text">
           <string>Filtered</string>
          </property>
+         <property name="autoExclusive">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="fb_autoscale">
+         <property name="text">
+          <string>Autoscale</string>
+         </property>
+         <property name="autoExclusive">
+          <bool>false</bool>
+         </property>
         </widget>
        </item>
        <item>

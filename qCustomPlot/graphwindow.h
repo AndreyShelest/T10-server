@@ -66,6 +66,8 @@ void legendDoubleClick(QCPLegend* legend, QCPAbstractLegendItem* item);
   void on_actionSave_to_File_triggered();
 
   void on_actionWriteDataToFile_toggled(bool arg1);
+  void on_fb_autoscale_toggled(bool checked);
+
 signals:
   void readyToSaveData(QVector<double> aVectorData);
 private:
@@ -86,6 +88,9 @@ QList<QVector<QVector <double> > > dataList;
   QComboBox* currentgraphList;
   QVector<QVector <double> > dataVector;
   QVector<QList <double> > filterVector;
+  double minYAxesNumber, maxYAxesNumber;
+   void setMinMaxNumber(QVector<double> *values);
+
 };
 
 #endif // GRAPHWINDOW_H

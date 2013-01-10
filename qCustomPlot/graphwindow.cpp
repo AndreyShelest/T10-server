@@ -730,8 +730,11 @@ void GraphWindow::setupRealtimeT10Data(QCustomPlot *customPlot)
   customPlot->yAxis->setTickFont(font);
   customPlot->legend->setFont(font);
   */
+  ui->customPlot->legend->clearItems();
   filterVector.clear();
   dataVector.clear();
+  minYAxesNumber=1;
+  maxYAxesNumber=1;
 QVector<double> buf;
 //buf.append(0);
   int n=ui->tableGraphics->count();
@@ -1063,13 +1066,18 @@ int n=ui->tableGraphics->count();
     // set data of dots:
     ui->customPlot->graph(i)->clearData();
     ui->customPlot->graph(i)->addData(key, value[i-n]);
-//ui->customPlot->legend->removeItem(i);
     }
+
     // rescale value (vertical) axis to fit the current data:
     ui->customPlot->rescaleAxes();
     // make key axis range scroll with the data (at a constant range size of 8):
     ui->customPlot->xAxis->setRange(key+0.25, 8, Qt::AlignRight);
- ui->customPlot->yAxis->setRange(-15,15);
+        setMinMaxNumber(&value);
+    if (!ui->fb_autoscale->isChecked())
+    {
+        ui->customPlot->yAxis->setRange(minYAxesNumber+minYAxesNumber*0.1,
+                                        maxYAxesNumber+maxYAxesNumber*0.1);
+    }
 //    ui->customPlot->legend->setVisible(true);
     ui->customPlot->replot();
     if (addTime)
@@ -1093,9 +1101,11 @@ int n=ui->tableGraphics->count();
     if (key-lastSec > 2) // average fps over 2 seconds
     {
       ui->statusBar->showMessage(
-            QString("%1 FPS, Total Data points: %2")
+            QString("%1 FPS, Total Data points: %2; min: %3, max: %4 ")
             .arg(frameCount/(key-lastSec), 0, 'f', 0)
             .arg(pointsCount)
+                  .arg(minYAxesNumber)
+                  .arg(maxYAxesNumber)
             , 0);
       lastSec = key;
       frameCount = 0;
@@ -1182,7 +1192,7 @@ void GraphWindow::on_actionWriteDataToFile_toggled(bool arg1)
     if(arg1)
     {
         time.clear();
-        addTime=true;
+        addTime=true;//разрешает сохранение времени
         connect(this,SIGNAL(readyToSaveData(QVector<double>)),this,SLOT(slotSaveData(QVector<double>)));
 
     }
@@ -1190,7 +1200,7 @@ void GraphWindow::on_actionWriteDataToFile_toggled(bool arg1)
     {
     disconnect(this,SIGNAL(readyToSaveData(QVector<double>)),this,SLOT(slotSaveData(QVector<double>)));
     ui->actionSave_to_File->setEnabled(true);
-addTime=false;
+addTime=false;//запрещает сохранение времени
 dataVector.append(time);
 dataList.append(dataVector);
 currentGraphMapList.append(currentgraphMap);
@@ -1257,6 +1267,17 @@ Qt::GlobalColor GraphWindow::getColor(int kind)
 
 }
 
+void GraphWindow::setMinMaxNumber(QVector<double> * values)
+{
+    foreach(double val, *values)
+    {
+    if (val<minYAxesNumber)
+        minYAxesNumber=val;
+    if (val>maxYAxesNumber)
+        maxYAxesNumber=val;
+    }
+}
+
 void GraphWindow::on_pb_add_clicked()
 {
     bool unique=true;
@@ -1287,6 +1308,8 @@ void GraphWindow::on_actionStart_toggled(bool arg1)
         setupDemo(14);
         connect(graphAircraft, SIGNAL(serverDataReady(QList<int>)), this, SLOT(realtimeT10Slot(QList<int>)));
         ui->pb_add->setEnabled(false);
+        ui->tableGraphics->setEnabled(false);
+        ui->cb_data->setEnabled(false);
         }
         else ui->actionStart->setChecked(false);
 
@@ -1300,6 +1323,8 @@ void GraphWindow::on_actionStart_toggled(bool arg1)
          if(ui->tableGraphics->count()>0)
          {
          ui->actionWriteDataToFile->setEnabled(false);
+         ui->tableGraphics->setEnabled(true);
+         ui->cb_data->setEnabled(true);
         // ui->actionWriteDataToFile->setChecked(false);
          }
     }
@@ -1581,3 +1606,10 @@ void GraphWindow::saveFilterChanged(const QString &filter)
     }
 }
 
+
+void GraphWindow::on_fb_autoscale_toggled(bool checked)
+{
+   // if(checked)
+   // {minYAxesNumber=1;
+    //maxYAxesNumber=1;}
+}

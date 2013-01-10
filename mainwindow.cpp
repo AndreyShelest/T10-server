@@ -55,9 +55,6 @@ MainWindow::MainWindow(QWidget *parent) :
     aircraft=new Aircraft(this);
     ui->aircraft_Simulate->setChecked(settings.value("Aircraft/Simulate", "true").toBool());
     on_aircraft_Simulate_triggered(settings.value("Aircraft/Simulate", "true").toBool());
-    ////aircraft->startSimulation();
-
-
     //    ui->listWidget_Log->clear();
     //    this->log(tr("Server started") + " [0.0.0.0:1989]");
 
@@ -127,7 +124,8 @@ void MainWindow::on_actionServer_toggled(bool arg1)
             connect(server, SIGNAL(peerConnected(PeerInfo*)), this, SLOT(peerConnected(PeerInfo*)));
             connect(server, SIGNAL(peerDisconnected(PeerInfo*)), this, SLOT(peerDisconnected(PeerInfo*)));
             connect(server, SIGNAL(peerNameChanged(PeerInfo*,QString)), this, SLOT(peerNameChanged(PeerInfo*,QString)));
-
+            connect(server, SIGNAL(peerConnected(PeerInfo*)), this, SLOT(peerConnected(PeerInfo*)));
+            connect(server, SIGNAL(peerConnected(PeerInfo*)), ui->client_info_widget, SLOT(updateData(PeerInfo*)));
             ui->actionServer->setStatusTip(tr("Stop server"));
             ui->actionServer->setToolTip(ui->actionServer->statusTip());
             labelServerStatus->setText(tr("Server: ") + "<span style=\"color:#008800;font-weight:bold;\">" + tr("running") + "</span>");
@@ -142,6 +140,11 @@ void MainWindow::on_actionServer_toggled(bool arg1)
     }
     else
     {
+        disconnect(server, SIGNAL(peerConnected(PeerInfo*)), this, SLOT(peerConnected(PeerInfo*)));
+        disconnect(server, SIGNAL(peerDisconnected(PeerInfo*)), this, SLOT(peerDisconnected(PeerInfo*)));
+        disconnect(server, SIGNAL(peerNameChanged(PeerInfo*,QString)), this, SLOT(peerNameChanged(PeerInfo*,QString)));
+        disconnect(server, SIGNAL(peerConnected(PeerInfo*)), this, SLOT(peerConnected(PeerInfo*)));
+        disconnect(server, SIGNAL(peerConnected(PeerInfo*)), ui->client_info_widget, SLOT(updateData(PeerInfo*)));
         server->close();
         this->log(tr("Server stopped"));
         ui->actionServer->setStatusTip(tr("Start server"));
@@ -256,6 +259,7 @@ void MainWindow::peerConnected(PeerInfo *peerInfo)
 {
     log(tr("Client connected") + ": " + peerInfo->name + " [" + peerInfo->address.toString() + "]");
     rebuildPeerList(peerInfo);
+
 }
 
 void MainWindow::peerDisconnected(PeerInfo *peerInfo)
@@ -274,8 +278,9 @@ void MainWindow::on_actionShowDataFromCom_toggled(bool arg1)
 {
     if (arg1)
     {
-       // ui->stackedWidget->setCurrentIndex(1);
-    }
+
+           }
+    else {}
 }
 
 void MainWindow::comPortNotResponding()
@@ -733,3 +738,18 @@ void MainWindow::closeEvent(QCloseEvent *e)
         e->ignore();
 }
 
+
+void MainWindow::on_listWidget_peerList_clicked(const QModelIndex &index)
+{
+    if (index.row()<=server->peers.size()-1)
+    {
+    ui->client_info_widget->updateData(server->peers[index.row()]);
+      //обновляются данные о выбраном пользователе
+      connect(server->peers[index.row()]->pThread,SIGNAL(peerConnected(PeerInfo*))
+              ,ui->client_info_widget,SLOT(updateData(PeerInfo*)));
+      connect(server,SIGNAL(peerNameChanged(PeerInfo*,QString))
+                      ,ui->client_info_widget,SLOT(updateData(PeerInfo*)));
+      connect(server->peers[index.row()]->pThread,SIGNAL(incomingMessage(PeerInfo*,QByteArray))
+                      ,ui->client_info_widget,SLOT(updateData(PeerInfo*)));
+    }
+}
