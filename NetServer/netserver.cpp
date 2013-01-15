@@ -36,6 +36,7 @@ void NetServer::peerConnected_slot(PeerInfo *peerInfo)
 {
     peers.append(peerInfo);
     qDebug() << tr("New connection: ") << peerInfo->id << " ::: "  << peerInfo->address;
+    connect(this, SIGNAL(toThreadsCustomDataReady(QList<float>)), peerInfo->pThread, SLOT(DataReady(QList<float>)));
     emit peerConnected(peerInfo);
 }
 
@@ -49,6 +50,11 @@ void NetServer::peerDisconnected_slot(PeerInfo *peerInfo)
          // peers.at(n)->pThread->deleteLater();
 
             peers.removeAt(n);
+            disconnect(this, SIGNAL(toThreadsDataReady(QList<float>)),
+                       peerInfo->pThread, SLOT(DataReady(QList<float>)));
+            disconnect(this, SIGNAL(toThreadsCustomDataReady(QList<float>)),
+                       peerInfo->pThread, SLOT(DataReady(QList<float>)));
+              emit peerDisconnected(peerInfo);
 emit peerDisconnected(peerInfo);
     }
 
@@ -63,7 +69,7 @@ void NetServer::incomingMessage_slot(PeerInfo *peerInfo, QByteArray msg)
         peerInfo->pThread->SendMessage(httpServer->request(msg));
         return;
     }
-    connect(this, SIGNAL(toThreadsCustomDataReady(QList<float>)), peerInfo->pThread, SLOT(DataReady(QList<float>)));
+
     QString s = msg;
     qDebug() << s;
     QStringList sl = s.split('\n');
@@ -139,9 +145,10 @@ void NetServer::incomingMessage_slot(PeerInfo *peerInfo, QByteArray msg)
             {
             dataNumbers.append(st.toInt());
             }
-            QString str="you request "+QString::number(dataNumbers.size())+"\n";
+//            QString str="you request "+QString::number(dataNumbers.size())+"\n";
 
-            peerInfo->pThread->SendMessage(str.toAscii());
+//            peerInfo->pThread->SendMessage(str.toAscii());
+
             emit getServerData(dataNumbers);
 
         }

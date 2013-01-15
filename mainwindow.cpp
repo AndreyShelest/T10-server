@@ -293,10 +293,6 @@ void MainWindow::comPortRepaired()
     labelComPortStatus->setText(tr("COM port: ") + "<span style=\"color:#008800;font-weight:bold;\">" + tr("transferring") + "</span>");
 }
 
-void MainWindow::on_stackedWidget_currentChanged(int arg1)
-{
-
-}
 
 void MainWindow::on_actionAbout_triggered()
 {

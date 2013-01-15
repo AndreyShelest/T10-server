@@ -41,10 +41,6 @@ private slots:
     void comPortNotResponding();
     void comPortRepaired();
 
-
-
-    void on_stackedWidget_currentChanged(int arg1);
-
     void on_actionAbout_triggered();
 
     void on_actionAbout_Qt_triggered();
