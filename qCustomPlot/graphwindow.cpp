@@ -1327,6 +1327,7 @@ void GraphWindow::on_actionStart_toggled(bool arg1)
          ui->cb_data->setEnabled(true);
         // ui->actionWriteDataToFile->setChecked(false);
          }
+
     }
 }
 
@@ -1342,7 +1343,8 @@ void GraphWindow::on_pb_remove_clicked()
 {
 
 
-
+currentgraphMap.remove(ui->tableGraphics->currentRow());
+filterVector.remove(ui->tableGraphics->currentRow());
     ui->tableGraphics->model()->removeRow(ui->tableGraphics->currentRow());
     ui->tableGraphics->repaint();
     ui->pb_remove->setEnabled(false);
