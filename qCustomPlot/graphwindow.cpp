@@ -1315,7 +1315,7 @@ void GraphWindow::on_pb_remove_clicked()
 {
 
 
-
+    currentgraphMap.remove(ui->tableGraphics->currentRow());
     ui->tableGraphics->model()->removeRow(ui->tableGraphics->currentRow());
     ui->tableGraphics->repaint();
     ui->pb_remove->setEnabled(false);
