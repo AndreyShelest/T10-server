@@ -44,7 +44,7 @@ public:
   void setupRealtimeT10Data(QCustomPlot *customPlot);
 private slots:
   void realtimeDataSlot();
-  void realtimeT10Slot(QList<int> indata);
+  void realtimeT10Slot(QList<float> indata);
   void screenShot();
   void allScreenShots();
     void slotSaveData(QVector<double> aVectorData);
@@ -87,7 +87,7 @@ QList<QVector<QVector <double> > > dataList;
   int currentDemoIndex;
   QComboBox* currentgraphList;
   QVector<QVector <double> > dataVector;
-  QVector<QList <double> > filterVector;
+
   double minYAxesNumber, maxYAxesNumber;
    void setMinMaxNumber(QVector<double> *values);
 

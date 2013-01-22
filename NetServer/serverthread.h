@@ -4,6 +4,7 @@
 #include <QThread>
 #include <QHostAddress>
 #include "tcpsocket.h"
+#include <QTcpServer>
 #include"ComPort/comporttransmitter.h"
 
 class ServerThread;
@@ -36,8 +37,7 @@ class ServerThread : public QThread
 {
     Q_OBJECT
 public:
-    ServerThread(int socketDescriptor, QObject *parent = 0);
-
+ ServerThread(int socketDescriptor, QObject *parent=0);
     ~ServerThread();
 
 protected:
@@ -46,6 +46,7 @@ protected:
 
 private:
     TcpSocket * tcpServerConnection;
+
     int socketDescriptor;
     PeerInfo peerInfo;
     QByteArray packet;

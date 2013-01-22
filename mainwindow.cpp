@@ -146,6 +146,7 @@ void MainWindow::on_actionServer_toggled(bool arg1)
         disconnect(server, SIGNAL(peerConnected(PeerInfo*)), this, SLOT(peerConnected(PeerInfo*)));
         disconnect(server, SIGNAL(peerConnected(PeerInfo*)), ui->client_info_widget, SLOT(updateData(PeerInfo*)));
         server->close();
+
         this->log(tr("Server stopped"));
         ui->actionServer->setStatusTip(tr("Start server"));
         ui->actionServer->setToolTip(ui->actionServer->statusTip());
@@ -606,9 +607,9 @@ void MainWindow::on_aircraft_Simulate_triggered(bool checked)
         connect(joystick, SIGNAL(sigZAxisChanged(int)), aircraft, SLOT(setJoyZ(int)));
         connect(aircraft,SIGNAL(signal_modelingStep()),aircraft,SLOT(setServerData()));
         connect(comPort,SIGNAL(DataReady(QByteArray)),aircraft,SLOT(setDataFromBoard(QByteArray)));
-        connect(aircraft,SIGNAL(serverDataReady(QList<int>)),server,SLOT(setServerData(QList<int>)));
+        connect(aircraft,SIGNAL(serverDataReady(QList<float>)),server,SLOT(setServerData(QList<float>)));
         connect(server,SIGNAL(getServerData(QList<int>)),aircraft,SLOT(setCustomServerData(QList<int>)));
-        connect(aircraft,SIGNAL(customDataReady(QList<int>)),server,SLOT(setCustomServerData(QList<int>)));
+        connect(aircraft,SIGNAL(serverCustomDataReady(QList<float>)),server,SLOT(setCustomServerData(QList<float>)));
     }
     else
     {
@@ -618,9 +619,9 @@ void MainWindow::on_aircraft_Simulate_triggered(bool checked)
         disconnect(joystick, SIGNAL(sigZAxisChanged(int)), aircraft, SLOT(setJoyZ(int)));
         disconnect(aircraft,SIGNAL(signal_modelingStep()),aircraft,SLOT(setServerData()));
         disconnect(comPort,SIGNAL(DataReady(QByteArray)),aircraft,SLOT(setDataFromBoard(QByteArray)));
-        disconnect(aircraft,SIGNAL(serverDataReady(QList<int>)),server,SLOT(setServerData(QList<int>)));
+        disconnect(aircraft,SIGNAL(serverDataReady(QList<float>)),server,SLOT(setServerData(QList<float>)));
         disconnect(server,SIGNAL(getServerData(QList<int>)),aircraft,SLOT(setCustomServerData(QList<int>)));
-        disconnect(aircraft,SIGNAL(customDataReady(QList<int>)),server,SLOT(setCustomServerData(QList<int>)));
+        disconnect(aircraft,SIGNAL(serverCustomDataReady(QList<float>)),server,SLOT(setCustomServerData(QList<float>)));
     }
 }
 

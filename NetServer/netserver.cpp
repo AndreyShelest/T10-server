@@ -23,11 +23,14 @@ NetServer::~NetServer()
 
 void NetServer::incomingConnection(int socketDescriptor)
 {
-    ServerThread* thread = new ServerThread(socketDescriptor, this);
+  ServerThread* thread = new ServerThread(socketDescriptor);
+
+
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     connect(thread, SIGNAL(peerConnected(PeerInfo*)), this, SLOT(peerConnected_slot(PeerInfo*)));
     connect(thread, SIGNAL(peerDisconnected(PeerInfo*)), this, SLOT(peerDisconnected_slot(PeerInfo*)));
-     connect(thread, SIGNAL(incomingMessage(PeerInfo*,QByteArray)), this, SLOT(incomingMessage_slot(PeerInfo*,QByteArray)));
+
+    connect(thread, SIGNAL(incomingMessage(PeerInfo*,QByteArray)), this, SLOT(incomingMessage_slot(PeerInfo*,QByteArray)));
 
        thread->start();
 }
@@ -47,15 +50,16 @@ void NetServer::peerDisconnected_slot(PeerInfo *peerInfo)
         int n = peers.indexOf(peerInfo);
     if (n != -1)
     {
-         // peers.at(n)->pThread->deleteLater();
-
+      //   peers.at(n)->pThread->deleteLater();
+        peerInfo->pThread->deleteLater();
             peers.removeAt(n);
+
             disconnect(this, SIGNAL(toThreadsDataReady(QList<float>)),
                        peerInfo->pThread, SLOT(DataReady(QList<float>)));
             disconnect(this, SIGNAL(toThreadsCustomDataReady(QList<float>)),
                        peerInfo->pThread, SLOT(DataReady(QList<float>)));
               emit peerDisconnected(peerInfo);
-emit peerDisconnected(peerInfo);
+//emit peerDisconnected(peerInfo);
     }
 
 
@@ -163,11 +167,11 @@ void NetServer::incomingMessage_slot(PeerInfo *peerInfo, QByteArray msg)
     }
 }
 
-void NetServer::setServerData(QList<int> indata)
+void NetServer::setServerData(QList<float> indata)
 {
     QList<float> lData;
-    foreach(int i,indata){
-        lData.append((float)i);
+    foreach(float i,indata){
+        lData.append(i);
 
     }
 //qDebug()<<lData;
@@ -176,11 +180,11 @@ void NetServer::setServerData(QList<int> indata)
 
 }
 
-void NetServer::setCustomServerData(QList<int> indata)
+void NetServer::setCustomServerData(QList<float> indata)
 {
     QList<float> lData;
-    foreach(int i,indata){
-        lData.append((float)i);
+    foreach(float i,indata){
+        lData.append(i);
 
     }
   clientData=lData;

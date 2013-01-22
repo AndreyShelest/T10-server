@@ -37,8 +37,8 @@ public slots:
    void peerConnected_slot(PeerInfo* peerInfo);
    void peerDisconnected_slot(PeerInfo* peerInfo);
    void incomingMessage_slot(PeerInfo* peerInfo, QByteArray msg);
-   void setServerData (QList<int> indata);
-   void setCustomServerData (QList<int> indata);
+   void setServerData (QList<float> indata);
+   void setCustomServerData (QList<float> indata);
 
 
     

@@ -731,7 +731,6 @@ void GraphWindow::setupRealtimeT10Data(QCustomPlot *customPlot)
   customPlot->legend->setFont(font);
   */
   ui->customPlot->legend->clearItems();
-  filterVector.clear();
   dataVector.clear();
   minYAxesNumber=1;
   maxYAxesNumber=1;
@@ -745,8 +744,7 @@ QMap<int, QString> ::iterator it=currentgraphMap.begin();
       customPlot->graph(i)->setPen(QPen(getColor(i)));
        customPlot->graph(i)->setName(it.value());
        dataVector.append(buf);
-       filterVector.append(buf.toList());
-      //customPlot->graph(i)->setBrush(QBrush(QColor(240, 255, 200)));
+            //customPlot->graph(i)->setBrush(QBrush(QColor(240, 255, 200)));
 ++it;
        }
 
@@ -1013,7 +1011,7 @@ void GraphWindow::realtimeDataSlot()
   }
 }
 
-void GraphWindow::realtimeT10Slot(QList<int> indata)
+void GraphWindow::realtimeT10Slot(QList<float> indata)
 {
     // calculate two new data points:
   #if QT_VERSION < QT_VERSION_CHECK(4, 7, 0)
@@ -1025,34 +1023,12 @@ void GraphWindow::realtimeT10Slot(QList<int> indata)
 int n=ui->tableGraphics->count();
     QVector<double> value;
     QMap<int, QString> ::iterator it=currentgraphMap.begin();
-    int i=0;
 
-    if(!ui->fb_filtered->isChecked()){
+    graphAircraft->setFiltered(ui->fb_filtered->isChecked());
     for(;it!=currentgraphMap.end();++it)
-    {
-        value.append((float)indata[it.key()]);
-    }
-    }
-    else
-    {
-        for(;it!=currentgraphMap.end();++it)
-        {
-            if(!filterVector[i].empty())
-            {
-            filterVector[i].append((filterVector[i].last()+(float)indata[it.key()])/2.0);
-            value.append(filterVector[i].last());
-            filterVector[i].removeFirst();
+       {
+            value.append(indata[it.key()]);
         }
-        else
-        {
-                filterVector[i].append((float)indata[it.key()]);
-                 value.append(filterVector[i].last());
-
-        }
-            ++i;
-        }
-        }
-
 // add data to lines:
     for (int i=0;i<n;i++)
     {
@@ -1136,6 +1112,7 @@ void GraphWindow::setupPlayground(QCustomPlot *customPlot)
 
 GraphWindow::~GraphWindow()
 {
+    delete graphAircraft;
   delete ui;
 }
 
@@ -1280,13 +1257,9 @@ void GraphWindow::setMinMaxNumber(QVector<double> * values)
 
 void GraphWindow::on_pb_add_clicked()
 {
-    bool unique=true;
-    for(int i=0;i<ui->tableGraphics->count();i++)
-    {
-        if(ui->cb_data->currentText()==ui->tableGraphics->itemAt(i,0)->text())
-            unique=false;
-    }
-    if (unique)
+
+    if ( currentgraphMap[ui->cb_data->currentIndex()]!=
+         ui->cb_data->currentText())
     {
     ui->tableGraphics->addItem(ui->cb_data->currentText());
     currentgraphMap[ui->cb_data->currentIndex()]=graphMap[ui->cb_data->currentIndex()];
@@ -1306,7 +1279,7 @@ void GraphWindow::on_actionStart_toggled(bool arg1)
         ui->actionStart->setEnabled(false);
         ui->actionWriteDataToFile->setEnabled(true);
         setupDemo(14);
-        connect(graphAircraft, SIGNAL(serverDataReady(QList<int>)), this, SLOT(realtimeT10Slot(QList<int>)));
+        connect(graphAircraft, SIGNAL(serverDataReady(QList<float>)), this, SLOT(realtimeT10Slot(QList<float>)));
         ui->pb_add->setEnabled(false);
         ui->tableGraphics->setEnabled(false);
         ui->cb_data->setEnabled(false);
@@ -1317,7 +1290,7 @@ void GraphWindow::on_actionStart_toggled(bool arg1)
     else
     {
       ui->pb_add->setEnabled(true);
-       disconnect(graphAircraft, SIGNAL(serverDataReady(QList<int>)), this, SLOT(realtimeT10Slot(QList<int>)));
+       disconnect(graphAircraft, SIGNAL(serverDataReady(QList<float>)), this, SLOT(realtimeT10Slot(QList<float>)));
               ui->actionPause->setEnabled(false);
          ui->actionStart->setEnabled(true);
          if(ui->tableGraphics->count()>0)

@@ -16,14 +16,17 @@ public:
     explicit Aircraft(QObject *parent = 0);
     ~Aircraft();
     QList<int> getJoyData();
+    void setFiltered(bool _turn);
  static QMap <int,QString> getQmapData();
 
 float getCurrentTime();
 private:
+QList<QList<float> > *avrg4Data; //массив соодержит 3 последних значения массивов данных с платы АЦП
 QMap  <int,QString>* qmapData;
+    bool filtered;
     int naviDataLength;
     int clientDataLength;
-    QList<int> dataFromBoard;
+    QList<float> dataFromBoard;
     float time;             // модельное время, секунд
     float dt;               // период квантования, секунд
     float pitch;            // тангаж
@@ -63,14 +66,15 @@ QMap  <int,QString>* qmapData;
     float Gx, Gy, Gz;       // проекции силы тяжести на оси связанной СК
 
 
-    inline float trapz(float previous, float current, float t);
-    QList<int> dataToserver;
+    inline float trapz(float previous, float current, float t=1);
+   inline float avrg4(float current, float current_1, float current_2, float current_3);
+    QVector<float> *dataToserver;
     QTimer modelingTimer;
 signals:
    void joyDataReady(QList<int>);
    void customDataReady(QList<int>);
-   void serverDataReady(QList<int>);
-   void serverCustomDataReady(QList<int>);
+   void serverDataReady(QList<float>);
+   void serverCustomDataReady(QList<float>);
    void signal_modelingStep();
 public slots:
    void slotCalculateControl(QList<int> inJoy);

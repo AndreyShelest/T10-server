@@ -12,14 +12,7 @@ Aircraft::Aircraft(QObject *parent) :
     QSettings settings(QSettings::IniFormat, QSettings::UserScope,
                        QCoreApplication::organizationName(), QCoreApplication::applicationName());
 
-//    settings.setValue("AircraftModel/initialTime", 0);
-//    settings.setValue("AircraftModel/dt", 0.1);
-//    settings.setValue("AircraftModel/initialPitch", 0);
-//    settings.setValue("AircraftModel/initialRoll", 0);
-//    settings.setValue("AircraftModel/initialYaw", 0);
-//    settings.setValue("AircraftModel/initialHeading", 0);
-//    settings.setValue("AircraftModel/initialHeight", 3000);
-//    settings.setValue("AircraftModel/initialVelocityMagnitude", 100);
+       setFiltered(settings.value("AircraftModel/filteredData", false).toBool());
     naviDataLength=settings.value("AircraftModel/naviDataLength", 18).toInt();
     clientDataLength=settings.value("AircraftModel/naviDataLength", 50).toInt();
     X_coord=settings.value("AircraftModel/initialX", 0).toFloat();
@@ -71,9 +64,9 @@ dhdt = temp;
     dVx = 0;
     dVy = 0;
     dVz = 0;
-    for(int i=0;i<clientDataLength;++i)
-    {
-dataToserver.append(0);}
+    dataToserver=new QVector<float>;
+    dataToserver->fill(0,clientDataLength);
+ avrg4Data =new QList<QList<float> >;
     connect(&modelingTimer, SIGNAL(timeout()), this, SLOT(modelingStep()));
 
 }
@@ -84,6 +77,8 @@ Aircraft::~Aircraft()
     delete aerodynamicForce;
     delete aerodynamicMoments;
     delete qmapData;
+    delete avrg4Data;
+
 }
 
 QList<int> Aircraft::getJoyData()
@@ -94,6 +89,16 @@ QList<int> Aircraft::getJoyData()
     data.append(joyZ);
     return data;
 }
+
+void Aircraft::setFiltered(bool _turn)
+{
+    filtered=_turn;
+//    if (_turn)
+//       avrg4Data =new QList<QList<float> >;
+//    else delete avrg4Data;
+}
+
+
 
 QMap<int, QString> Aircraft::getQmapData()
 {
@@ -144,98 +149,141 @@ float Aircraft::trapz(float previous, float current, float t)
     return ((previous+current)/2) * t;
 }
 
+float Aircraft::avrg4(float current, float current_1, float current_2, float current_3)
+{
+    return ((current+current_1+current_2+current_3)/4);
+}
+
 void Aircraft::setJoyX(int param)
 {
+    if (!filtered)
     this->joyX=param;
-}
+    else
+     this->joyX=trapz(this->joyX,param);
+
+    }
 
 void Aircraft::setJoyY(int param)
 {
+    if (!filtered)
     this->joyY=param;
+    else
+     this->joyY=trapz(this->joyY,param);
 }
 
 void Aircraft::setJoyZ(int param)
 {
+    if (!filtered)
     this->joyZ=param;
+    else
+     this->joyZ=trapz(this->joyZ,param);
 }
 
 void Aircraft::setDataFromBoard(QByteArray indata)
 {
 
-    dataFromBoard.clear();
-    foreach(int i,indata)
-    {
-    dataFromBoard.append(i);
+
+    if (!filtered){
+        dataFromBoard.clear();
+        foreach(float i,indata)
+        {
+        dataFromBoard.append(i);
+        }
     }
-    roll=(int)dataFromBoard[4]+76;
-    pitch=(int)dataFromBoard[5]-113;
+    else
+     {
+        if(avrg4Data->size()<3){
+
+        for(int i=0;i<indata.size();i++)
+          dataFromBoard.replace(i,trapz(dataFromBoard[i],indata[i]));
+        avrg4Data->append(dataFromBoard);
+        }
+        else
+        {
+            for(int i=0;i<indata.size();i++)
+            {
+              dataFromBoard.replace(i,
+                                    avrg4(indata[i],
+                                    avrg4Data->at(0).at(i),
+                                    avrg4Data->at(1).at(i),
+                                    avrg4Data->at(2).at(i)));
+              avrg4Data->removeFirst();
+              avrg4Data->append(dataFromBoard);
+            }
+            }
+        }
+
+
+    roll=dataFromBoard[4]+76;
+    pitch=dataFromBoard[5]-113;
  if (pitch<-13)
         pitch=-13;
-    yaw=(int)dataFromBoard[6]+101;
+    yaw=dataFromBoard[6]+101;
 
 }
 
 void Aircraft::setServerData()
 {
 
-     dataToserver.clear();
-    dataToserver.append(joyX);         //0
-   dataToserver.append(joyY);          //1
-   dataToserver.append(joyZ);          //2
-   dataToserver.append((int)heading);  //3
-   dataToserver.append((int)velocity->x()); //4
-   dataToserver.append((int)velocity->y()); //5
-   dataToserver.append((int)velocity->z()); //6
-   dataToserver.append((int)time*1000);             //7
-   dataToserver.append((int)X_coord);  //8
-   dataToserver.append((int)Y_coord);  //9
-   dataToserver.append((int)Z_coord);  //10
-   dataToserver.append(0);             //11
-   dataToserver.append((int)slide_angle);   //12
-   dataToserver.append((int)attack_angle);   //13
-   for (int i=dataToserver.size();i<naviDataLength;i++)
+     dataToserver->clear();
+    dataToserver->append(joyX);         //0
+   dataToserver->append(joyY);          //1
+   dataToserver->append(joyZ);          //2
+   dataToserver->append(heading);  //3
+   dataToserver->append(velocity->x()); //4
+   dataToserver->append(velocity->y()); //5
+   dataToserver->append(velocity->z()); //6
+   dataToserver->append(time*1000);             //7
+   dataToserver->append(X_coord);  //8
+   dataToserver->append(Y_coord);  //9
+   dataToserver->append(Z_coord);  //10
+   dataToserver->append(0);             //11
+   dataToserver->append(slide_angle);   //12
+   dataToserver->append(attack_angle);   //13
+   for (int i=dataToserver->size();i<naviDataLength;i++)
    {
-       dataToserver.append(0);
+       dataToserver->append(0);
    }
-//    dataToserver.append((joyX) / 256);
-//dataToserver.append((joyY) / 256);
-// dataToserver.append((joyZ) / 256);
+//    dataToserver->append((joyX) / 256);
+//dataToserver->append((joyY) / 256);
+// dataToserver->append((joyZ) / 256);
    if (dataFromBoard.size()==32)
    {
  for (int i=0;i<dataFromBoard.size();i++)
  {
-     dataToserver.append((int)dataFromBoard[i]);
+     dataToserver->append(dataFromBoard[i]);
  }
    }
    else
    {
-       for (int i=0;i<clientDataLength-naviDataLength;i++)
+       for (int i=0;i<(clientDataLength-naviDataLength);i++)
        {
-           dataToserver.append(0);
+           dataToserver->append(0);
        }
    }
-dataToserver[naviDataLength+4]=(int)roll;
-dataToserver[naviDataLength+5]=(int)pitch;
-dataToserver[naviDataLength+6]=(int)yaw;
-  emit serverDataReady(dataToserver);
+dataToserver->replace(naviDataLength+4,roll);
+dataToserver->replace(naviDataLength+5,pitch);
+dataToserver->replace(naviDataLength+6,yaw);
+QList<float> sendData=dataToserver->toList();
 
+  emit serverDataReady(sendData);
 }
 
 void Aircraft::setCustomServerData(QList<int> dataNumbers)
 {
- QList<int> clientData;
+ QList<float> clientData;
     QMap<int, QString> ::iterator it=qmapData->begin();
     for(;it!=qmapData->end();++it)
     {
         for(int i=0;i<dataNumbers.size();i++)
         {
             if (it.key()==dataNumbers[i])
-                clientData.append(dataToserver[it.key()]);
+                clientData.append(dataToserver->at(it.key()));
         }
 
     }
 
-    emit customDataReady(clientData);
+    emit serverCustomDataReady(clientData);
 }
 
 void Aircraft::modelingStep()
@@ -315,12 +363,14 @@ void Aircraft::startSimulation()
     if(!modelingTimer.isActive())
     {
     modelingTimer.start(dt*1000);
+    dataToserver=new QVector<float>;
     }
 }
 
 void Aircraft::stopSimulation()
 {
     modelingTimer.stop();
+    delete dataToserver;
 }
 
 
@@ -331,8 +381,8 @@ void Aircraft::slotCalculateControl(QList<int> inJoy)
     {
         out.append(i);
     }
-    out.append(inJoy.at(2));
-    out.append(inJoy.at(0));
-    out.append(inJoy.at(1));
+    out.append((float)inJoy.at(2));
+    out.append((float)inJoy.at(0));
+    out.append((float)inJoy.at(1));
         emit customDataReady(out);
 }

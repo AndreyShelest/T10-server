@@ -1,21 +1,25 @@
 #include "serverthread.h"
 
-ServerThread::ServerThread(int socketDescriptor, QObject *parent) :
+ServerThread::ServerThread(int socketDescriptor,
+                          QObject *parent) :
     QThread(parent),
     tcpServerConnection(0),
     socketDescriptor(socketDescriptor)
 {
     lineEnd = '\n';
+
 }
 
 ServerThread::~ServerThread()
 {
    this->exit(0);
+    tcpServerConnection->deleteLater();
 }
 
 void ServerThread::run()
 {
     tcpServerConnection = new TcpSocket;
+
     if (!tcpServerConnection->setSocketDescriptor(socketDescriptor))
     {
         qDebug() << tr("Unable to set socket descriptor...");
