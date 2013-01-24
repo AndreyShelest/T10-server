@@ -223,7 +223,7 @@ void MainWindow::on_actionCom_port_toggled(bool arg1)
             this->log(tr("COM port: connected to ") + comPort->getDeviceName());
             labelComPortStatus->setText(tr("COM port: ") + "<span style=\"color:#008800;font-weight:bold;\">" + tr("connected") + "</span>");
             ui->pushButton_comPortReconnect->setEnabled(true);
-           // connect(aircraft, SIGNAL(serverDataReady(QList<int>)), this, SLOT(showAircraftData(QList<int>)));
+           connect(aircraft, SIGNAL(serverDataReady(QList<float>)), this, SLOT(showAircraftData(QList<float>)));
 
         }
         else
@@ -247,7 +247,7 @@ void MainWindow::on_actionCom_port_toggled(bool arg1)
             labelComPortStatus->setText(tr("COM port: ") + "<span style=\"color:#ff0000;font-weight:bold;\">" + tr("disconnected") + "</span>");
         }
         comPort->COM_disconnect();
-       // disconnect(aircraft, SIGNAL(serverDataReady(QList<int>)), this, SLOT(showAircraftData(QList<int>)));
+        disconnect(aircraft, SIGNAL(serverDataReady(QList<float>)), this, SLOT(showAircraftData(QList<float>)));
 
         ui->actionCom_port->setStatusTip(tr("Connect to COM port"));
         ui->actionCom_port->setToolTip(ui->actionCom_port->statusTip());
@@ -348,22 +348,22 @@ void MainWindow::showDataToCom(QByteArray dataToMc)
 
 }
 
-void MainWindow::showAircraftData(QList<int> data)
+void MainWindow::showAircraftData(QList<float> data)
 {
     QString buf;
     if (comPort->COM_isConnected())
     {
-        for(int i=18; i<data.size();i++)
-        {
-            buf.append(QString::number(data[i])+", ");
+//        for(int i=18; i<data.size();i++)
+//        {
+//            buf.append(QString::number(data[i])+", ");
 
-        }
+//        }
 
-        ui->list_fromCom->addItem(buf);
-        if (ui->list_fromCom->count()>50)
-            ui->list_fromCom->clear();
+//        ui->list_fromCom->addItem(buf);
+//        if (ui->list_fromCom->count()>50)
+//            ui->list_fromCom->clear();
 
-        ui->list_fromCom->scrollToBottom();
+//        ui->list_fromCom->scrollToBottom();
 
         QStandardItemModel model(ui->table_aitcraftData->rowCount(),ui->table_aitcraftData->columnCount());
         int n=0;

@@ -52,7 +52,7 @@ private slots:
 
     void on_pushButton_comPortReconnect_clicked();
     void showDataToCom(QByteArray dataToMc);
-    void showAircraftData(QList<int> data);
+    void showAircraftData(QList<float> data);
     void on_pb_joy_refresh_clicked();
 
 
