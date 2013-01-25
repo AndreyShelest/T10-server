@@ -219,6 +219,7 @@ void Aircraft::setDataFromBoard(QByteArray indata)
  if (pitch<-13)
         pitch=-13;
     yaw=dataFromBoard[6]+101;
+    //yaw=dataFromBoard[6];
 
 }
 
@@ -381,8 +382,8 @@ void Aircraft::slotCalculateControl(QList<int> inJoy)
     {
         out.append(i);
     }
-    out.append((float)inJoy.at(2));
-    out.append((float)inJoy.at(0));
-    out.append((float)inJoy.at(1));
+    out.append(inJoy.at(2));
+    out.append(inJoy.at(0));
+    out.append(inJoy.at(1));
         emit customDataReady(out);
 }
