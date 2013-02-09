@@ -367,10 +367,11 @@ void MainWindow::showAircraftData(QList<float> data)
 
         QStandardItemModel model(ui->table_aitcraftData->rowCount(),ui->table_aitcraftData->columnCount());
         int n=0;
-        for (int i=0;i<ui->table_aitcraftData->columnCount();i++)
-        {
-            for (int j=0;j<ui->table_aitcraftData->rowCount()-1;j++)
+
+            for (int j=0;j<ui->table_aitcraftData->rowCount();j++)
             {
+                for (int i=0;i<ui->table_aitcraftData->columnCount();i++)
+                {
                 ui->table_aitcraftData->model()->setData(model.index(j,i),data[n+18]);
                 n++;
             }

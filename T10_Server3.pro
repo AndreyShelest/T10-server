@@ -31,7 +31,8 @@ SOURCES += main.cpp\
     ./qCustomPlot/qcustomplot.cpp \
     qCustomPlot/graphwindow.cpp \
     qCustomPlot/writer.cpp \
-    NetServer/peerwidget.cpp
+    NetServer/peerwidget.cpp \
+    Windows/t10servermain.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -45,7 +46,8 @@ HEADERS  += mainwindow.h \
     ./qCustomPlot/qcustomplot.h \
     qCustomPlot/graphwindow.h \
     qCustomPlot/writer.h \
-    NetServer/peerwidget.h
+    NetServer/peerwidget.h \
+    Windows/t10servermain.h
 
 
 FORMS    += mainwindow.ui \

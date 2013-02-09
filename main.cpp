@@ -1,6 +1,7 @@
 #include <QtGui/QApplication>
 #include <QTextCodec>
 #include "mainwindow.h"
+#include "Windows/t10servermain.h"
 
 int main(int argc, char *argv[])
 {
@@ -13,8 +14,9 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("T10_server");
 
     QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
-    
+//    MainWindow w;
+//    w.show();
+    T10ServerMain appMainWindow;
+    appMainWindow.show();
     return a.exec();
 }

@@ -117,9 +117,9 @@ QMap<int, QString> Aircraft::getQmapData()
     mapOfdata[11]="unused11";             //11
     mapOfdata[12]="slide_angle"; //12
     mapOfdata[13]="attack_angle";  //13
-    mapOfdata[14]="unused14";
-    mapOfdata[15]="unused15";
-    mapOfdata[16]="unused16";
+    mapOfdata[14]="Rau_X";
+    mapOfdata[15]="Rau_Y";
+    mapOfdata[16]="Rau_Z";
     mapOfdata[17]="unused17";
    mapOfdata[18]="rudder";
    mapOfdata[19]="aileron";
@@ -187,7 +187,7 @@ void Aircraft::setDataFromBoard(QByteArray indata)
         dataFromBoard.clear();
         foreach(float i,indata)
         {
-        dataFromBoard.append(i);
+        dataFromBoard.append((unsigned char)i);
         }
     }
     else
@@ -195,7 +195,7 @@ void Aircraft::setDataFromBoard(QByteArray indata)
         if(avrg4Data->size()<3){
 
         for(int i=0;i<indata.size();i++)
-          dataFromBoard.replace(i,trapz(dataFromBoard[i],indata[i]));
+          dataFromBoard.replace(i,trapz(dataFromBoard[i],(unsigned char)indata[i]));
         avrg4Data->append(dataFromBoard);
         }
         else
@@ -203,7 +203,7 @@ void Aircraft::setDataFromBoard(QByteArray indata)
             for(int i=0;i<indata.size();i++)
             {
               dataFromBoard.replace(i,
-                                    avrg4(indata[i],
+                                    avrg4((unsigned char)indata[i],
                                     avrg4Data->at(0).at(i),
                                     avrg4Data->at(1).at(i),
                                     avrg4Data->at(2).at(i)));
@@ -214,11 +214,12 @@ void Aircraft::setDataFromBoard(QByteArray indata)
         }
 
 
-    roll=dataFromBoard[4]+76;
+    roll=dataFromBoard[4]-180;
     pitch=dataFromBoard[5]-113;
  if (pitch<-13)
         pitch=-13;
-    yaw=dataFromBoard[6]+101;
+    yaw=dataFromBoard[6]-158;
+
     //yaw=dataFromBoard[6];
 
 }
@@ -265,6 +266,13 @@ void Aircraft::setServerData()
 dataToserver->replace(naviDataLength+4,roll);
 dataToserver->replace(naviDataLength+5,pitch);
 dataToserver->replace(naviDataLength+6,yaw);
+dataToserver->replace(naviDataLength+7,dataToserver->at(naviDataLength+7)-128);
+dataToserver->replace(naviDataLength+8,dataToserver->at(naviDataLength+8)-128);
+dataToserver->replace(naviDataLength+9,dataToserver->at(naviDataLength+9)-128);
+dataToserver->replace(naviDataLength+10,dataToserver->at(naviDataLength+10)-108);
+dataToserver->replace(14,(joyX/256)/9);
+dataToserver->replace(15,(joyY/256)/8);
+dataToserver->replace(16,(joyZ/256)/7);
 QList<float> sendData=dataToserver->toList();
 
   emit serverDataReady(sendData);
