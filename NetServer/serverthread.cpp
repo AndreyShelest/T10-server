@@ -13,7 +13,7 @@ ServerThread::ServerThread(int socketDescriptor,
 ServerThread::~ServerThread()
 {
    this->exit(0);
-    tcpServerConnection->deleteLater();
+    //tcpServerConnection->deleteLater();
 }
 
 void ServerThread::run()

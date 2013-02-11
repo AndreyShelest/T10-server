@@ -16,7 +16,7 @@ T10ServerMain::T10ServerMain(QWidget *parent) :
     //загружаются настройки из файла
     settings =new QSettings(QSettings::IniFormat, QSettings::UserScope,
                        QCoreApplication::organizationName(), QCoreApplication::applicationName());
-    activeTabs =new QStringList();
+    activeTabs =new QList<bool>();
        main_tab_wgt =new QTabWidget();
 if (loadSettings(settings))
 {
@@ -46,7 +46,7 @@ createMenuAndToolBar();
 
 T10ServerMain::~T10ServerMain()
 {
-    delete gMainLayout;
+   // delete gMainLayout;
     delete cntrlWgt;
     delete main_tab_wgt;
     delete settings;
@@ -65,21 +65,21 @@ bool T10ServerMain::loadSettings(QSettings *_settings)
     //load ComPort settings
     _settings->beginGroup("/ComPort");
     activeComPort=_settings->value("/TabON", "true").toBool();
-    if(activeComPort) activeTabs->append("ComPort");
+    activeTabs->append(activeComPort);
 
      _settings->endGroup();
 
      //load Server settings
       _settings->beginGroup("/Server");
       activeServer=_settings->value("/TabON", "true").toBool();
-      if(activeServer) activeTabs->append("Server");
+     activeTabs->append(activeServer);
       _settings->endGroup();
 
     //save Aircraft setings
     _settings->beginGroup("/Aircraft");
     activeAircraft=_settings->value("Aircraft/TabON", "true").toBool();
 
-    if(activeAircraft) activeTabs->append("Aircraft");
+    activeTabs->append(activeAircraft);
    _settings->endGroup();
 
 
@@ -87,7 +87,7 @@ bool T10ServerMain::loadSettings(QSettings *_settings)
     _settings->beginGroup("/Joystick");
    activeJoy=_settings->value("/TabON", "true").toBool();
 
-   if(activeJoy) activeTabs->append("Joystick");
+  activeTabs->append(activeJoy);
    _settings->endGroup();
 
 
@@ -103,6 +103,12 @@ void T10ServerMain::writeSettings()
     //save ComPort settings
     settings->endGroup();
 
+    settings->beginGroup("/Server");
+    //save Server settings
+    settings->setValue("/TabON",activeServer);
+
+    settings->endGroup();
+
     settings->beginGroup("/Aircraft");
     settings->setValue("/TabON",activeAircraft);
     //save Aircraft setings
@@ -111,12 +117,6 @@ void T10ServerMain::writeSettings()
     settings->beginGroup("/Joystick");
     //save Joystick settings
     settings->setValue("/TabON",activeJoy);
-
-    settings->endGroup();
-
-    settings->beginGroup("/Server");
-    //save Server settings
-    settings->setValue("/TabON",activeServer);
 
     settings->endGroup();
 
@@ -135,8 +135,9 @@ void T10ServerMain::createMenuAndToolBar()
    iconsToolBar->addAction(actionServer);
    actionServer->setCheckable(true);
    actionServer->setToolTip("Включить сервер");
-   connect (this->actionServer,SIGNAL(toggled(bool)),this,SLOT(slotServerActionToggled(bool)));
 
+   connect (this->actionServer,SIGNAL(toggled(bool)),this,SLOT(slotServerActionToggled(bool)));
+connect (this->actionServer,SIGNAL(toggled(bool)),serverWgt,SLOT(slotConnectServer(bool)));
    actionAircraft=new QAction(QIcon(":/resources/icons/airplane.svg"),"Aircraft",this);
   iconsToolBar->addAction(actionAircraft);
   actionAircraft->setCheckable(true);
@@ -151,22 +152,31 @@ void T10ServerMain::createMenuAndToolBar()
  iconsToolBar->addSeparator();
     this->addToolBar(iconsToolBar);
  //создание статусбара
- main_statusbar=new QStatusBar(this);
-// main_statusbar->set
+ main_statusbar=new QStatusBar();
+ main_statusbar->addPermanentWidget(serverWgt->labelServerStatus);
+ this->setStatusBar(main_statusbar);
 }
 
 bool T10ServerMain::createTabs()
 {
-    for(int i=0;i<activeTabs->size();i++)
-    {
-    main_tab_wgt->addTab(new QLabel(activeTabs->at(i),main_tab_wgt),activeTabs->at(i));
+      //create
+ if (activeComPort)
+    main_tab_wgt->addTab(new QLabel("com"),QIcon(":/resources/icons/plug_in.svg"),"ComPort");
+    serverWgt =new ServerWiget();
+    if (activeServer)
+    main_tab_wgt->addTab(serverWgt,QIcon(":/resources/icons/computer.svg"),"Server");
+    if (activeAircraft)
+    main_tab_wgt->addTab(new QLabel("ai"),QIcon(":/resources/icons/airplane.svg"),"Aircraft");
+    if (activeJoy)
+    main_tab_wgt->addTab(new QLabel("dj"),QIcon(":/resources/icons/joystick.svg"),"Joystick");;
 
-    }
-    if (main_tab_wgt->count()>0)
+
+    main_tab_wgt->setMovable(true);
+     if (main_tab_wgt->count()>0)
             return true;
     else
     return false;
-}
+    }
 
 void T10ServerMain::closeEvent(QCloseEvent *e)
 {
@@ -216,6 +226,7 @@ void T10ServerMain::slotAircraftActionToggled(bool arg)
     if (arg)
     {
         actionAircraft->setToolTip("Включить моделирование");
+
         qDebug()<<"Simulation started";
     }
     else

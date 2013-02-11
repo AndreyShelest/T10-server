@@ -12,11 +12,14 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("T10_Server");
     QCoreApplication::setOrganizationDomain("approximator.org");
     QCoreApplication::setApplicationName("T10_server");
+    QCoreApplication::setApplicationVersion("4.0.0b");
 
     QApplication a(argc, argv);
-//    MainWindow w;
+
+    //    MainWindow w;
 //    w.show();
     T10ServerMain appMainWindow;
+    appMainWindow.setWindowIcon(QIcon(":/resources/icons/appIcon.png"));
     appMainWindow.show();
     return a.exec();
 }

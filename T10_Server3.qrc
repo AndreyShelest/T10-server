@@ -31,7 +31,6 @@
         <file>resources/icons/play.png</file>
         <file>resources/icons/save.png</file>
         <file>resources/icons/stop.png</file>
-        <file>resources/icons/appIcon.png</file>
         <file>resources/icons/faster.png</file>
         <file>resources/icons/fit.png</file>
         <file>resources/icons/pan.png</file>
@@ -41,5 +40,6 @@
         <file>resources/icons/graphs.png</file>
         <file>resources/icons/update.png</file>
         <file>resources/icons/Icon.ico</file>
+        <file>resources/icons/appIcon.png</file>
     </qresource>
 </RCC>

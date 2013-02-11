@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QCoreApplication>
 #include <QtGui>
+#include <Windows/serverwiget.h>
 class T10ServerMain : public QMainWindow
 {
     Q_OBJECT
@@ -20,13 +21,14 @@ private:
     QWidget * cntrlWgt;
     QTabWidget * main_tab_wgt;
     QSettings * settings;
-    QStringList * activeTabs;
+    QList<bool> * activeTabs;
     QToolBar * iconsToolBar;
     QStatusBar * main_statusbar;
     QAction * actionComPort;
     QAction * actionAircraft;
     QAction * actionServer;
     QAction * actionJoystick;
+    ServerWiget * serverWgt;
     void createMenuAndToolBar();
     bool createTabs ();
     bool activeComPort,activeJoy,activeAircraft,activeServer;
