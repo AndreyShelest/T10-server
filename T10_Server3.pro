@@ -34,7 +34,9 @@ SOURCES += main.cpp\
     NetServer/peerwidget.cpp \
     Windows/t10servermain.cpp \
     Windows/comportwidget.cpp \
-    Windows/serverwiget.cpp
+    Windows/serverwiget.cpp \
+    Windows/window.cpp \
+    Windows/t10tray.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -51,7 +53,9 @@ HEADERS  += mainwindow.h \
     NetServer/peerwidget.h \
     Windows/t10servermain.h \
     Windows/comportwidget.h \
-    Windows/serverwiget.h
+    Windows/serverwiget.h \
+    Windows/window.h \
+    Windows/t10tray.h
 
 
 FORMS    += mainwindow.ui \

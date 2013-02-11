@@ -12,7 +12,8 @@ T10ServerMain::T10ServerMain(QWidget *parent) :
     QString styleSheet = QLatin1String(file.readAll());
      this->setStyleSheet(styleSheet);
     this->setWindowTitle(QCoreApplication::applicationName());
-
+    //создаётся иконка в трее
+    trayIconWgt=new t10tray(this);
     //загружаются настройки из файла
     settings =new QSettings(QSettings::IniFormat, QSettings::UserScope,
                        QCoreApplication::organizationName(), QCoreApplication::applicationName());
@@ -47,15 +48,15 @@ createMenuAndToolBar();
 T10ServerMain::~T10ServerMain()
 {
    // delete gMainLayout;
-    delete cntrlWgt;
-    delete main_tab_wgt;
-    delete settings;
-    delete activeTabs;
-    delete iconsToolBar;
-    delete actionComPort;
-    delete actionAircraft;
-    delete actionServer;
-    delete actionJoystick;
+//    delete cntrlWgt;
+//    delete main_tab_wgt;
+//    delete settings;
+//    delete activeTabs;
+//    delete iconsToolBar;
+//    delete actionComPort;
+//    delete actionAircraft;
+//    delete actionServer;
+//    delete actionJoystick;
     qDebug()<<"T10serverMain Closed";
 
 }
@@ -171,6 +172,8 @@ bool T10ServerMain::createTabs()
     main_tab_wgt->addTab(new QLabel("dj"),QIcon(":/resources/icons/joystick.svg"),"Joystick");;
 
 
+
+    main_tab_wgt->addTab(trayIconWgt,QIcon(":/resources/icons/gears.svg"),"Settings");
     main_tab_wgt->setMovable(true);
      if (main_tab_wgt->count()>0)
             return true;
@@ -180,16 +183,27 @@ bool T10ServerMain::createTabs()
 
 void T10ServerMain::closeEvent(QCloseEvent *e)
 {
-    if (QMessageBox::question(this, tr("T10_Server"),
-                              tr("Are you sure you want to exit?"),
-                              QMessageBox::Yes | QMessageBox::No,
-                              QMessageBox::No) == QMessageBox::Yes)
-    {
-//       this->hide();
+//    if (QMessageBox::question(this, tr("T10_Server"),
+//                              tr("Are you sure you want to exit?"),
+//                              QMessageBox::Yes | QMessageBox::No,
+//                              QMessageBox::No) == QMessageBox::Yes)
+//    {
+//      this->hide();
+//        this->writeSettings();
+//                 }
+//    else
+//        e->ignore();
+    if (trayIconWgt->isVisibleTray()) {
+        QMessageBox::information(this, tr("Systray"),
+                                 tr("The program will keep running in the "
+                                    "system tray. To terminate the program, "
+                                    "choose <b>Quit</b> in the context menu "
+                                    "of the system tray entry."));
         this->writeSettings();
-                 }
-    else
+        this->hide();
+        trayIconWgt->hide();
         e->ignore();
+    }
 }
 
 void T10ServerMain::slotServerActionToggled(bool arg)
@@ -226,7 +240,6 @@ void T10ServerMain::slotAircraftActionToggled(bool arg)
     if (arg)
     {
         actionAircraft->setToolTip("Включить моделирование");
-
         qDebug()<<"Simulation started";
     }
     else

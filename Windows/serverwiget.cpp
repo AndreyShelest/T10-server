@@ -27,8 +27,8 @@ ServerWiget::ServerWiget(QWidget *parent) :
 ServerWiget::~ServerWiget()
 {
     qDebug()<<"Server Widget deleted";
-    delete m_grLayout;
-
+    //delete m_grLayout;
+delete peers;
 }
 
 void ServerWiget::log(QString data)

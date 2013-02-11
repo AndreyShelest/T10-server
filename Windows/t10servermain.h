@@ -6,6 +6,7 @@
 #include <QCoreApplication>
 #include <QtGui>
 #include <Windows/serverwiget.h>
+#include <Windows/t10tray.h>
 class T10ServerMain : public QMainWindow
 {
     Q_OBJECT
@@ -17,6 +18,7 @@ public:
     bool loadSettings(QSettings * _settings);
     void writeSettings();
 private:
+    t10tray * trayIconWgt;
     QGridLayout * gMainLayout;
     QWidget * cntrlWgt;
     QTabWidget * main_tab_wgt;
