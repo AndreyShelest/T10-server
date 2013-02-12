@@ -11,7 +11,7 @@ private:
 
 public:
     explicit ComPortWidget(QWidget *parent = 0);
-    
+
 signals:
     
 public slots:

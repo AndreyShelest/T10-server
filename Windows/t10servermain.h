@@ -7,13 +7,14 @@
 #include <QtGui>
 #include <Windows/serverwiget.h>
 #include <Windows/t10tray.h>
+#include <Windows/joywidget.h>
+
 class T10ServerMain : public QMainWindow
 {
     Q_OBJECT
 public:
     explicit T10ServerMain(QWidget *parent = 0);
     ~T10ServerMain();
-    void setMainVisible(bool visible);
 
     bool loadSettings(QSettings * _settings);
     void writeSettings();
@@ -32,8 +33,10 @@ private:
     QAction *minimizeAction;
     QAction *maximizeAction;
     QAction *restoreAction;
+    QAction *messageAction;
     QAction *quitAction;
     ServerWiget* serverWgt;
+    JoyWidget *joyWgt;
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
     void createMenuAndToolBar();
@@ -44,6 +47,8 @@ private:
 signals:
 
 private slots:
+    void slotMinimize();
+    void slotRestore();
    // void setIcon(int index);
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void showMessage();

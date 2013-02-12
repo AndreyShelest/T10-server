@@ -1,7 +1,6 @@
 #ifndef T10TRAY_H
 #define T10TRAY_H
 
-#include <QSystemTrayIcon>
 #include <QtGui>
 class QAction;
 class QCheckBox;

@@ -61,14 +61,6 @@ T10ServerMain::~T10ServerMain()
 
 }
 
-void T10ServerMain::setMainVisible(bool visible)
-{
-    minimizeAction->setEnabled(visible);
-    maximizeAction->setEnabled(!this->isMaximized());
-    restoreAction->setEnabled(this->isMaximized() || !visible);
-
-this->setVisible(visible);
-}
 
 bool T10ServerMain::loadSettings(QSettings *_settings)
 {
@@ -136,13 +128,16 @@ void T10ServerMain::createMenuAndToolBar()
 {
     // комманды скрытия, закрытия и разворачивания окна
     minimizeAction = new QAction(tr("Mi&nimize"), this);
-    connect(minimizeAction, SIGNAL(triggered()), this, SLOT(hide()));
+    connect(minimizeAction, SIGNAL(triggered()), this, SLOT(slotMinimize()));
 
     maximizeAction = new QAction(tr("Ma&ximize"), this);
     connect(maximizeAction, SIGNAL(triggered()), this, SLOT(showMaximized()));
 
     restoreAction = new QAction(tr("&Restore"), this);
-    connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
+    connect(restoreAction, SIGNAL(triggered()), this, SLOT(slotRestore()));
+
+    messageAction = new QAction(tr("I&nfo"), this);
+    connect(messageAction, SIGNAL(triggered()), this, SLOT(showMessage()));
 
     quitAction = new QAction(tr("&Quit"), this);
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
@@ -173,11 +168,14 @@ connect (this->actionServer,SIGNAL(toggled(bool)),serverWgt,SLOT(slotConnectServ
  actionJoystick->setCheckable(true);
  actionJoystick->setToolTip("Подключить джойстик");
  connect (this->actionJoystick,SIGNAL(toggled(bool)),this,SLOT(slotJoystickActionToggled(bool)));
+ connect (this->actionJoystick,SIGNAL(toggled(bool)),joyWgt,SLOT(slotJoyConnect(bool)));
+ connect (joyWgt,SIGNAL(JoyConnected(bool)),this->actionJoystick,SLOT(setChecked(bool)));
  iconsToolBar->addSeparator();
     this->addToolBar(iconsToolBar);
  //создание статусбара
  main_statusbar=new QStatusBar();
  main_statusbar->addPermanentWidget(serverWgt->labelServerStatus);
+ main_statusbar->addPermanentWidget(joyWgt->labelJoystickStatus);
  this->setStatusBar(main_statusbar);
 }
 
@@ -191,8 +189,10 @@ bool T10ServerMain::createTabs()
     main_tab_wgt->addTab(serverWgt,QIcon(":/resources/icons/computer.svg"),"Server");
     if (activeAircraft)
     main_tab_wgt->addTab(new QLabel("ai"),QIcon(":/resources/icons/airplane.svg"),"Aircraft");
+    joyWgt=new JoyWidget();
+    joyWgt->createJoystick();
     if (activeJoy)
-    main_tab_wgt->addTab(new QLabel("dj"),QIcon(":/resources/icons/joystick.svg"),"Joystick");;
+    main_tab_wgt->addTab(joyWgt,QIcon(":/resources/icons/joystick.svg"),"Joystick");;
 
 
 
@@ -206,26 +206,47 @@ bool T10ServerMain::createTabs()
 
 void T10ServerMain::closeEvent(QCloseEvent *e)
 {
-//    if (QMessageBox::question(this, tr("T10_Server"),
-//                              tr("Are you sure you want to exit?"),
-//                              QMessageBox::Yes | QMessageBox::No,
-//                              QMessageBox::No) == QMessageBox::Yes)
-//    {
-//      this->hide();
-//        this->writeSettings();
-//                 }
-//    else
-//        e->ignore();
-    if (trayIcon->isVisible()) {
-        QMessageBox::information(this, tr("Systray"),
-                                 tr("The program will keep running in the "
-                                    "system tray. To terminate the program, "
-                                    "choose <b>Quit</b> in the context menu "
-                                    "of the system tray entry."));
+    if (QMessageBox::question(this, tr("T10_Server"),
+                              tr("The program will keep running in the "
+                                        "system tray. To terminate the program, "
+                                        "choose <b>Quit</b> in the context menu "
+                                        "of the system tray entry."),
+                              QMessageBox::Yes | QMessageBox::No,
+                              QMessageBox::No) == QMessageBox::Yes)
+    {
+     this->slotMinimize();
         this->writeSettings();
-        this->hide();
-            e->ignore();
-    }
+                 }
+    else
+        e->ignore();
+//    if (trayIcon->isVisible()) {
+//        QMessageBox::information(this, tr("Systray"),
+//                                 tr("The program will keep running in the "
+//                                    "system tray. To terminate the program, "
+//                                    "choose <b>Quit</b> in the context menu "
+//                                    "of the system tray entry."));
+//        this->writeSettings();
+//       minimizeAction->setChecked(true);
+//            e->ignore();
+//    }
+}
+
+void T10ServerMain::slotMinimize()
+{
+    minimizeAction->setVisible(false);
+//    maximizeAction->setEnabled(!this->isMaximized());
+    restoreAction->setVisible(true);
+
+    this->setVisible(false);
+}
+
+void T10ServerMain::slotRestore()
+{
+    minimizeAction->setVisible(true);
+//    maximizeAction->setEnabled(!this->isMaximized());
+    restoreAction->setVisible(false);
+
+this->setVisible(true);
 }
 
 void T10ServerMain::iconActivated(QSystemTrayIcon::ActivationReason reason)
@@ -247,7 +268,7 @@ break;
 void T10ServerMain::showMessage()
 {
     QIcon icon = trayIcon->icon();
-    trayIcon->showMessage("Сообщение", "Пользователей подключено: "
+    trayIcon->showMessage("Status", "Пользователей подключено: "
                           +QString::number(serverWgt->getPeersCount()));
 }
 
@@ -255,13 +276,13 @@ void T10ServerMain::slotServerActionToggled(bool arg)
 {
     if (arg)
     {
-        actionServer->setToolTip("Включить сервер");
 
+actionServer->setToolTip("Выключить сервер");
         qDebug()<<"Server connected";
     }
     else
     {
-        actionServer->setToolTip("Выключить сервер");
+        actionServer->setToolTip("Включить сервер");
         qDebug()<<"Server disconnected";
     }
 }
@@ -270,12 +291,12 @@ void T10ServerMain::slotComPortActionToggled(bool arg)
 {
     if (arg)
     {
-        actionComPort->setToolTip("Подключить COM порт");
+        actionComPort->setToolTip("Отключить COM порт");
         qDebug()<<"COMport connected";
     }
     else
     {
-        actionComPort->setToolTip("Отключить COM порт");
+        actionComPort->setToolTip("Подключить COM порт");
         qDebug()<<"COMport disconnected";
     }
 }
@@ -284,12 +305,12 @@ void T10ServerMain::slotAircraftActionToggled(bool arg)
 {
     if (arg)
     {
-        actionAircraft->setToolTip("Включить моделирование");
+        actionAircraft->setToolTip("Остановить моделирование");
         qDebug()<<"Simulation started";
     }
     else
     {
-        actionAircraft->setToolTip("Остановить моделирование");
+        actionAircraft->setToolTip("Включить моделирование");
         qDebug()<<"Simulation stopped";
     }
 }
@@ -299,13 +320,13 @@ void T10ServerMain::slotJoystickActionToggled(bool arg)
 
     if (arg)
     {
-        actionAircraft->setToolTip("Подключить джойстик");
+        actionJoystick->setToolTip("Отключить джойстик");
         qDebug()<<"Joystick connected";
     }
     else
     {
-        actionAircraft->setToolTip("Отключить джойстик");
-        qDebug()<<"Joystick disconnected";
+        actionJoystick->setToolTip("Подключить джойстик");
+                qDebug()<<"Joystick disconnected";
     }
 }
 
@@ -316,16 +337,19 @@ void T10ServerMain::slotJoystickActionToggled(bool arg)
 void T10ServerMain::createTrayIcon()
 {
     trayIconMenu = new QMenu(this);
+    trayIconMenu->addAction(minimizeAction);
+    // trayIconMenu->addAction(maximizeAction);
+    trayIconMenu->addAction(restoreAction);
+    restoreAction->setVisible(false);
+    trayIconMenu->addSeparator();
+
+
     trayIconMenu->addAction(actionComPort);
     trayIconMenu->addAction(actionServer);
     trayIconMenu->addAction(actionAircraft);
     trayIconMenu->addAction(actionJoystick);
-
-    trayIconMenu->addSeparator();
-    trayIconMenu->addAction(minimizeAction);
-    trayIconMenu->addAction(maximizeAction);
-    trayIconMenu->addAction(restoreAction);
-    trayIconMenu->addSeparator();
+   trayIconMenu->addSeparator();
+     trayIconMenu->addAction(messageAction);
     trayIconMenu->addAction(quitAction);
 
     trayIcon = new QSystemTrayIcon(this);

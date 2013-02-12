@@ -35,7 +35,8 @@ SOURCES += main.cpp\
     Windows/t10servermain.cpp \
     Windows/comportwidget.cpp \
     Windows/serverwiget.cpp \
-    Windows/t10tray.cpp
+    Windows/t10tray.cpp \
+    Windows/joywidget.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -53,7 +54,8 @@ HEADERS  += mainwindow.h \
     Windows/t10servermain.h \
     Windows/comportwidget.h \
     Windows/serverwiget.h \
-    Windows/t10tray.h
+    Windows/t10tray.h \
+    Windows/joywidget.h
 
 
 FORMS    += mainwindow.ui \
