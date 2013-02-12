@@ -9,9 +9,9 @@ NetServer::NetServer(QObject *parent) :
     QSettings settings(QSettings::IniFormat, QSettings::UserScope,
                        QCoreApplication::organizationName(), QCoreApplication::applicationName());
 
-    settings.beginGroup("NetServer/dataIndexes/fromComPort");
-    settings.setValue("pitch_suspension", 1);
-    settings.endGroup();
+//    settings.beginGroup("NetServer/dataIndexes/fromComPort");
+//    settings.setValue("pitch_suspension", 1);
+//    settings.endGroup();
 
     httpServer = new MikroHttpServer();
 }
@@ -23,11 +23,14 @@ NetServer::~NetServer()
 
 void NetServer::incomingConnection(int socketDescriptor)
 {
-    ServerThread* thread = new ServerThread(socketDescriptor, this);
+  ServerThread* thread = new ServerThread(socketDescriptor);
+
+
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     connect(thread, SIGNAL(peerConnected(PeerInfo*)), this, SLOT(peerConnected_slot(PeerInfo*)));
     connect(thread, SIGNAL(peerDisconnected(PeerInfo*)), this, SLOT(peerDisconnected_slot(PeerInfo*)));
-     connect(thread, SIGNAL(incomingMessage(PeerInfo*,QByteArray)), this, SLOT(incomingMessage_slot(PeerInfo*,QByteArray)));
+
+    connect(thread, SIGNAL(incomingMessage(PeerInfo*,QByteArray)), this, SLOT(incomingMessage_slot(PeerInfo*,QByteArray)));
 
        thread->start();
 }
@@ -36,21 +39,30 @@ void NetServer::peerConnected_slot(PeerInfo *peerInfo)
 {
     peers.append(peerInfo);
     qDebug() << tr("New connection: ") << peerInfo->id << " ::: "  << peerInfo->address;
+    connect(this, SIGNAL(toThreadsCustomDataReady(QList<float>)), peerInfo->pThread, SLOT(DataReady(QList<float>)));
     emit peerConnected(peerInfo);
 }
 
 void NetServer::peerDisconnected_slot(PeerInfo *peerInfo)
 {
-    disconnect(this, SIGNAL(toThreadsDataReady(QList<float>)),
-               peerInfo->pThread, SLOT(DataReady(QList<float>)));
+
     qDebug() << tr("Disconnected: ") << peerInfo->id << " ::: "  << peerInfo->address;
         int n = peers.indexOf(peerInfo);
     if (n != -1)
+    {
+      //   peers.at(n)->pThread->deleteLater();
+        peerInfo->pThread->deleteLater();
+            peers.removeAt(n);
 
-    //peers.at(peerInfo)->pThread->currentThread()->destroyed();
-   // delete peers.at(n)->pThread;
-     peers.removeAt(n);
-    emit peerDisconnected(peerInfo);
+            disconnect(this, SIGNAL(toThreadsDataReady(QList<float>)),
+                       peerInfo->pThread, SLOT(DataReady(QList<float>)));
+            disconnect(this, SIGNAL(toThreadsCustomDataReady(QList<float>)),
+                       peerInfo->pThread, SLOT(DataReady(QList<float>)));
+              emit peerDisconnected(peerInfo);
+//emit peerDisconnected(peerInfo);
+    }
+
+
 }
 
 void NetServer::incomingMessage_slot(PeerInfo *peerInfo, QByteArray msg)
@@ -61,6 +73,7 @@ void NetServer::incomingMessage_slot(PeerInfo *peerInfo, QByteArray msg)
         peerInfo->pThread->SendMessage(httpServer->request(msg));
         return;
     }
+
     QString s = msg;
     qDebug() << s;
     QStringList sl = s.split('\n');
@@ -102,8 +115,8 @@ void NetServer::incomingMessage_slot(PeerInfo *peerInfo, QByteArray msg)
                     else if (s == "visualisation_programm")
                     {
                         peerInfo->dataMode = DataModes(matlab);
-                        peerInfo->pThread->SendMessage("OK. Data mode: floatvisualisation_programm\n");
-                        qDebug()<<"Подключено";
+                        peerInfo->pThread->SendMessage("OK. Data mode: visualisation_programm\n");
+                        //qDebug()<<"Подключено";
                     }
                     else if (s == "filtered")
                     {
@@ -127,24 +140,55 @@ void NetServer::incomingMessage_slot(PeerInfo *peerInfo, QByteArray msg)
                     }
                 }
             }
+        if (s.startsWith("Get: "))
+        {
+            s=s.remove(0,5);
+            QStringList datalist = s.split(",");
+           QList<int> dataNumbers;
+            foreach (QString st,datalist)
+            {
+            dataNumbers.append(st.toInt());
+            }
+//            QString str="you request "+QString::number(dataNumbers.size())+"\n";
+
+//            peerInfo->pThread->SendMessage(str.toAscii());
+
+            emit getServerData(dataNumbers);
+
+        }
         if (s.startsWith("BYE"))
         {
-        emit peerDisconnected(peerInfo);
+            disconnect(this, SIGNAL(toThreadsDataReady(QList<float>)),
+                       peerInfo->pThread, SLOT(DataReady(QList<float>)));
+            disconnect(this, SIGNAL(toThreadsCustomDataReady(QList<float>)),
+                       peerInfo->pThread, SLOT(DataReady(QList<float>)));
+              emit peerDisconnected(peerInfo);
         }
     }
 }
 
-void NetServer::setServerData(QList<int> indata)
+void NetServer::setServerData(QList<float> indata)
 {
     QList<float> lData;
-    foreach(int i,indata){
-        lData.append((float)i);
+    foreach(float i,indata){
+        lData.append(i);
 
     }
 //qDebug()<<lData;
   clientData=lData;
   emit toThreadsDataReady(lData);
 
+}
+
+void NetServer::setCustomServerData(QList<float> indata)
+{
+    QList<float> lData;
+    foreach(float i,indata){
+        lData.append(i);
+
+    }
+  clientData=lData;
+  emit toThreadsCustomDataReady(lData);
 }
 
 

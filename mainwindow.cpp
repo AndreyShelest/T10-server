@@ -34,7 +34,6 @@ MainWindow::MainWindow(QWidget *parent) :
     server = new NetServer();
     if (settings.value("NetServer/autostart", true).toBool())
         ui->actionServer->setChecked(true);
-
     comPort = new ComPortTransmitter(this);
     connect(comPort, SIGNAL(Zavislo()), this, SLOT(comPortNotResponding()));
     connect(comPort, SIGNAL(Otvislo()), this, SLOT(comPortRepaired()));
@@ -54,10 +53,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->set_transmit_mode('d');
     ui->PPN_wgt->setHidden(!ui->tb_custom_pp->isChecked());
     aircraft=new Aircraft(this);
-    ui->pBsimulate->setChecked(settings.value("NetServer/dataToClients", "true").toBool());
-    ////aircraft->startSimulation();
-
-
+    ui->aircraft_Simulate->setChecked(settings.value("Aircraft/Simulate", "true").toBool());
+    on_aircraft_Simulate_triggered(settings.value("Aircraft/Simulate", "true").toBool());
     //    ui->listWidget_Log->clear();
     //    this->log(tr("Server started") + " [0.0.0.0:1989]");
 
@@ -127,7 +124,8 @@ void MainWindow::on_actionServer_toggled(bool arg1)
             connect(server, SIGNAL(peerConnected(PeerInfo*)), this, SLOT(peerConnected(PeerInfo*)));
             connect(server, SIGNAL(peerDisconnected(PeerInfo*)), this, SLOT(peerDisconnected(PeerInfo*)));
             connect(server, SIGNAL(peerNameChanged(PeerInfo*,QString)), this, SLOT(peerNameChanged(PeerInfo*,QString)));
-
+            connect(server, SIGNAL(peerConnected(PeerInfo*)), this, SLOT(peerConnected(PeerInfo*)));
+            connect(server, SIGNAL(peerConnected(PeerInfo*)), ui->client_info_widget, SLOT(updateData(PeerInfo*)));
             ui->actionServer->setStatusTip(tr("Stop server"));
             ui->actionServer->setToolTip(ui->actionServer->statusTip());
             labelServerStatus->setText(tr("Server: ") + "<span style=\"color:#008800;font-weight:bold;\">" + tr("running") + "</span>");
@@ -142,7 +140,13 @@ void MainWindow::on_actionServer_toggled(bool arg1)
     }
     else
     {
+        disconnect(server, SIGNAL(peerConnected(PeerInfo*)), this, SLOT(peerConnected(PeerInfo*)));
+        disconnect(server, SIGNAL(peerDisconnected(PeerInfo*)), this, SLOT(peerDisconnected(PeerInfo*)));
+        disconnect(server, SIGNAL(peerNameChanged(PeerInfo*,QString)), this, SLOT(peerNameChanged(PeerInfo*,QString)));
+        disconnect(server, SIGNAL(peerConnected(PeerInfo*)), this, SLOT(peerConnected(PeerInfo*)));
+        disconnect(server, SIGNAL(peerConnected(PeerInfo*)), ui->client_info_widget, SLOT(updateData(PeerInfo*)));
         server->close();
+
         this->log(tr("Server stopped"));
         ui->actionServer->setStatusTip(tr("Start server"));
         ui->actionServer->setToolTip(ui->actionServer->statusTip());
@@ -219,9 +223,8 @@ void MainWindow::on_actionCom_port_toggled(bool arg1)
             this->log(tr("COM port: connected to ") + comPort->getDeviceName());
             labelComPortStatus->setText(tr("COM port: ") + "<span style=\"color:#008800;font-weight:bold;\">" + tr("connected") + "</span>");
             ui->pushButton_comPortReconnect->setEnabled(true);
-            connect(aircraft, SIGNAL(serverDataReady(QList<int>)), this, SLOT(showAircraftData(QList<int>)));
-                       //            connect(comPort, SIGNAL(Zavislo()), this, SLOT(comPortNotResponding()));
-            //            connect(comPort, SIGNAL(Otvislo()), this, SLOT(comPortRepaired()));
+           connect(aircraft, SIGNAL(serverDataReady(QList<float>)), this, SLOT(showAircraftData(QList<float>)));
+
         }
         else
         {
@@ -244,7 +247,7 @@ void MainWindow::on_actionCom_port_toggled(bool arg1)
             labelComPortStatus->setText(tr("COM port: ") + "<span style=\"color:#ff0000;font-weight:bold;\">" + tr("disconnected") + "</span>");
         }
         comPort->COM_disconnect();
-        disconnect(aircraft, SIGNAL(serverDataReady(QList<int>)), this, SLOT(showAircraftData(QList<int>)));
+        disconnect(aircraft, SIGNAL(serverDataReady(QList<float>)), this, SLOT(showAircraftData(QList<float>)));
 
         ui->actionCom_port->setStatusTip(tr("Connect to COM port"));
         ui->actionCom_port->setToolTip(ui->actionCom_port->statusTip());
@@ -257,6 +260,7 @@ void MainWindow::peerConnected(PeerInfo *peerInfo)
 {
     log(tr("Client connected") + ": " + peerInfo->name + " [" + peerInfo->address.toString() + "]");
     rebuildPeerList(peerInfo);
+
 }
 
 void MainWindow::peerDisconnected(PeerInfo *peerInfo)
@@ -275,8 +279,9 @@ void MainWindow::on_actionShowDataFromCom_toggled(bool arg1)
 {
     if (arg1)
     {
-       // ui->stackedWidget->setCurrentIndex(1);
-    }
+
+           }
+    else {}
 }
 
 void MainWindow::comPortNotResponding()
@@ -289,10 +294,6 @@ void MainWindow::comPortRepaired()
     labelComPortStatus->setText(tr("COM port: ") + "<span style=\"color:#008800;font-weight:bold;\">" + tr("transferring") + "</span>");
 }
 
-void MainWindow::on_stackedWidget_currentChanged(int arg1)
-{
-
-}
 
 void MainWindow::on_actionAbout_triggered()
 {
@@ -347,29 +348,30 @@ void MainWindow::showDataToCom(QByteArray dataToMc)
 
 }
 
-void MainWindow::showAircraftData(QList<int> data)
+void MainWindow::showAircraftData(QList<float> data)
 {
     QString buf;
     if (comPort->COM_isConnected())
     {
-        for(int i=18; i<data.size();i++)
-        {
-            buf.append(QString::number(data[i])+", ");
+//        for(int i=18; i<data.size();i++)
+//        {
+//            buf.append(QString::number(data[i])+", ");
 
-        }
+//        }
 
-        ui->list_fromCom->addItem(buf);
-        if (ui->list_fromCom->count()>50)
-            ui->list_fromCom->clear();
+//        ui->list_fromCom->addItem(buf);
+//        if (ui->list_fromCom->count()>50)
+//            ui->list_fromCom->clear();
 
-        ui->list_fromCom->scrollToBottom();
+//        ui->list_fromCom->scrollToBottom();
 
         QStandardItemModel model(ui->table_aitcraftData->rowCount(),ui->table_aitcraftData->columnCount());
         int n=0;
-        for (int i=0;i<ui->table_aitcraftData->columnCount();i++)
-        {
-            for (int j=0;j<ui->table_aitcraftData->rowCount()-1;j++)
+
+            for (int j=0;j<ui->table_aitcraftData->rowCount();j++)
             {
+                for (int i=0;i<ui->table_aitcraftData->columnCount();i++)
+                {
                 ui->table_aitcraftData->model()->setData(model.index(j,i),data[n+18]);
                 n++;
             }
@@ -517,10 +519,6 @@ void MainWindow::set_transmit_mode(char com)
 }
 
 
-void MainWindow::on_tb_data_on_clicked(bool checked)
-{
-
-}
 
 void MainWindow::on_tb_data_on_toggled(bool checked)
 {
@@ -608,6 +606,11 @@ void MainWindow::on_aircraft_Simulate_triggered(bool checked)
         connect(joystick, SIGNAL(sigXAxisChanged(int)), aircraft, SLOT(setJoyX(int)));
         connect(joystick, SIGNAL(sigYAxisChanged(int)), aircraft, SLOT(setJoyY(int)));
         connect(joystick, SIGNAL(sigZAxisChanged(int)), aircraft, SLOT(setJoyZ(int)));
+        connect(aircraft,SIGNAL(signal_modelingStep()),aircraft,SLOT(setServerData()));
+        connect(comPort,SIGNAL(DataReady(QByteArray)),aircraft,SLOT(setDataFromBoard(QByteArray)));
+        connect(aircraft,SIGNAL(serverDataReady(QList<float>)),server,SLOT(setServerData(QList<float>)));
+        connect(server,SIGNAL(getServerData(QList<int>)),aircraft,SLOT(setCustomServerData(QList<int>)));
+        connect(aircraft,SIGNAL(serverCustomDataReady(QList<float>)),server,SLOT(setCustomServerData(QList<float>)));
     }
     else
     {
@@ -615,6 +618,11 @@ void MainWindow::on_aircraft_Simulate_triggered(bool checked)
         disconnect(joystick, SIGNAL(sigXAxisChanged(int)), aircraft, SLOT(setJoyX(int)));
         disconnect(joystick, SIGNAL(sigYAxisChanged(int)), aircraft, SLOT(setJoyY(int)));
         disconnect(joystick, SIGNAL(sigZAxisChanged(int)), aircraft, SLOT(setJoyZ(int)));
+        disconnect(aircraft,SIGNAL(signal_modelingStep()),aircraft,SLOT(setServerData()));
+        disconnect(comPort,SIGNAL(DataReady(QByteArray)),aircraft,SLOT(setDataFromBoard(QByteArray)));
+        disconnect(aircraft,SIGNAL(serverDataReady(QList<float>)),server,SLOT(setServerData(QList<float>)));
+        disconnect(server,SIGNAL(getServerData(QList<int>)),aircraft,SLOT(setCustomServerData(QList<int>)));
+        disconnect(aircraft,SIGNAL(serverCustomDataReady(QList<float>)),server,SLOT(setCustomServerData(QList<float>)));
     }
 }
 
@@ -679,21 +687,71 @@ void MainWindow::on_tb_custom_pp_toggled(bool checked)
 
 }
 
-void MainWindow::on_pBsimulate_toggled(bool checked)
-{
-    if (checked)
-    {
-        this->on_aircraft_Simulate_triggered(true);
-         //ui->aircraft_Simulate->setChecked(true);
-        connect(aircraft,SIGNAL(signal_modelingStep()),aircraft,SLOT(setServerData()));
-        connect(comPort,SIGNAL(DataReady(QByteArray)),aircraft,SLOT(setDataFromBoard(QByteArray)));
-        connect(aircraft,SIGNAL(serverDataReady(QList<int>)),server,SLOT(setServerData(QList<int>)));
 
+
+void MainWindow::on_actionPlots_toggled(bool arg1)
+{
+
+    if (arg1)
+    {
+//        if (graphWindow == NULL)
+//        {
+            graphWindow = new GraphWindow(this);
+            graphWindow->installEventFilter(this);
+        //}
+        graphWindow->show();
+        graphWindow->setAirctaftData(aircraft);
+
+        ui->actionPlots->setStatusTip(tr("Hide aircraft data"));
     }
     else
     {
-        disconnect(aircraft,SIGNAL(signal_modelingStep()),aircraft,SLOT(setServerData()));
-        disconnect(comPort,SIGNAL(DataReady(QByteArray)),aircraft,SLOT(setDataFromBoard(QByteArray)));
-        disconnect(aircraft,SIGNAL(serverDataReady(QList<int>)),server,SLOT(setServerData(QList<int>)));
+        disconnect(graphWindow);
+        delete graphWindow;
+        graphWindow = NULL;
+        ui->actionPlots->setStatusTip(tr("Show aircraft data"));
+    }
+}
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+    if ((obj == graphWindow)&&(event->type() == QEvent::Close))
+    {
+            ui->actionPlots->setChecked(false);
+            ui->actionPlots->setStatusTip(tr("Show graphics window"));
+           //ui->tb_data_on->setChecked(true);
+            this->on_actionCom_port_toggled(false);
+            return true;
+    }
+    else
+        return QMainWindow::eventFilter(obj, event);
+}
+
+void MainWindow::closeEvent(QCloseEvent *e)
+{
+    if (QMessageBox::question(this, tr("T10_Server"),
+                              tr("Are you sure you want to exit?"),
+                              QMessageBox::Yes | QMessageBox::No,
+                              QMessageBox::No) == QMessageBox::Yes)
+    {
+        if (graphWindow != NULL)
+            delete graphWindow;
+    }
+    else
+        e->ignore();
+}
+
+
+void MainWindow::on_listWidget_peerList_clicked(const QModelIndex &index)
+{
+    if (index.row()<=server->peers.size()-1)
+    {
+    ui->client_info_widget->updateData(server->peers[index.row()]);
+      //обновляются данные о выбраном пользователе
+      connect(server->peers[index.row()]->pThread,SIGNAL(peerConnected(PeerInfo*))
+              ,ui->client_info_widget,SLOT(updateData(PeerInfo*)));
+      connect(server,SIGNAL(peerNameChanged(PeerInfo*,QString))
+                      ,ui->client_info_widget,SLOT(updateData(PeerInfo*)));
+      connect(server->peers[index.row()]->pThread,SIGNAL(incomingMessage(PeerInfo*,QByteArray))
+                      ,ui->client_info_widget,SLOT(updateData(PeerInfo*)));
     }
 }

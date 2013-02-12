@@ -13,6 +13,8 @@
 #include "QListWidget"
 #include "QStandardItemModel"
 #include "qCustomPlot/qcustomplot.h"
+#include "qCustomPlot/graphwindow.h"
+#include "NetServer/peerwidget.h"
 
 namespace Ui {
 class MainWindow;
@@ -39,10 +41,6 @@ private slots:
     void comPortNotResponding();
     void comPortRepaired();
 
-
-
-    void on_stackedWidget_currentChanged(int arg1);
-
     void on_actionAbout_triggered();
 
     void on_actionAbout_Qt_triggered();
@@ -54,14 +52,12 @@ private slots:
 
     void on_pushButton_comPortReconnect_clicked();
     void showDataToCom(QByteArray dataToMc);
-    void showAircraftData(QList<int> data);
+    void showAircraftData(QList<float> data);
     void on_pb_joy_refresh_clicked();
 
 
     void on_list_toCom_itemClicked(QListWidgetItem *item);
     void set_transmit_mode(char com);
-    void on_tb_data_on_clicked(bool checked);
-
     void on_tb_data_on_toggled(bool checked);
 
     void on_tb_data_rau_joy_toggled(bool checked);
@@ -83,7 +79,9 @@ private slots:
 
     void on_tb_custom_pp_toggled(bool checked);
 
-    void on_pBsimulate_toggled(bool checked);
+    void on_actionPlots_toggled(bool arg1);
+
+    void on_listWidget_peerList_clicked(const QModelIndex &index);
 
 public slots:
     void log(QString data);
@@ -98,7 +96,9 @@ private:
     ComPortTransmitter* comPort;
     Aircraft* aircraft;
     VJoystickAdapter* joystick;
-
+    GraphWindow* graphWindow;
+    void closeEvent(QCloseEvent *);
+    bool eventFilter(QObject *, QEvent *);
     void rebuildPeerList(PeerInfo* pinfo, bool disconnected = false, bool renamed = false);
 };
 

@@ -6456,7 +6456,7 @@ bool QCustomPlot::addPlottable(QCPAbstractPlottable *plottable)
     return true;
   } else
   {
-    qDebug() << FUNCNAME << "plottable either already in list or not created with this QCustomPlot as parent:" << (int)plottable;
+    qDebug() << FUNCNAME << "plottable either already in list or not created with this QCustomPlot as parent:" << plottable;
     return false;
   }
 }
@@ -6483,7 +6483,7 @@ bool QCustomPlot::removePlottable(QCPAbstractPlottable *plottable)
     return true;
   } else
   {
-    qDebug() << FUNCNAME << "plottable not in list:" << (int)plottable;
+    qDebug() << FUNCNAME << "plottable not in list:" << plottable;
     return false;
   }
 }

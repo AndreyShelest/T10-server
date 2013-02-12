@@ -28,7 +28,15 @@ SOURCES += main.cpp\
     ComPort/comporttransmitter.cpp \
     Aircraft/aircraft.cpp \
     Joystick/v_joystick_adapter.cpp \
-    ./qCustomPlot/qcustomplot.cpp
+    ./qCustomPlot/qcustomplot.cpp \
+    qCustomPlot/graphwindow.cpp \
+    qCustomPlot/writer.cpp \
+    NetServer/peerwidget.cpp \
+    Windows/t10servermain.cpp \
+    Windows/comportwidget.cpp \
+    Windows/serverwiget.cpp \
+    Windows/window.cpp \
+    Windows/t10tray.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -39,10 +47,19 @@ HEADERS  += mainwindow.h \
     ComPort/comporttransmitter.h \
     Aircraft/aircraft.h \
     Joystick/v_joystick_adapter.h \
-    ./qCustomPlot/qcustomplot.h
+    ./qCustomPlot/qcustomplot.h \
+    qCustomPlot/graphwindow.h \
+    qCustomPlot/writer.h \
+    NetServer/peerwidget.h \
+    Windows/t10servermain.h \
+    Windows/comportwidget.h \
+    Windows/serverwiget.h \
+    Windows/window.h \
+    Windows/t10tray.h
 
 
 FORMS    += mainwindow.ui \
+    qCustomPlot/graphwindow.ui
 
 RESOURCES += \
     T10_Server3.qrc

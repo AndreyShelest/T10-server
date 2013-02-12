@@ -170,8 +170,15 @@ void ComPortTransmitter::slotCustomAll(QList<int> indata)
     i++;
     }
 
+    //invert aileron
+    int value=indata[4];
+            if (value<=0)
+            {value=abs(value);}
+            else {value=0-value;}
+            val = (value+32767) / 256;
+           dataToMc[8]=val ;
     //invert Stab
-    int value=indata[5];
+    value=indata[5];
             if (value<=0)
             {value=abs(value);}
             else {value=0-value;}
@@ -219,7 +226,7 @@ void ComPortTransmitter::slot_Recieved()
         s.clear();
         for (int i = 0; i < packet.size(); i++)
             s += QString::number(((unsigned char)packet[i]))+",";
-        qDebug() << s;
+        //qDebug() << s;
 
         emit DataReady(packet);
 
@@ -327,7 +334,7 @@ void ComPortTransmitter::setCustomPPNr(int rudder)
 void ComPortTransmitter::setCustomPPNa(int aileron)
 {
 
-    dataToMc[8]=(unsigned char)aileron;
+    dataToMc[8]=(unsigned char) (aileron);
 
 }
 

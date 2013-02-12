@@ -27,7 +27,7 @@ QPushButton {
     border-style: solid;
     border-radius: 5px;
     padding: 3px;
-    min-width: 9ex;
+    /*min-width: 9ex;*/
     /*min-height: 2.5ex;*/
 }
 
