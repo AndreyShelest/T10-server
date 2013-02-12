@@ -13,12 +13,11 @@ class T10ServerMain : public QMainWindow
 public:
     explicit T10ServerMain(QWidget *parent = 0);
     ~T10ServerMain();
-
+    void setMainVisible(bool visible);
 
     bool loadSettings(QSettings * _settings);
     void writeSettings();
 private:
-    t10tray * trayIconWgt;
     QGridLayout * gMainLayout;
     QWidget * cntrlWgt;
     QTabWidget * main_tab_wgt;
@@ -30,13 +29,25 @@ private:
     QAction * actionAircraft;
     QAction * actionServer;
     QAction * actionJoystick;
-    ServerWiget * serverWgt;
+    QAction *minimizeAction;
+    QAction *maximizeAction;
+    QAction *restoreAction;
+    QAction *quitAction;
+    ServerWiget* serverWgt;
+    QSystemTrayIcon *trayIcon;
+    QMenu *trayIconMenu;
     void createMenuAndToolBar();
+    void createTrayIcon();
     bool createTabs ();
     bool activeComPort,activeJoy,activeAircraft,activeServer;
     void closeEvent(QCloseEvent *e);
 signals:
-    
+
+private slots:
+   // void setIcon(int index);
+    void iconActivated(QSystemTrayIcon::ActivationReason reason);
+    void showMessage();
+    //void messageClicked();
 public slots:
     void slotServerActionToggled(bool arg);
     void slotComPortActionToggled(bool arg);

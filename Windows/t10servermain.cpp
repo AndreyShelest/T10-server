@@ -12,8 +12,7 @@ T10ServerMain::T10ServerMain(QWidget *parent) :
     QString styleSheet = QLatin1String(file.readAll());
      this->setStyleSheet(styleSheet);
     this->setWindowTitle(QCoreApplication::applicationName());
-    //создаётся иконка в трее
-    trayIconWgt=new t10tray(this);
+
     //загружаются настройки из файла
     settings =new QSettings(QSettings::IniFormat, QSettings::UserScope,
                        QCoreApplication::organizationName(), QCoreApplication::applicationName());
@@ -38,8 +37,9 @@ else
     main_tab_wgt->addTab(new QLabel("Ошибка при чтении файла настроек",main_tab_wgt),"error");
 }
     this->setCentralWidget(main_tab_wgt);
-createMenuAndToolBar();
 
+createMenuAndToolBar();
+createTrayIcon();
 
     this->resize(700,500);
 
@@ -59,6 +59,15 @@ T10ServerMain::~T10ServerMain()
 //    delete actionJoystick;
     qDebug()<<"T10serverMain Closed";
 
+}
+
+void T10ServerMain::setMainVisible(bool visible)
+{
+    minimizeAction->setEnabled(visible);
+    maximizeAction->setEnabled(!this->isMaximized());
+    restoreAction->setEnabled(this->isMaximized() || !visible);
+
+this->setVisible(visible);
 }
 
 bool T10ServerMain::loadSettings(QSettings *_settings)
@@ -125,6 +134,20 @@ void T10ServerMain::writeSettings()
 
 void T10ServerMain::createMenuAndToolBar()
 {
+    // комманды скрытия, закрытия и разворачивания окна
+    minimizeAction = new QAction(tr("Mi&nimize"), this);
+    connect(minimizeAction, SIGNAL(triggered()), this, SLOT(hide()));
+
+    maximizeAction = new QAction(tr("Ma&ximize"), this);
+    connect(maximizeAction, SIGNAL(triggered()), this, SLOT(showMaximized()));
+
+    restoreAction = new QAction(tr("&Restore"), this);
+    connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
+
+    quitAction = new QAction(tr("&Quit"), this);
+    connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+
+    //создание тулбара
     iconsToolBar=new QToolBar("Main ToolBar",this);
      actionComPort=new QAction(QIcon(":/resources/icons/plug_in.svg"),"ComPort",this);
     iconsToolBar->addAction(actionComPort);
@@ -173,7 +196,7 @@ bool T10ServerMain::createTabs()
 
 
 
-    main_tab_wgt->addTab(trayIconWgt,QIcon(":/resources/icons/gears.svg"),"Settings");
+    main_tab_wgt->addTab(new QLabel("dj"),QIcon(":/resources/icons/gears.svg"),"Settings");
     main_tab_wgt->setMovable(true);
      if (main_tab_wgt->count()>0)
             return true;
@@ -193,7 +216,7 @@ void T10ServerMain::closeEvent(QCloseEvent *e)
 //                 }
 //    else
 //        e->ignore();
-    if (trayIconWgt->isVisibleTray()) {
+    if (trayIcon->isVisible()) {
         QMessageBox::information(this, tr("Systray"),
                                  tr("The program will keep running in the "
                                     "system tray. To terminate the program, "
@@ -201,9 +224,31 @@ void T10ServerMain::closeEvent(QCloseEvent *e)
                                     "of the system tray entry."));
         this->writeSettings();
         this->hide();
-        trayIconWgt->hide();
-        e->ignore();
+            e->ignore();
     }
+}
+
+void T10ServerMain::iconActivated(QSystemTrayIcon::ActivationReason reason)
+{
+    switch (reason) {
+    case QSystemTrayIcon::Trigger:
+break;
+    case QSystemTrayIcon::DoubleClick:
+        this->setVisible(!this->isVisible());
+        break;
+    case QSystemTrayIcon::MiddleClick:
+        showMessage();
+        break;
+    default:
+        ;
+    }
+}
+
+void T10ServerMain::showMessage()
+{
+    QIcon icon = trayIcon->icon();
+    trayIcon->showMessage("Сообщение", "Пользователей подключено: "
+                          +QString::number(serverWgt->getPeersCount()));
 }
 
 void T10ServerMain::slotServerActionToggled(bool arg)
@@ -262,4 +307,32 @@ void T10ServerMain::slotJoystickActionToggled(bool arg)
         actionAircraft->setToolTip("Отключить джойстик");
         qDebug()<<"Joystick disconnected";
     }
+}
+
+
+
+
+
+void T10ServerMain::createTrayIcon()
+{
+    trayIconMenu = new QMenu(this);
+    trayIconMenu->addAction(actionComPort);
+    trayIconMenu->addAction(actionServer);
+    trayIconMenu->addAction(actionAircraft);
+    trayIconMenu->addAction(actionJoystick);
+
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(minimizeAction);
+    trayIconMenu->addAction(maximizeAction);
+    trayIconMenu->addAction(restoreAction);
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(quitAction);
+
+    trayIcon = new QSystemTrayIcon(this);
+    trayIcon->setContextMenu(trayIconMenu);
+    trayIcon->setIcon(QIcon(":/resources/icons/appIcon48.png"));
+    //connect(trayIcon, SIGNAL(messageClicked()), this, SLOT(messageClicked()));
+    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+            this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+    trayIcon->show();
 }

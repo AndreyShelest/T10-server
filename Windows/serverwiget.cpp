@@ -28,7 +28,12 @@ ServerWiget::~ServerWiget()
 {
     qDebug()<<"Server Widget deleted";
     //delete m_grLayout;
-delete peers;
+    delete peers;
+}
+
+int ServerWiget::getPeersCount()
+{
+    return peer_count->value();
 }
 
 void ServerWiget::log(QString data)

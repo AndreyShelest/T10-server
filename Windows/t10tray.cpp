@@ -194,4 +194,5 @@ void t10tray::createTrayIcon()
 
     trayIcon = new QSystemTrayIcon(parentWgt);
     trayIcon->setContextMenu(trayIconMenu);
+
 }
