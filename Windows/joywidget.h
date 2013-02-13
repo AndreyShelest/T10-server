@@ -19,6 +19,7 @@ public:
     void setSettings(QSettings * _settings);
     void createJoystick();
     bool rescanJoystick();
+    VJoystickAdapter * getJoystick();
 
     QLabel * labelJoystickStatus;
 signals:

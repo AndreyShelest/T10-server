@@ -140,6 +140,10 @@ float Aircraft::getCurrentTime()
 
     return time;
 }
+bool Aircraft::isactiveSimulate()
+{
+    return modelingTimer.isActive();
+}
 
 
 
@@ -361,7 +365,7 @@ void Aircraft::modelingStep()
 
 
     time = time + dt;
-
+    qDebug()<<"ssd";
     emit joyDataReady(getJoyData());
     emit signal_modelingStep();
 

@@ -8,6 +8,8 @@
 #include <Windows/serverwiget.h>
 #include <Windows/t10tray.h>
 #include <Windows/joywidget.h>
+#include <Windows/aircraftwidget.h>
+#include "qCustomPlot/graphwindow.h"
 
 class T10ServerMain : public QMainWindow
 {
@@ -30,6 +32,7 @@ private:
     QAction * actionAircraft;
     QAction * actionServer;
     QAction * actionJoystick;
+    QAction * actionGraphs;
     QAction *minimizeAction;
     QAction *maximizeAction;
     QAction *restoreAction;
@@ -37,6 +40,8 @@ private:
     QAction *quitAction;
     ServerWiget* serverWgt;
     JoyWidget *joyWgt;
+    AircraftWidget *aircraftWgt;
+    GraphWindow* graphWindow;
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
     void createMenuAndToolBar();
@@ -53,11 +58,14 @@ private slots:
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void showMessage();
     //void messageClicked();
+    bool eventFilter(QObject *obj, QEvent *event);
+
 public slots:
     void slotServerActionToggled(bool arg);
     void slotComPortActionToggled(bool arg);
     void slotAircraftActionToggled(bool arg);
     void slotJoystickActionToggled(bool arg);
+    void slotGraphsActionToggled(bool arg);
 };
 
 #endif // T10SERVERMAIN_H

@@ -162,6 +162,7 @@ connect (this->actionServer,SIGNAL(toggled(bool)),serverWgt,SLOT(slotConnectServ
   actionAircraft->setCheckable(true);
   actionAircraft->setToolTip("Включить моделирование");
   connect (this->actionAircraft,SIGNAL(toggled(bool)),this,SLOT(slotAircraftActionToggled(bool)));
+  connect (this->actionAircraft,SIGNAL(toggled(bool)),aircraftWgt,SLOT(slotSimulate(bool)));
 
   actionJoystick=new QAction(QIcon(":/resources/icons/joystick.svg"),"Joystick",this);
  iconsToolBar->addAction(actionJoystick);
@@ -170,7 +171,15 @@ connect (this->actionServer,SIGNAL(toggled(bool)),serverWgt,SLOT(slotConnectServ
  connect (this->actionJoystick,SIGNAL(toggled(bool)),this,SLOT(slotJoystickActionToggled(bool)));
  connect (this->actionJoystick,SIGNAL(toggled(bool)),joyWgt,SLOT(slotJoyConnect(bool)));
  connect (joyWgt,SIGNAL(JoyConnected(bool)),this->actionJoystick,SLOT(setChecked(bool)));
+ iconsToolBar->addAction(actionJoystick);
  iconsToolBar->addSeparator();
+
+ actionGraphs=new QAction(QIcon(":/resources/icons/graph.png"),"Graphs",this);
+  iconsToolBar->addAction(actionGraphs);
+  actionGraphs->setCheckable(true);
+ connect (this->actionGraphs,SIGNAL(toggled(bool)),this,SLOT(slotGraphsActionToggled(bool)));
+
+
     this->addToolBar(iconsToolBar);
  //создание статусбара
  main_statusbar=new QStatusBar();
@@ -188,13 +197,12 @@ bool T10ServerMain::createTabs()
     if (activeServer)
     main_tab_wgt->addTab(serverWgt,QIcon(":/resources/icons/computer.svg"),"Server");
     if (activeAircraft)
-    main_tab_wgt->addTab(new QLabel("ai"),QIcon(":/resources/icons/airplane.svg"),"Aircraft");
+        aircraftWgt=new AircraftWidget();
+    main_tab_wgt->addTab(aircraftWgt,QIcon(":/resources/icons/airplane.svg"),"Aircraft");
     joyWgt=new JoyWidget();
     joyWgt->createJoystick();
     if (activeJoy)
     main_tab_wgt->addTab(joyWgt,QIcon(":/resources/icons/joystick.svg"),"Joystick");;
-
-
 
     main_tab_wgt->addTab(new QLabel("dj"),QIcon(":/resources/icons/gears.svg"),"Settings");
     main_tab_wgt->setMovable(true);
@@ -272,16 +280,45 @@ void T10ServerMain::showMessage()
                           +QString::number(serverWgt->getPeersCount()));
 }
 
+bool T10ServerMain::eventFilter(QObject *obj, QEvent *event)
+{
+    if ((obj == graphWindow)&&(event->type() == QEvent::Close))
+    {
+            actionGraphs->setChecked(false);
+            actionGraphs->setStatusTip(tr("Show graphics window"));
+
+            return true;
+    }
+    else
+        return QMainWindow::eventFilter(obj, event);
+}
+
 void T10ServerMain::slotServerActionToggled(bool arg)
 {
     if (arg)
     {
+//               connect(aircraftWgt->getAircraft(),SIGNAL(serverDataReady(QList<float>)),
+//                    serverWgt->getServer(),SLOT(setServerData(QList<float>)));
+//            connect(serverWgt->getServer(),SIGNAL(getServerData(QList<int>)),
+//                    aircraftWgt->getAircraft(),SLOT(setCustomServerData(QList<int>)));
+//            connect(aircraftWgt->getAircraft(),SIGNAL(serverCustomDataReady(QList<float>)),
+//                    serverWgt->getServer(),SLOT(setCustomServerData(QList<float>)));
+//            qDebug()<<"Server connected without modeling";
+
 
 actionServer->setToolTip("Выключить сервер");
-        qDebug()<<"Server connected";
+
     }
     else
     {
+
+//            disconnect(aircraftWgt->getAircraft(),SIGNAL(serverDataReady(QList<float>)),
+//                    serverWgt->getServer(),SLOT(setServerData(QList<float>)));
+//            disconnect(serverWgt->getServer(),SIGNAL(getServerData(QList<int>)),
+//                    aircraftWgt->getAircraft(),SLOT(setCustomServerData(QList<int>)));
+//            disconnect(aircraftWgt->getAircraft(),SIGNAL(serverCustomDataReady(QList<float>)),
+//                    serverWgt->getServer(),SLOT(setCustomServerData(QList<float>)));
+
         actionServer->setToolTip("Включить сервер");
         qDebug()<<"Server disconnected";
     }
@@ -306,12 +343,23 @@ void T10ServerMain::slotAircraftActionToggled(bool arg)
     if (arg)
     {
         actionAircraft->setToolTip("Остановить моделирование");
+        connect(joyWgt->getJoystick(), SIGNAL(sigXAxisChanged(int)), aircraftWgt->getAircraft(), SLOT(setJoyX(int)));
+        connect(joyWgt->getJoystick(), SIGNAL(sigYAxisChanged(int)), aircraftWgt->getAircraft(), SLOT(setJoyY(int)));
+        connect(joyWgt->getJoystick(), SIGNAL(sigZAxisChanged(int)), aircraftWgt->getAircraft(), SLOT(setJoyZ(int)));
+        connect(aircraftWgt->getAircraft(),SIGNAL(signal_modelingStep()),aircraftWgt->getAircraft(),SLOT(setServerData()));
+        //connect(comPort,SIGNAL(DataReady(QByteArray)),aircraft,SLOT(setDataFromBoard(QByteArray)));
+
         qDebug()<<"Simulation started";
     }
     else
     {
         actionAircraft->setToolTip("Включить моделирование");
-        qDebug()<<"Simulation stopped";
+        disconnect(joyWgt->getJoystick(), SIGNAL(sigXAxisChanged(int)), aircraftWgt->getAircraft(), SLOT(setJoyX(int)));
+        disconnect(joyWgt->getJoystick(), SIGNAL(sigYAxisChanged(int)), aircraftWgt->getAircraft(), SLOT(setJoyY(int)));
+        disconnect(joyWgt->getJoystick(), SIGNAL(sigZAxisChanged(int)), aircraftWgt->getAircraft(), SLOT(setJoyZ(int)));
+        disconnect(aircraftWgt->getAircraft(),SIGNAL(signal_modelingStep()),aircraftWgt->getAircraft(),SLOT(setServerData()));
+       // disconnect(comPort,SIGNAL(DataReady(QByteArray)),aircraft,SLOT(setDataFromBoard(QByteArray)));
+               qDebug()<<"Simulation stopped";
     }
 }
 
@@ -327,6 +375,29 @@ void T10ServerMain::slotJoystickActionToggled(bool arg)
     {
         actionJoystick->setToolTip("Подключить джойстик");
                 qDebug()<<"Joystick disconnected";
+    }
+}
+
+void T10ServerMain::slotGraphsActionToggled(bool arg)
+{
+    if (arg)
+    {
+//        if (graphWindow == NULL)
+//        {
+            graphWindow = new GraphWindow(this);
+            graphWindow->installEventFilter(this);
+        //}
+        graphWindow->show();
+        graphWindow->setAirctaftData(aircraftWgt->getAircraft());
+
+        actionGraphs->setStatusTip(tr("Hide plot window"));
+    }
+    else
+    {
+        disconnect(graphWindow);
+        delete graphWindow;
+        graphWindow = NULL;
+        actionGraphs->setStatusTip(tr("Show plot window"));
     }
 }
 
@@ -348,6 +419,7 @@ void T10ServerMain::createTrayIcon()
     trayIconMenu->addAction(actionServer);
     trayIconMenu->addAction(actionAircraft);
     trayIconMenu->addAction(actionJoystick);
+    trayIconMenu->addAction(actionGraphs);
    trayIconMenu->addSeparator();
      trayIconMenu->addAction(messageAction);
     trayIconMenu->addAction(quitAction);

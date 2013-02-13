@@ -40,6 +40,11 @@ bool JoyWidget::rescanJoystick()
     else return false;
 }
 
+VJoystickAdapter *JoyWidget::getJoystick()
+{
+    return joystick;
+}
+
 void JoyWidget::slotJoyConnect(bool arg)
 {
     qDebug() << "Available joysticks: ";

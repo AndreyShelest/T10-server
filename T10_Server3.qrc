@@ -42,5 +42,6 @@
         <file>resources/icons/Icon.ico</file>
         <file>resources/icons/appIcon.png</file>
         <file>resources/icons/appIcon48.png</file>
+        <file>resources/icons/graph.png</file>
     </qresource>
 </RCC>

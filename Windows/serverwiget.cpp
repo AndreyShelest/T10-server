@@ -31,6 +31,11 @@ ServerWiget::~ServerWiget()
     delete peers;
 }
 
+NetServer *ServerWiget::getServer()
+{
+    return server;
+}
+
 int ServerWiget::getPeersCount()
 {
     return peer_count->value();

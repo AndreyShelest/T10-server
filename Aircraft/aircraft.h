@@ -17,10 +17,12 @@ public:
     ~Aircraft();
     QList<int> getJoyData();
     void setFiltered(bool _turn);
+    bool isactiveSimulate();
  static QMap <int,QString> getQmapData();
 
 float getCurrentTime();
 private:
+
 QList<QList<float> > *avrg4Data; //массив соодержит 3 последних значения массивов данных с платы АЦП
 QMap  <int,QString>* qmapData;
     bool filtered;

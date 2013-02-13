@@ -19,6 +19,7 @@ public:
     explicit ServerWiget(QWidget *parent = 0);
      ~ServerWiget();
      QLabel* labelServerStatus;
+     NetServer* getServer();
      int getPeersCount();
 
 signals:

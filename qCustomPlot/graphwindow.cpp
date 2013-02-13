@@ -1112,7 +1112,7 @@ void GraphWindow::setupPlayground(QCustomPlot *customPlot)
 
 GraphWindow::~GraphWindow()
 {
-    delete graphAircraft;
+    //delete graphAircraft;
   delete ui;
 }
 
