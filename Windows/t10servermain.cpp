@@ -157,6 +157,7 @@ void T10ServerMain::createMenuAndToolBar()
 
    connect (this->actionServer,SIGNAL(toggled(bool)),this,SLOT(slotServerActionToggled(bool)));
 connect (this->actionServer,SIGNAL(toggled(bool)),serverWgt,SLOT(slotConnectServer(bool)));
+connect (serverWgt,SIGNAL(serverError(bool)),actionServer,SLOT(setChecked(bool)));
    actionAircraft=new QAction(QIcon(":/resources/icons/airplane.svg"),"Aircraft",this);
   iconsToolBar->addAction(actionAircraft);
   actionAircraft->setCheckable(true);
@@ -297,13 +298,7 @@ void T10ServerMain::slotServerActionToggled(bool arg)
 {
     if (arg)
     {
-//               connect(aircraftWgt->getAircraft(),SIGNAL(serverDataReady(QList<float>)),
-//                    serverWgt->getServer(),SLOT(setServerData(QList<float>)));
-//            connect(serverWgt->getServer(),SIGNAL(getServerData(QList<int>)),
-//                    aircraftWgt->getAircraft(),SLOT(setCustomServerData(QList<int>)));
-//            connect(aircraftWgt->getAircraft(),SIGNAL(serverCustomDataReady(QList<float>)),
-//                    serverWgt->getServer(),SLOT(setCustomServerData(QList<float>)));
-//            qDebug()<<"Server connected without modeling";
+serverWgt->turnOnServer(aircraftWgt->getAircraft(),arg);
 
 
 actionServer->setToolTip("Выключить сервер");
@@ -312,15 +307,9 @@ actionServer->setToolTip("Выключить сервер");
     else
     {
 
-//            disconnect(aircraftWgt->getAircraft(),SIGNAL(serverDataReady(QList<float>)),
-//                    serverWgt->getServer(),SLOT(setServerData(QList<float>)));
-//            disconnect(serverWgt->getServer(),SIGNAL(getServerData(QList<int>)),
-//                    aircraftWgt->getAircraft(),SLOT(setCustomServerData(QList<int>)));
-//            disconnect(aircraftWgt->getAircraft(),SIGNAL(serverCustomDataReady(QList<float>)),
-//                    serverWgt->getServer(),SLOT(setCustomServerData(QList<float>)));
-
+serverWgt->turnOnServer(aircraftWgt->getAircraft(),arg);
         actionServer->setToolTip("Включить сервер");
-        qDebug()<<"Server disconnected";
+
     }
 }
 

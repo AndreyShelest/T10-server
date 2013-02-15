@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <NetServer/netserver.h>
 #include <NetServer/peerwidget.h>
+#include <Aircraft/aircraft.h>
 class ServerWiget : public QWidget
 {
     Q_OBJECT
@@ -23,7 +24,7 @@ public:
      int getPeersCount();
 
 signals:
-    
+     void serverError(bool);
 
 public slots:
      void rebuildPeerList(PeerInfo *pinfo, bool disconnected=0, bool renamed=0);
@@ -32,6 +33,7 @@ public slots:
      void peerNameChanged(PeerInfo* peerInfo, QString oldName);
      void on_listWidget_peerList_clicked(const QModelIndex &index);
      void log(QString data);
+     void turnOnServer(Aircraft * aircraft, bool activate);
      void slotConnectServer(bool arg);
 };
 

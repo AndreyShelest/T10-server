@@ -4,7 +4,7 @@ ServerWiget::ServerWiget(QWidget *parent) :
     QWidget(parent)
 {
     qDebug()<<"Server Widget created";
-
+ server=new NetServer();
     peers=new PeerWidget();
     m_grLayout=new QGridLayout(this);
     listWidget_peerList =new QListWidget();
@@ -28,6 +28,7 @@ ServerWiget::~ServerWiget()
 {
     qDebug()<<"Server Widget deleted";
     //delete m_grLayout;
+    delete server;
     delete peers;
 }
 
@@ -48,11 +49,40 @@ void ServerWiget::log(QString data)
 
 }
 
+void ServerWiget::turnOnServer(Aircraft *aircraft, bool activate)
+{
+    if (activate)
+    {
+
+               connect(aircraft,SIGNAL(serverDataReady(QList<float>)),
+                   server,SLOT(setServerData(QList<float>)));
+            connect(server,SIGNAL(getServerData(QList<int>)),
+                    aircraft,SLOT(setCustomServerData(QList<int>)));
+            connect(aircraft,SIGNAL(serverCustomDataReady(QList<float>)),
+                    server,SLOT(setCustomServerData(QList<float>)));
+
+            qDebug()<<"Server connected with modeling";
+
+
+    }
+    else
+    {
+        disconnect(aircraft,SIGNAL(serverDataReady(QList<float>)),
+            server,SLOT(setServerData(QList<float>)));
+     disconnect(server,SIGNAL(getServerData(QList<int>)),
+             aircraft,SLOT(setCustomServerData(QList<int>)));
+     disconnect(aircraft,SIGNAL(serverCustomDataReady(QList<float>)),
+             server,SLOT(setCustomServerData(QList<float>)));
+
+        qDebug()<<"Server disconnected";
+    }
+}
+
 
 void ServerWiget::slotConnectServer(bool arg)
 {
     if (arg){
-        server=new NetServer();
+
     QHostAddress addr("0.0.0.0");
             //settings.value("NetServer/address", "0.0.0.0").toString());
     port = 1988;
@@ -71,8 +101,9 @@ void ServerWiget::slotConnectServer(bool arg)
     else
     {
        this->log(tr("Unable to start server: ") + server->errorString());
-    server->deleteLater();
-        //ui->actionServer->setChecked(false);
+
+        server->close();
+           emit serverError(false);
 
 
     }
@@ -84,7 +115,6 @@ else
     disconnect(server, SIGNAL(peerConnected(PeerInfo*)), this, SLOT(peerConnected(PeerInfo*)));
     disconnect(server, SIGNAL(peerConnected(PeerInfo*)), peers, SLOT(updateData(PeerInfo*)));
     server->close();
-server->deleteLater();
 
     this->log(tr("Server stopped"));
     labelServerStatus->setText(tr("Server: ") + "<span style=\"color:#ff0000;font-weight:bold;\">" + tr("stopped") + "</span>");
