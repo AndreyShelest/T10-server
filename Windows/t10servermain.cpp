@@ -170,8 +170,7 @@ connect (serverWgt,SIGNAL(serverError(bool)),actionServer,SLOT(setChecked(bool))
  actionJoystick->setCheckable(true);
  actionJoystick->setToolTip("Подключить джойстик");
  connect (this->actionJoystick,SIGNAL(toggled(bool)),this,SLOT(slotJoystickActionToggled(bool)));
- connect (this->actionJoystick,SIGNAL(toggled(bool)),joyWgt,SLOT(slotJoyConnect(bool)));
- connect (joyWgt,SIGNAL(JoyConnected(bool)),this->actionJoystick,SLOT(setChecked(bool)));
+
  iconsToolBar->addAction(actionJoystick);
  iconsToolBar->addSeparator();
 
@@ -193,19 +192,19 @@ bool T10ServerMain::createTabs()
 {
       //create
  if (activeComPort)
-    main_tab_wgt->addTab(new QLabel("com"),QIcon(":/resources/icons/plug_in.svg"),"ComPort");
+    main_tab_wgt->addTab(new QLabel("com"),QIcon(":/resources/icons/plug_in.svg"),"&ComPort");
     serverWgt =new ServerWiget();
     if (activeServer)
-    main_tab_wgt->addTab(serverWgt,QIcon(":/resources/icons/computer.svg"),"Server");
+    main_tab_wgt->addTab(serverWgt,QIcon(":/resources/icons/computer.svg"),"&Server");
     if (activeAircraft)
         aircraftWgt=new AircraftWidget();
-    main_tab_wgt->addTab(aircraftWgt,QIcon(":/resources/icons/airplane.svg"),"Aircraft");
+    main_tab_wgt->addTab(aircraftWgt,QIcon(":/resources/icons/airplane.svg"),"&Aircraft");
     joyWgt=new JoyWidget();
     joyWgt->createJoystick();
     if (activeJoy)
-    main_tab_wgt->addTab(joyWgt,QIcon(":/resources/icons/joystick.svg"),"Joystick");;
+    main_tab_wgt->addTab(joyWgt,QIcon(":/resources/icons/joystick.svg"),"&Joystick");;
 
-    main_tab_wgt->addTab(new QLabel("dj"),QIcon(":/resources/icons/gears.svg"),"Settings");
+    main_tab_wgt->addTab(new QLabel("dj"),QIcon(":/resources/icons/gears.svg"),"Se&ttings");
     main_tab_wgt->setMovable(true);
      if (main_tab_wgt->count()>0)
             return true;
@@ -358,11 +357,18 @@ void T10ServerMain::slotJoystickActionToggled(bool arg)
     if (arg)
     {
         actionJoystick->setToolTip("Отключить джойстик");
+        joyWgt->rescanJoystick();
+        joyWgt->slotJoyConnect(arg);
+        connect (joyWgt,SIGNAL(JoyConnected(bool)),this->actionJoystick,SLOT(setChecked(bool)));
+        if (!joyWgt->joyAvailable())
+          actionJoystick->setChecked(false);
         qDebug()<<"Joystick connected";
     }
     else
     {
         actionJoystick->setToolTip("Подключить джойстик");
+        joyWgt->slotJoyConnect(arg);
+        disconnect (joyWgt,SIGNAL(JoyConnected(bool)),this->actionJoystick,SLOT(setChecked(bool)));
                 qDebug()<<"Joystick disconnected";
     }
 }

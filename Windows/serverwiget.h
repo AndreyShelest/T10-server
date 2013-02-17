@@ -5,6 +5,7 @@
 #include <NetServer/netserver.h>
 #include <NetServer/peerwidget.h>
 #include <Aircraft/aircraft.h>
+#include <QNetworkInterface>
 class ServerWiget : public QWidget
 {
     Q_OBJECT
@@ -12,9 +13,16 @@ private:
      NetServer* server;
      PeerWidget* peers;
      QGridLayout * m_grLayout;
+     QHBoxLayout * m_hbLayout;
      QLCDNumber * peer_count;
      QListWidget * listWidget_peerList;
      QListWidget * listWidget_Log;
+     QWidget* server_Parameters;
+     QGridLayout* sp_gboxLayout;
+     QLabel* labelServerIP;
+     QLabel* labelServerIP2;
+     QLabel* labelServerPort;
+     QPushButton* UpdateServerInfo;
      quint16 port;
 public:
     explicit ServerWiget(QWidget *parent = 0);
@@ -22,6 +30,7 @@ public:
      QLabel* labelServerStatus;
      NetServer* getServer();
      int getPeersCount();
+     QString getServerIP (int num);
 
 signals:
      void serverError(bool);
@@ -35,6 +44,7 @@ public slots:
      void log(QString data);
      void turnOnServer(Aircraft * aircraft, bool activate);
      void slotConnectServer(bool arg);
+     void updateServerInfo();
 };
 
 #endif // SERVERWIGET_H

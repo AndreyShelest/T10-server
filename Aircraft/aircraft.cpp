@@ -365,7 +365,7 @@ void Aircraft::modelingStep()
 
 
     time = time + dt;
-    qDebug()<<"ssd";
+
     emit joyDataReady(getJoyData());
     emit signal_modelingStep();
 
