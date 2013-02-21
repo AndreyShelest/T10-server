@@ -61,7 +61,7 @@ bool ComPortTransmitter::COM_reconnect()
 
     QSettings settings(QSettings::IniFormat, QSettings::UserScope,
                        QCoreApplication::organizationName(), QCoreApplication::applicationName());
-    deviceName = settings.value("ComPort/name", "").toString();
+    deviceName = settings.value("ComPort/name", "/dev/ttyUSB0").toString();
     port->setDeviceName(deviceName);
     if (!port->open(AbstractSerial::ReadWrite))
     {
@@ -226,7 +226,7 @@ void ComPortTransmitter::slot_Recieved()
         s.clear();
         for (int i = 0; i < packet.size(); i++)
             s += QString::number(((unsigned char)packet[i]))+",";
-        //qDebug() << s;
+        qDebug() << s;
 
         emit DataReady(packet);
 

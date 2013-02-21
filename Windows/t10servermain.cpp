@@ -9,7 +9,7 @@ T10ServerMain::T10ServerMain(QWidget *parent) :
     file.open(QFile::ReadOnly);
 
     //устанавливаем стили из этого файла
-    QString styleSheet = QLatin1String(file.readAll());
+    styleSheet = QLatin1String(file.readAll());
      this->setStyleSheet(styleSheet);
     this->setWindowTitle(QCoreApplication::applicationName());
 
@@ -149,6 +149,7 @@ void T10ServerMain::createMenuAndToolBar()
     actionComPort->setCheckable(true);
     actionComPort->setToolTip("Подключить COM порт");
     connect (this->actionComPort,SIGNAL(toggled(bool)),this,SLOT(slotComPortActionToggled(bool)));
+    connect (comPortWGT,SIGNAL(comPortConnected(bool)),actionComPort,SLOT(setChecked(bool)));
 
     actionServer=new QAction(QIcon(":/resources/icons/computer.svg"),"Start/Stop",this);
    iconsToolBar->addAction(actionServer);
@@ -183,7 +184,9 @@ connect (serverWgt,SIGNAL(serverError(bool)),actionServer,SLOT(setChecked(bool))
     this->addToolBar(iconsToolBar);
  //создание статусбара
  main_statusbar=new QStatusBar();
+  main_statusbar->addPermanentWidget(comPortWGT->labelComPortStatus);
  main_statusbar->addPermanentWidget(serverWgt->labelServerStatus);
+
  main_statusbar->addPermanentWidget(joyWgt->labelJoystickStatus);
  this->setStatusBar(main_statusbar);
 }
@@ -192,7 +195,8 @@ bool T10ServerMain::createTabs()
 {
       //create
  if (activeComPort)
-    main_tab_wgt->addTab(new QLabel("com"),QIcon(":/resources/icons/plug_in.svg"),"&ComPort");
+     comPortWGT=new ComPortWidget();
+    main_tab_wgt->addTab(comPortWGT,QIcon(":/resources/icons/plug_in.svg"),"&ComPort");
     serverWgt =new ServerWiget();
     if (activeServer)
     main_tab_wgt->addTab(serverWgt,QIcon(":/resources/icons/computer.svg"),"&Server");
@@ -317,11 +321,13 @@ void T10ServerMain::slotComPortActionToggled(bool arg)
     if (arg)
     {
         actionComPort->setToolTip("Отключить COM порт");
+        comPortWGT->slot_turnOnComPort(true);
         qDebug()<<"COMport connected";
     }
     else
     {
         actionComPort->setToolTip("Подключить COM порт");
+        comPortWGT->slot_turnOnComPort(false);
         qDebug()<<"COMport disconnected";
     }
 }
@@ -395,8 +401,6 @@ void T10ServerMain::slotGraphsActionToggled(bool arg)
         actionGraphs->setStatusTip(tr("Show plot window"));
     }
 }
-
-
 
 
 

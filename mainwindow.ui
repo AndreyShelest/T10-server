@@ -51,7 +51,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <property name="documentMode">
        <bool>false</bool>
@@ -930,6 +930,15 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="mouseTracking">
+           <bool>false</bool>
+          </property>
+          <property name="acceptDrops">
+           <bool>false</bool>
+          </property>
+          <property name="autoFillBackground">
+           <bool>false</bool>
+          </property>
          </widget>
         </item>
         <item row="0" column="0" rowspan="5">
@@ -1071,6 +1080,15 @@
            <width>191</width>
            <height>121</height>
           </rect>
+         </property>
+         <property name="contextMenuPolicy">
+          <enum>Qt::DefaultContextMenu</enum>
+         </property>
+         <property name="acceptDrops">
+          <bool>false</bool>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
          </property>
          <property name="title">
           <string>Joystick</string>
@@ -1434,7 +1452,7 @@
      <x>0</x>
      <y>0</y>
      <width>709</width>
-     <height>25</height>
+     <height>19</height>
     </rect>
    </property>
   </widget>

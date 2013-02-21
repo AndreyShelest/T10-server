@@ -1,7 +1,7 @@
 #ifndef T10SERVERMAIN_H
 #define T10SERVERMAIN_H
 
-//#include <QMainWindow>
+
 #include <QFile>
 #include <QCoreApplication>
 #include <QtGui>
@@ -10,6 +10,7 @@
 #include <Windows/joywidget.h>
 #include <Windows/aircraftwidget.h>
 #include "qCustomPlot/graphwindow.h"
+#include <Windows/comportwidget.h>
 
 class T10ServerMain : public QMainWindow
 {
@@ -20,7 +21,9 @@ public:
 
     bool loadSettings(QSettings * _settings);
     void writeSettings();
+
 private:
+    QString styleSheet;
     QGridLayout * gMainLayout;
     QWidget * cntrlWgt;
     QTabWidget * main_tab_wgt;
@@ -38,6 +41,7 @@ private:
     QAction *restoreAction;
     QAction *messageAction;
     QAction *quitAction;
+    ComPortWidget * comPortWGT;
     ServerWiget* serverWgt;
     JoyWidget *joyWgt;
     AircraftWidget *aircraftWgt;

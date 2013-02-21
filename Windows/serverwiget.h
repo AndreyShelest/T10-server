@@ -6,6 +6,7 @@
 #include <NetServer/peerwidget.h>
 #include <Aircraft/aircraft.h>
 #include <QNetworkInterface>
+//#include <Windows/t10servermain.h>
 class ServerWiget : public QWidget
 {
     Q_OBJECT

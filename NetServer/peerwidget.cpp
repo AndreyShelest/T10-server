@@ -38,7 +38,8 @@ PeerWidget::PeerWidget(QWidget *parent) :
     this->setLayout(g_layout);
    // this->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
      //this->setMaximumSize(1200,1200);
-    this->show();
+     //this->autoFillBackground();
+    //this->show();
 }
 
 void PeerWidget::updateData(PeerInfo *peerInfo)

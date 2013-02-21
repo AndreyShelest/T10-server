@@ -3,7 +3,7 @@
 ServerWiget::ServerWiget(QWidget *parent) :
     QWidget(parent)
 {
-    qDebug()<<"Server Widget created";
+
     server=new NetServer();
      port = 1988;
     peers=new PeerWidget();
@@ -45,7 +45,8 @@ ServerWiget::ServerWiget(QWidget *parent) :
     labelServerStatus=new QLabel(tr("Server: ") + "<span style=\"color:#000088;\">" + tr("stopped") + "</span>");
     connect(UpdateServerInfo,SIGNAL(clicked()),this,SLOT(updateServerInfo()));
     connect(listWidget_peerList,SIGNAL(clicked(QModelIndex)),this,SLOT(on_listWidget_peerList_clicked(QModelIndex)));
-       this->setLayout(m_grLayout);
+    this->setLayout(m_grLayout);
+    qDebug()<<"Server Widget created";
 }
 
 ServerWiget::~ServerWiget()
@@ -71,16 +72,16 @@ int ServerWiget::getPeersCount()
 
 QString ServerWiget::getServerIP(int num)
 {
-    QString locIP;
-     QList<QHostAddress> addr = QNetworkInterface::allAddresses();
+         QList<QHostAddress> addr = QNetworkInterface::allAddresses();
 //     for (int i=0;i<addr.size();i++)
 //     {
 //            locIP = addr.at(i).toString();
 //     qDebug()<<locIP;
 //     }
-
-     locIP = addr.at(num).toString();
-     return locIP;
+if (num <addr.size())
+    return addr.at(num).toString();
+else
+    return "";
 
 }
 
