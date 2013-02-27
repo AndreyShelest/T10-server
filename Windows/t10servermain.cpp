@@ -5,12 +5,12 @@ T10ServerMain::T10ServerMain(QWidget *parent) :
     QMainWindow(parent)
 {
     // подключаем файл внешнего вида
-    QFile file(":/resources/qss/green.qss");
-    file.open(QFile::ReadOnly);
+    //QFile file(":/resources/qss/green.qss");
+    //file.open(QFile::ReadOnly);
 
     //устанавливаем стили из этого файла
-    styleSheet = QLatin1String(file.readAll());
-     this->setStyleSheet(styleSheet);
+   // styleSheet = QLatin1String(file.readAll());
+   //  this->setStyleSheet(styleSheet);
     this->setWindowTitle(QCoreApplication::applicationName());
 
     //загружаются настройки из файла

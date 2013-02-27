@@ -13,10 +13,31 @@ JoyWidget::JoyWidget(QWidget *parent) :
     labelJoystickStatus = new QLabel(tr("Joystick: ") + "<span style=\"color:#ff0000;font-weight:bold;\">" + tr("not connected") + "</span>");
     this->setLayout(m_grLayout);
     connect(rescanButton,SIGNAL(clicked()),this,SLOT(rescanJoystick()));
+
+    //создание виджетов кнопок джойстика
+
+    QGridLayout * jtopLayout=new QGridLayout;
+    joyButtons=new QWidget();
+    joyButtons->setLayout(jtopLayout);
+    int n=0;//цифра на кнопке
+     for (int i=0; i<3;++i)
+    for (int j=0; j<4;++j)
+               {
+            jtopLayout->addWidget(createButton(n),i,j);
+           // qDebug()<<"i: "<<i<<" j: "<<j<<"--"<<n;
+            n++;
+        }
+     joyButtons->setFixedSize(100,100);
+    m_grLayout->addWidget(joyButtons,1,1);
 }
 
 JoyWidget::~JoyWidget()
 {
+    delete m_grLayout;
+    delete cmbxJoy;
+    delete rescanButton;
+    delete labelJoystickStatus;
+    delete joyButtons;
     qDebug()<< "JoyWidget deleted";
 }
 
@@ -57,6 +78,32 @@ VJoystickAdapter *JoyWidget::getJoystick()
     return joystick;
 }
 
+void JoyWidget::joyButtonChecked(int button_num, bool state)
+{
+
+
+        QList<QPushButton *> btnList= joyButtons->findChildren<QPushButton *>("");
+
+                for(int i=0;i<btnList.size();++i)
+        {
+            if(btnList.at(i)->property("numButton").toInt()==button_num)
+            {
+                btnList.at(i)->setChecked(state);
+                     //   qDebug()<<"property: "<<btnList.at(i)->property("numButton").toInt();
+            }
+        }
+                if (state)
+                {
+        qDebug()<<"JoyBtn "<<button_num<<" clicked";
+                }
+}
+
+void JoyWidget::joyButtonToggled(bool arg)
+{
+    ((QPushButton*)sender())->setChecked(arg);
+   // qDebug()<<((QPushButton*)sender())->property("numButton").toInt();
+}
+
 
 
 void JoyWidget::slotJoyConnect(bool arg)
@@ -80,7 +127,7 @@ void JoyWidget::slotJoyConnect(bool arg)
         {
 
             labelJoystickStatus->setText(tr("Joystick: ") + "<span style=\"color:#008800;font-weight:bold;\">" + tr("connected") + "</span>");
-
+  connect(joystick,SIGNAL(sigButtonChanged(int,bool)),this,SLOT(joyButtonChecked(int,bool)));
             //ui->actionJoystick->setStatusTip(tr("Disconnect from Joystick"));
             // ui->actionJoystick->setToolTip(ui->actionJoystick->statusTip());
             qDebug() << "Joystick connected: " << joystick->getJoystickName();
@@ -90,7 +137,9 @@ void JoyWidget::slotJoyConnect(bool arg)
         {
             //ui->label_Joystick_status->setText("<font color=red>"+tr("Not connected")+"</font>");
             //labelJoystickStatus->setText(tr("Joystick: ") + "<span style=\"color:#ff0000;font-weight:bold;\">" + tr("connecting error") + "</span>");
+             disconnect(joystick,SIGNAL(sigButtonChanged(int,bool)),this,SLOT(joyButtonChecked(int,bool)));
             emit JoyConnected(false);
+
             qDebug() << "connecting error: " << joystick->getJoystickName();
         }
     }
@@ -103,9 +152,22 @@ void JoyWidget::slotJoyConnect(bool arg)
             labelJoystickStatus->setText(tr("Joystick: ") + "<span style=\"color:#ff0000;font-weight:bold;\">" + tr("disconnected") + "</span>");
             joystick->close();
         }
+          disconnect(joystick,SIGNAL(sigButtonChanged(int,bool)),this,SLOT(joyButtonChecked(int,bool)));
         emit JoyConnected(false);
 
         // ui->actionJoystick->setStatusTip(tr("Connect to Joystick"));
         // ui->actionJoystick->setToolTip(ui->actionJoystick->statusTip());
     }
+}
+
+
+QPushButton *JoyWidget::createButton(const int num)
+{
+    QPushButton * joyBtn=new QPushButton (QString::number(num+1));
+    joyBtn->setFixedSize(20,20);
+    joyBtn->setProperty("numButton",num);
+    joyBtn->setCheckable(true);
+    //joyBtn->setObjectName("joyBtn"+QString::number(num));
+   connect(joyBtn,SIGNAL(toggled(bool)),this,SLOT(joyButtonToggled(bool)));
+                return joyBtn;
 }
