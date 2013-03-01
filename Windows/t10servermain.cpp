@@ -5,12 +5,12 @@ T10ServerMain::T10ServerMain(QWidget *parent) :
     QMainWindow(parent)
 {
     // подключаем файл внешнего вида
-    //QFile file(":/resources/qss/green.qss");
-    //file.open(QFile::ReadOnly);
+   //QFile file(":/resources/qss/green.qss");
+   //file.open(QFile::ReadOnly);
 
-    //устанавливаем стили из этого файла
-   // styleSheet = QLatin1String(file.readAll());
-   //  this->setStyleSheet(styleSheet);
+  //устанавливаем стили из этого файла
+  // styleSheet = QLatin1String(file.readAll());
+  //this->setStyleSheet(styleSheet);
     this->setWindowTitle(QCoreApplication::applicationName());
 
     //загружаются настройки из файла
@@ -342,8 +342,7 @@ void T10ServerMain::slotAircraftActionToggled(bool arg)
         connect(joyWgt->getJoystick(), SIGNAL(sigZAxisChanged(int)), aircraftWgt->getAircraft(), SLOT(setJoyZ(int)));
         connect(aircraftWgt->getAircraft(),SIGNAL(signal_modelingStep()),aircraftWgt->getAircraft(),SLOT(setServerData()));
         //connect(comPort,SIGNAL(DataReady(QByteArray)),aircraft,SLOT(setDataFromBoard(QByteArray)));
-
-        qDebug()<<"Simulation started";
+         qDebug()<<"Simulation started";
     }
     else
     {

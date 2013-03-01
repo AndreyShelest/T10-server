@@ -19,15 +19,16 @@ JoyWidget::JoyWidget(QWidget *parent) :
     QGridLayout * jtopLayout=new QGridLayout;
     joyButtons=new QWidget();
     joyButtons->setLayout(jtopLayout);
+     jtopLayout->addWidget(new QLabel("<span style=\"color:#91fb5d;font-weight:bold;\">" +tr("Joy Butons") + "</span>"),0,0,1,4,Qt::AlignCenter);
     int n=0;//цифра на кнопке
      for (int i=0; i<3;++i)
     for (int j=0; j<4;++j)
                {
-            jtopLayout->addWidget(createButton(n),i,j);
+            jtopLayout->addWidget(createButton(n),i+1,j);
            // qDebug()<<"i: "<<i<<" j: "<<j<<"--"<<n;
             n++;
         }
-     joyButtons->setFixedSize(100,100);
+         joyButtons->setFixedSize(100,100);
     m_grLayout->addWidget(joyButtons,1,1);
 }
 

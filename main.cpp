@@ -23,10 +23,10 @@ int main(int argc, char *argv[])
         return 1;
     }
     QApplication::setQuitOnLastWindowClosed(false);
-    //    MainWindow w;
-//    w.show();
-    T10ServerMain appMainWindow;
-    appMainWindow.setWindowIcon(QIcon(":/resources/icons/appIcon.png"));
-    appMainWindow.show();
+        MainWindow w;
+    w.show();
+    //T10ServerMain appMainWindow;
+   // appMainWindow.setWindowIcon(QIcon(":/resources/icons/appIcon.png"));
+   // appMainWindow.show();
     return a.exec();
 }

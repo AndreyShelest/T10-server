@@ -40,7 +40,11 @@ QPushButton:pressed {
     padding-top: 5px;
     background-color: #009605;
 }
-
+QPushButton:checked {
+    padding-left: 5px;
+    padding-top: 5px;
+    background-color: #61d9c9;
+}
 /*QLabel, QAbstractButton {
     font: normal;
 }*/
