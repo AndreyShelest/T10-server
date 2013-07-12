@@ -1,8 +1,19 @@
 T10-server
 
   Version 4.0.0b
-  New Main window style was added.
-  If you want switch to new style you may run proramm
-  with argument <--new-style> 
-  
-  add qserialdevice as submodule repository
+  CANGES:
+   --New Main window style was added.
+   --If you want switch to new style you may run proramm
+   --with argument <--new-style> 
+   --add qserialdevice as submodule repository
+   
+   
+   
+   
+   
+   INSTALATION
+   $git clone https://github.com/AndreyShelest/T10-server.git
+   $cd T10-server
+   $git checkout new-style
+   $git submodule init 
+   $git submodule update
