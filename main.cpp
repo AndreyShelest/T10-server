@@ -2,6 +2,7 @@
 #include <QTextCodec>
 #include "mainwindow.h"
 #include "Windows/t10servermain.h"
+#include "QDebug"
 
 int main(int argc, char *argv[])
 {
@@ -23,10 +24,25 @@ int main(int argc, char *argv[])
         return 1;
     }
     QApplication::setQuitOnLastWindowClosed(false);
-    //    MainWindow w;
-//    w.show();
-    T10ServerMain appMainWindow;
-    appMainWindow.setWindowIcon(QIcon(":/resources/icons/appIcon.png"));
-    appMainWindow.show();
-    return a.exec();
+    //qDebug()<<argv[1];
+    T10ServerMain* appMainWindow=NULL;
+    MainWindow* w=NULL;
+    if (argv[1]!=NULL){
+        if (!strcmp(argv[1],"--new-style")){
+            appMainWindow=new T10ServerMain();
+            appMainWindow->setWindowIcon(QIcon(":/resources/icons/appIcon.png"));
+            appMainWindow->show();
+        }
+    } else {
+        w=new MainWindow();
+        w->show();
+    }
+
+        int ret= a.exec();
+        if (w!=NULL)
+            delete w;
+        if (appMainWindow!=NULL)
+            delete appMainWindow;
+        return ret;
+
 }
