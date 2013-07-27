@@ -180,6 +180,10 @@ connect (serverWgt,SIGNAL(serverError(bool)),actionServer,SLOT(setChecked(bool))
   actionGraphs->setCheckable(true);
  connect (this->actionGraphs,SIGNAL(toggled(bool)),this,SLOT(slotGraphsActionToggled(bool)));
 
+ //кнопка выключения программы
+ iconsToolBar->addSeparator();
+ iconsToolBar->addWidget(new QSplitter(Qt::Horizontal));
+ iconsToolBar->addAction(quitAction);
 
     this->addToolBar(iconsToolBar);
  //создание статусбара

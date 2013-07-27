@@ -1,3 +1,6 @@
 [submodule "qserialdevice"]
       path = ComPort/qserialdevice
       url = git://gitorious.org/qserialdevice/qserialdevice.git
+[submodule "manipulatorQML"]
+	path = manipulatorQML
+	url = git://github.com/AndreyShelest/manipulatorQML.git

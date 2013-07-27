@@ -37,7 +37,8 @@ SOURCES += main.cpp\
     Windows/serverwiget.cpp \
     Windows/t10tray.cpp \
     Windows/joywidget.cpp \
-    Windows/aircraftwidget.cpp
+    Windows/aircraftwidget.cpp \
+    Windows/manipulatorwidget.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -57,7 +58,8 @@ HEADERS  += mainwindow.h \
     Windows/serverwiget.h \
     Windows/t10tray.h \
     Windows/joywidget.h \
-    Windows/aircraftwidget.h
+    Windows/aircraftwidget.h \
+    Windows/manipulatorwidget.h
 
 
 FORMS    += mainwindow.ui \
@@ -65,3 +67,6 @@ FORMS    += mainwindow.ui \
 
 RESOURCES += \
     T10_Server3.qrc
+
+OTHER_FILES += \
+    qtManipulator.qml
